@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#f5f5f5"
+    android:orientation="vertical">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#ffffff"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="44.2dp"
+            android:orientation="horizontal">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/profile_image"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_gravity="center"
+                android:layout_marginStart="150dp"
+                android:src="@drawable/profile1"
+                app:civ_border_color="#FF000000" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <customfonts.MyTextView_Roboto_Regular
+                android:layout_width="match_parent"
+                android:layout_height="41dp"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:text="@string/about_you_text"
+                android:textColor="#262628"
+                android:textSize="19.2sp" />
+
+            <customfonts.MyTextView_Roboto_Regular
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:paddingLeft="30dp"
+                android:paddingTop="10dp"
+                android:paddingRight="30dp"
+                android:text="@string/about_you_description"
+                android:textColor="#9b9b9b"
+                android:textSize="12.4sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="47.2dp"
+            android:layout_marginBottom="20.3dp"
+            android:orientation="horizontal">
+
+            <customfonts.MyTextView_Roboto_Regular
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15.2dp"
+                android:layout_weight="1"
+                android:text="@string/about_user_name"
+                android:textColor="#9b9b9b"
+                android:textSize="14.4sp" />
+
+            <customfonts.MyTextView_Roboto_Regular
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/user_name_text"
+                android:textColor="#262628"
+                android:textSize="14.4sp" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="13dp"
+                android:layout_marginEnd="19dp"
+                android:contentDescription="@string/edit_field_image"
+                android:src="@drawable/ic_chevron_right_black_24dp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="27.2dp"
+            android:layout_marginBottom="20.3dp"
+            android:orientation="horizontal">
+
+            <customfonts.MyTextView_Roboto_Regular
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15.2dp"
+                android:layout_weight="1"
+                android:text="@string/about_gender"
+                android:textColor="#9b9b9b"
+                android:textSize="14.4sp" />
+
+            <customfonts.MyTextView_Roboto_Regular
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/gender_text"
+                android:textColor="#262628"
+                android:textSize="14.4sp" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="13dp"
+                android:layout_marginEnd="19dp"
+                android:contentDescription="@string/edit_field_image"
+                android:src="@drawable/ic_chevron_right_black_24dp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="27.2dp"
+            android:layout_marginBottom="20.3dp"
+            android:orientation="horizontal">
+
+            <customfonts.MyTextView_Roboto_Regular
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15.2dp"
+                android:layout_weight="1"
+                android:text="@string/about_height"
+                android:textColor="#9b9b9b"
+                android:textSize="14.4sp" />
+
+            <customfonts.MyTextView_Roboto_Regular
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/height_text"
+                android:textColor="#262628"
+                android:textSize="14.4sp" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="13dp"
+                android:layout_marginEnd="19dp"
+                android:contentDescription="@string/edit_field_image"
+                android:src="@drawable/ic_chevron_right_black_24dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="27.2dp"
+            android:layout_marginBottom="20.3dp"
+            android:orientation="horizontal">
+
+            <customfonts.MyTextView_Roboto_Regular
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15.2dp"
+                android:layout_weight="1"
+                android:text="@string/about_weight"
+                android:textColor="#9b9b9b"
+                android:textSize="14.4sp" />
+
+            <customfonts.MyTextView_Roboto_Regular
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/weight_text"
+                android:textColor="#262628"
+                android:textSize="14.4sp" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="13dp"
+                android:layout_marginEnd="19dp"
+                android:contentDescription="@string/edit_field_image"
+                android:src="@drawable/ic_chevron_right_black_24dp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>
