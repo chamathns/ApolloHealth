@@ -12,6 +12,7 @@
 /captures
 .externalNativeBuild
 .cxx
+/src/androidTest
 
 ### Android ###
 # Built application files

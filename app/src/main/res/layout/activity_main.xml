@@ -62,9 +62,9 @@
         android:id="@+id/bottomBar_id"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        app:bb_behavior="iconsOnly"
         android:layout_alignParentBottom="true"
-        android:background="@color/navbar_material_blue"
+        android:background="@color/navbar_material_purple"
         android:paddingTop="4dp"
+        app:bb_behavior="iconsOnly"
         app:bb_tabXmlResource="@xml/bottombar" />
 </RelativeLayout>
