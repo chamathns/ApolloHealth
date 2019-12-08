@@ -14,9 +14,9 @@
     <string name="username_greeting_text">Hi, Chamath</string>
 
     <string-array name="timeframe_report_array">
-        <item>3-day report</item>
-        <item>weekly report</item>
-        <item>monthly report</item>
-        <item>yearly report</item>
+        <item>3-day Report</item>
+        <item>Weekly Report</item>
+        <item>Monthly Report</item>
+        <item>Yearly Report</item>
     </string-array>
 </resources>
