@@ -36,14 +36,20 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 switch (menuItem.getItemId()) {
 
                     case R.id.action_profile:
-                        Intent i = new Intent(MainActivity.this, AboutActivity.class);
-                        startActivityForResult(i, result);
+                        Intent profileIntent = new Intent(MainActivity.this, AboutActivity.class);
+                        startActivityForResult(profileIntent, result);
                         break;
 
-//                    case R.id.action_health:
-//                        Intent i = new Intent(MainActivity.this, AboutActivity.class);
-//                        startActivityForResult(i,result);
-//                        break;
+                    case R.id.action_health:
+                        Intent healthIntent = new Intent(MainActivity.this, HealthActivity.class);
+                        startActivityForResult(healthIntent,result);
+                        break;
+
+                    case R.id.action_journal:
+                        Intent journalIntent = new Intent(MainActivity.this, JournalActivity.class);
+                        startActivityForResult(journalIntent,result);
+                        break;
+//                        startActivity(journalIntent);
                     default:
                         throw new IllegalStateException("Unexpected value: " + menuItem.getItemId());
                 }

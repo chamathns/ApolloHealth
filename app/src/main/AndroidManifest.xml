@@ -19,8 +19,18 @@
 
         <activity
             android:name=".AboutActivity"
-            android:label="Get Name"
+            android:label="About Profile"
             android:theme="@style/AppTheme" />
+        <activity
+            android:name=".HealthActivity"
+            android:label="Helath"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".JournalActivity"
+            android:label="Journal"
+            android:theme="@style/AppTheme" />
+
     </application>
+
 
 </manifest>
