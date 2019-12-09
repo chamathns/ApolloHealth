@@ -38,8 +38,31 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="182dp"
+            android:layout_height="wrap_content"
             android:paddingTop="30dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="167dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_weight="1"
+                android:background="@drawable/border">
+
+                <TextView
+                    android:paddingTop="10dp"
+                    android:id="@+id/physical1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="TextView"
+                    android:textAlignment="center" />
+
+            </LinearLayout>
 
 
             <!--            <View-->
@@ -56,26 +79,41 @@
             <!--                android:background="@drawable/border"-->
             <!--                android:fadingEdge="horizontal|vertical" />-->
 
-            <TextView
-                android:id="@+id/physical1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="TextView"
-                android:textAlignment="center" />
-        </LinearLayout>
 
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="212dp"
-            android:paddingTop="30dp"
-            android:paddingBottom="30dp">
+            android:layout_height="wrap_content"
+            android:paddingTop="10dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="167dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_weight="1"
+                android:background="@drawable/border">
+
+                <TextView
+                    android:paddingTop="10dp"
+                    android:id="@+id/emotional1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="TextView"
+                    android:textAlignment="center" />
+
+            </LinearLayout>
 
 
             <!--            <View-->
-            <!--                android:id="@+id/view_emotional"-->
-            <!--                android:layout_width="282dp"-->
+            <!--                android:id="@+id/view_physical"-->
+            <!--                android:layout_width="297dp"-->
             <!--                android:layout_height="wrap_content"-->
             <!--                android:layout_marginStart="10dp"-->
             <!--                android:layout_marginLeft="10dp"-->
@@ -85,30 +123,26 @@
             <!--                android:layout_marginBottom="10dp"-->
             <!--                android:layout_weight="1"-->
             <!--                android:background="@drawable/border"-->
-            <!--                android:fadingEdge="horizontal|vertical"-->
-            <!--                android:paddingBottom="20dp" />-->
+            <!--                android:fadingEdge="horizontal|vertical" />-->
 
-            <TextView
-                android:id="@+id/emotional1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <Spinner
+                android:id="@+id/timeSpinner"
+                android:layout_width="201dp"
+                android:layout_height="134dp"
+                android:layout_marginStart="100dp"
+                android:layout_marginEnd="100dp"
                 android:layout_weight="1"
-                android:text="TextView"
+                android:background="@null"
+                android:dropDownWidth="wrap_content"
+                android:entries="@array/timeframe_report_array"
+                android:layoutDirection="ltr"
                 android:textAlignment="center" />
         </LinearLayout>
-
-        <Spinner
-            android:id="@+id/timeSpinner"
-            android:layout_width="201dp"
-            android:layout_height="32dp"
-            android:layout_marginStart="100dp"
-            android:layout_marginEnd="100dp"
-            android:layout_weight="1"
-            android:background="@null"
-            android:dropDownWidth="wrap_content"
-            android:entries="@array/timeframe_report_array"
-            android:layoutDirection="ltr"
-            android:textAlignment="center" />
     </LinearLayout>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
