@@ -10,5 +10,6 @@
     <color name="bluePrimary">#13B9DA</color>
     <color name="bluePrimaryDark">#2B9BB2</color>
     <color name="navbar_material_purple">#6C3483</color>
+    <color name="white">#ffffff</color>
 
 </resources>

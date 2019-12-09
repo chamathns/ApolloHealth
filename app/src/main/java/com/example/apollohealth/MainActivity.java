@@ -1,18 +1,26 @@
 package com.example.apollohealth;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
     private Spinner timeSpinner;
+    private TextView physicalTextView;
+    private TextView emotionalTextView;
 //    private View mainView;
 
     @Override
@@ -20,11 +28,36 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                final int result = 1;
+                switch (menuItem.getItemId()) {
+
+                    case R.id.action_profile:
+                        Intent i = new Intent(MainActivity.this, AboutActivity.class);
+                        startActivityForResult(i, result);
+                        break;
+
+//                    case R.id.action_health:
+//                        Intent i = new Intent(MainActivity.this, AboutActivity.class);
+//                        startActivityForResult(i,result);
+//                        break;
+                    default:
+                        throw new IllegalStateException("Unexpected value: " + menuItem.getItemId());
+                }
+                return false;
+            }
+        });
+
         addItemsSpinner();
     }
 
     public void addItemsSpinner() {
 //        mainView = (View) findViewById(R.id.view);
+        physicalTextView = (TextView) findViewById(R.id.physical1);
+        emotionalTextView = (TextView) findViewById(R.id.emotional1);
 
         timeSpinner = (Spinner) findViewById(R.id.timeSpinner);
         timeSpinner.setOnItemSelectedListener(this);
@@ -39,7 +72,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     public void onItemSelected(AdapterView<?> parent, View view,
                                int pos, long id) {
-        view.
+
+        physicalTextView.setText(parent.getItemAtPosition(pos).toString());
+        emotionalTextView.setText(parent.getItemAtPosition(pos).toString());
+
         Toast.makeText(parent.getContext(),
                 "Report Type : " + parent.getItemAtPosition(pos).toString(),
                 Toast.LENGTH_SHORT).show();
@@ -48,9 +84,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     public void onNothingSelected(AdapterView<?> parent) {
         // Another interface callback
     }
-
-
-
 
 
 }
