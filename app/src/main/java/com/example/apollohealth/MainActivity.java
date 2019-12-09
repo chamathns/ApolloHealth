@@ -28,6 +28,13 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
+        addItemsSpinner();
+        addBottomNavigation();
+    }
+
+
+    public void addBottomNavigation() {
         BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -42,12 +49,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
                     case R.id.action_health:
                         Intent healthIntent = new Intent(MainActivity.this, HealthActivity.class);
-                        startActivityForResult(healthIntent,result);
+                        startActivityForResult(healthIntent, result);
                         break;
 
                     case R.id.action_journal:
                         Intent journalIntent = new Intent(MainActivity.this, JournalActivity.class);
-                        startActivityForResult(journalIntent,result);
+                        startActivityForResult(journalIntent, result);
                         break;
 //                        startActivity(journalIntent);
                     default:
@@ -56,8 +63,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 return false;
             }
         });
-
-        addItemsSpinner();
     }
 
     public void addItemsSpinner() {
