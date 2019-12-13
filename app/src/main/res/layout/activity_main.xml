@@ -24,6 +24,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginStart="24dp"
                 android:src="@drawable/profile1"
+                android:onClick="dpClick"
                 app:civ_border_color="#FF000000" />
 
             <customfonts.MyTextView_Roboto_Regular
@@ -420,7 +421,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_gravity="bottom"
-        android:background="@color/colorPrimary"
+        android:background="@color/navbar_material_purple"
         app:itemIconTint="@color/white"
         app:itemTextColor="@color/white"
         app:menu="@menu/bottombar_menu" />

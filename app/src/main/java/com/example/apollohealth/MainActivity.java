@@ -16,17 +16,21 @@ import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
     private Spinner timeSpinner;
     private TextView physicalTextView;
     private TextView emotionalTextView;
+    private CircleImageView profileImage;
 //    private View mainView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        profileImage = (CircleImageView) findViewById(R.id.profile_image);
 
 
         addItemsSpinner();
@@ -43,7 +47,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 switch (menuItem.getItemId()) {
 
                     case R.id.action_profile:
-                        Intent profileIntent = new Intent(MainActivity.this, AboutActivity.class);
+                        Intent profileIntent = new Intent(MainActivity.this, MainActivity.class);
                         startActivityForResult(profileIntent, result);
                         break;
 
@@ -95,6 +99,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     public void onNothingSelected(AdapterView<?> parent) {
         // Another interface callback
     }
+
+    public void dpClick(View view){
+        Intent aboutIntent = new Intent(MainActivity.this, AboutActivity.class);
+        startActivityForResult(aboutIntent, 1);
+    };
 
 
 }
