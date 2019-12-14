@@ -13,11 +13,24 @@
         android:orientation="vertical">
 
         <TextView
+            android:id="@+id/test_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="activity_health.xml"
             android:textSize="20sp"
             android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/startBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Button" />
+
+        <Button
+            android:id="@+id/endBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Button" />
 
     </LinearLayout>
 
