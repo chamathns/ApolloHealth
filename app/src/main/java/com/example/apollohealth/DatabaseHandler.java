@@ -35,7 +35,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     //    app data table
     public static final String APP_TABLE = "APP_TABLE";
-    public static final String APP_TABLE_USAGE_ID = "ID";
     public static final String APP_TABLE_NAME = "APP_NAME";
     public static final String APP_TABLE_GENRE = "GENRE";
     public static final String APP_TABLE_SCREEN_TIME = "SCREEN_TIME";
@@ -72,11 +71,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         sqLiteDatabase.execSQL(
                 "CREATE TABLE " + APP_TABLE + " (" +
-                        APP_TABLE_USAGE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                         APP_TABLE_NAME + " TEXT NOT NULL, " +
                         APP_TABLE_GENRE + " TEXT NOT NULL, " +
                         APP_TABLE_SCREEN_TIME + " INT NOT NULL, " +
                         APP_TABLE_TIMESTAMP + " BIGINT NOT NULL, " +
+                        "PRIMARY KEY (" + APP_TABLE_NAME + ", " + APP_TABLE_TIMESTAMP + "), " +
                         "FOREIGN KEY (" + APP_TABLE_TIMESTAMP + ") REFERENCES " + HEALTH_TABLE + " (" + HEALTH_TABLE_TIMESTAMP + "));"
         );
     }
@@ -241,10 +240,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         long tsLimitDate = Long.parseLong(dateFormat.format(tsLimit));
 
         return db.rawQuery(
-                "SELECT " + APP_TABLE_NAME + ", SUM(" + APP_TABLE_SCREEN_TIME + ") " +
-                        "FROM " + APP_TABLE + " " +
-                        "GROUP BY " + APP_TABLE_NAME + " " +
-                        "WHERE (" + APP_TABLE_TIMESTAMP + " > " + tsLimitDate + ");",
+                "SELECT " + APP_TABLE_NAME + ", SUM(" + APP_TABLE_SCREEN_TIME + ")" +
+                        " FROM " + APP_TABLE +
+                        " GROUP BY " + APP_TABLE_NAME +
+                        " WHERE (" + APP_TABLE_TIMESTAMP + " > " + tsLimitDate + ");",
                 null
         );
     }
@@ -257,11 +256,40 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         long tsLimitDate = Long.parseLong(dateFormat.format(tsLimit));
 
         return db.rawQuery(
-                "SELECT " + APP_TABLE_GENRE + ", SUM(" + APP_TABLE_SCREEN_TIME + ") " +
-                        "FROM " + APP_TABLE + " " +
-                        "GROUP BY " + APP_TABLE_GENRE + " " +
-                        "WHERE (" + APP_TABLE_TIMESTAMP + " > " + tsLimitDate + ");",
+                "SELECT " + APP_TABLE_GENRE + ", SUM(" + APP_TABLE_SCREEN_TIME + ")" +
+                        " FROM " + APP_TABLE +
+                        " GROUP BY " + APP_TABLE_GENRE +
+                        " WHERE (" + APP_TABLE_TIMESTAMP + " > " + tsLimitDate + ");",
                 null
         );
+    }
+
+    public boolean updateAppData(String appName, String appGenre, long timestamp, int screenTime) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        long timestampDate = Long.parseLong(dateFormat.format(timestamp));
+
+        Cursor c = db.rawQuery(
+                "SELECT 1" +
+                        " FROM " + APP_TABLE +
+                        " WHERE (" + APP_TABLE_NAME + " = " + appName + ")" +
+                        " AND (" + APP_TABLE_TIMESTAMP + " = " + timestampDate + ");",
+                null
+        );
+
+        if (c.getCount() <= 0) {
+            c.close();
+            return insertAppData(appName, appGenre, timestamp, screenTime);
+        }
+
+        c.close();
+
+        db.execSQL(
+                "UPDATE " + APP_TABLE +
+                        " SET " + APP_TABLE_SCREEN_TIME + " = " + APP_TABLE_SCREEN_TIME + " + " + screenTime +
+                        " WHERE (" + APP_TABLE_NAME + " = " + appName + ")" +
+                        " AND (" + APP_TABLE_TIMESTAMP + " = " + timestampDate + ");"
+        );
+
+        return true;
     }
 }
