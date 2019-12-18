@@ -32,6 +32,13 @@
             android:layout_height="wrap_content"
             android:text="Button" />
 
+        <TextView
+            android:id="@+id/pressureText"
+            android:layout_width="match_parent"
+            android:layout_height="49dp"
+            android:text="TextView"
+            android:textSize="24sp" />
+
     </LinearLayout>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
