@@ -50,7 +50,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         sqLiteDatabase.execSQL(
                 "CREATE TABLE " + HEALTH_TABLE + " (" +
-                        HEALTH_TABLE_TIMESTAMP + " TEXT PRIMARY KEY," +
+                        HEALTH_TABLE_TIMESTAMP + " BIGINT PRIMARY KEY," +
                         HEALTH_TABLE_SCREEN_TIME + " INTEGER," +
                         HEALTH_TABLE_UNLOCKS + " INTEGER," +
                         HEALTH_TABLE_PICKUPS + " INTEGER," +
@@ -112,7 +112,47 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return true;
     }
 
-    
+    public boolean insertHealthData(long timestamp, int screenTime, int unlocks, int pickups, int walkingDist, int steps, int heights) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
 
+        contentValues.put(HEALTH_TABLE_TIMESTAMP, timestamp);
+        contentValues.put(HEALTH_TABLE_SCREEN_TIME, screenTime);
+        contentValues.put(HEALTH_TABLE_UNLOCKS, unlocks);
+        contentValues.put(HEALTH_TABLE_PICKUPS, pickups);
+        contentValues.put(HEALTH_TABLE_DIST, walkingDist);
+        contentValues.put(HEALTH_TABLE_STEPS, steps);
+        contentValues.put(HEALTH_TABLE_HEIGHTS, heights);
+
+        long result = db.insert(HEALTH_TABLE, null, contentValues);
+
+        return result != -1;
+    }
+
+    public Cursor getEmotionData(int numDays) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        long tsCurrent = System.currentTimeMillis();
+        long tsLimit = tsCurrent - 24 * 3600 * 1000 * numDays;
+
+        return db.rawQuery(
+                "SELECT SCREEN_TIME, UNLOCKS, PICKUPS " +
+                        "FROM " + HEALTH_TABLE + " " +
+                        "WHERE (TIMESTAMP > " + tsLimit + ")",
+                null
+        );
+    }
+
+    public Cursor getPhysicalData(int numDays) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        long tsCurrent = System.currentTimeMillis();
+        long tsLimit = tsCurrent - 24 * 3600 * 1000 * numDays;
+
+        return db.rawQuery(
+                "SELECT WALK_DIST, STEPS, HEIGHT_CLIMBED " +
+                        "FROM " + HEALTH_TABLE + " " +
+                        "WHERE (TIMESTAMP > " + tsLimit + ")",
+                null
+        );
+    }
 
 }
