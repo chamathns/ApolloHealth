@@ -32,11 +32,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         setContentView(R.layout.activity_main);
         profileImage = (CircleImageView) findViewById(R.id.profile_image);
 
-
         addItemsSpinner();
         addBottomNavigation();
     }
-
 
     public void addBottomNavigation() {
         BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
@@ -100,10 +98,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         // Another interface callback
     }
 
-    public void dpClick(View view){
+    public void dpClick(View view) {
         Intent aboutIntent = new Intent(MainActivity.this, AboutActivity.class);
         startActivityForResult(aboutIntent, 1);
-    };
-
-
+    }
 }
