@@ -17,6 +17,8 @@ import androidx.annotation.Nullable;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import static java.lang.Math.abs;
+
 public class HealthActivity extends Activity implements SensorEventListener, StepListener {
 
     private TextView tvSteps;
@@ -29,12 +31,16 @@ public class HealthActivity extends Activity implements SensorEventListener, Ste
     private Sensor pressureSensor;
     private static final String TEXT_NUM_STEPS = "Number of Steps: ";
     private int numSteps;
+    private float initHeight;
+    private int flights = 0;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_health);
         addBottomNavigation();
+
+        initHeight = 0;
 
         // Get an instance of the SensorManager
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
@@ -112,8 +118,19 @@ public class HealthActivity extends Activity implements SensorEventListener, Ste
                     event.timestamp, event.values[0], event.values[1], event.values[2]);
         } else if (event.sensor.getType() == Sensor.TYPE_PRESSURE) {
             float[] pValues = event.values;
+            float cHeight = SensorManager.getAltitude(SensorManager.PRESSURE_STANDARD_ATMOSPHERE, pValues[0]);
+            int heightDiff = abs((int)(cHeight - initHeight));
+            if(heightDiff/3 >= 1) {
+                flights += heightDiff/3;
 //            pressureText.setText(String.format("%.3f mbar", pValues[0]));
-            pressureText.setText(String.format("Altitude: %.3f", SensorManager.getAltitude(SensorManager.PRESSURE_STANDARD_ATMOSPHERE, pValues[0])));
+                pressureText.setText(
+                        String.format("Flights climbed: %d \nInitial: %.2f \nCurrent: %.2f",flights, initHeight, cHeight));
+                initHeight = cHeight;
+            }
+            else{
+                pressureText.setText(
+                        String.format("Flights climbed: %d \nInitial: %.2f \nCurrent: %.2f",flights, initHeight, cHeight));
+            }
         }
     }
 
