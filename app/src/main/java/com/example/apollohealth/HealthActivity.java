@@ -22,9 +22,11 @@ public class HealthActivity extends Activity implements SensorEventListener, Ste
     private TextView tvSteps;
     private Button startBtn;
     private Button endBtn;
+    private TextView pressureText;
     private StepDetector simpleStepDetector;
     private SensorManager sensorManager;
     private Sensor accel;
+    private Sensor pressureSensor;
     private static final String TEXT_NUM_STEPS = "Number of Steps: ";
     private int numSteps;
 
@@ -37,10 +39,12 @@ public class HealthActivity extends Activity implements SensorEventListener, Ste
         // Get an instance of the SensorManager
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         accel = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        pressureSensor = sensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE);
         simpleStepDetector = new StepDetector();
         simpleStepDetector.registerListener(this);
 
         tvSteps = (TextView) findViewById(R.id.test_text);
+        pressureText = (TextView) findViewById(R.id.pressureText);
         startBtn = (Button) findViewById(R.id.startBtn);
         endBtn = (Button) findViewById(R.id.endBtn);
 
@@ -66,9 +70,6 @@ public class HealthActivity extends Activity implements SensorEventListener, Ste
 
             }
         });
-
-
-
 
 
     }
@@ -109,6 +110,10 @@ public class HealthActivity extends Activity implements SensorEventListener, Ste
         if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
             simpleStepDetector.updateAccel(
                     event.timestamp, event.values[0], event.values[1], event.values[2]);
+        } else if (event.sensor.getType() == Sensor.TYPE_PRESSURE) {
+            float[] pValues = event.values;
+//            pressureText.setText(String.format("%.3f mbar", pValues[0]));
+            pressureText.setText(String.format("Altitude: %.3f", SensorManager.getAltitude(SensorManager.PRESSURE_STANDARD_ATMOSPHERE, pValues[0])));
         }
     }
 
@@ -121,5 +126,17 @@ public class HealthActivity extends Activity implements SensorEventListener, Ste
     public void step(long timeNs) {
         numSteps++;
         tvSteps.setText(TEXT_NUM_STEPS + numSteps);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        sensorManager.registerListener(this, pressureSensor, SensorManager.SENSOR_DELAY_UI);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        sensorManager.unregisterListener(this);
     }
 }
