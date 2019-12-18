@@ -8,6 +8,9 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import androidx.annotation.Nullable;
 
+import java.text.Format;
+import java.text.SimpleDateFormat;
+
 public class DatabaseHandler extends SQLiteOpenHelper {
     public static final String DB_NAME = "Apollo.db";
 
@@ -31,6 +34,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public static final String HEALTH_TABLE_HEIGHTS = "HEIGHT_CLIMBED";
 
     //    app data table
+
+    private static final Format dateFormat = new SimpleDateFormat("yyyyMMdd");
 
     public DatabaseHandler(@Nullable Context context) {
         super(context, DB_NAME, null, 1);
@@ -116,7 +121,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
 
-        contentValues.put(HEALTH_TABLE_TIMESTAMP, timestamp);
+        long timestampDate = Long.parseLong(dateFormat.format(timestamp));
+
+        contentValues.put(HEALTH_TABLE_TIMESTAMP, timestampDate);
         contentValues.put(HEALTH_TABLE_SCREEN_TIME, screenTime);
         contentValues.put(HEALTH_TABLE_UNLOCKS, unlocks);
         contentValues.put(HEALTH_TABLE_PICKUPS, pickups);
@@ -131,28 +138,40 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     public Cursor getEmotionData(int numDays) {
         SQLiteDatabase db = this.getWritableDatabase();
+
         long tsCurrent = System.currentTimeMillis();
-        long tsLimit = tsCurrent - 24 * 3600 * 1000 * numDays;
+        long tsLimit = tsCurrent - numDays * 24 * 3600 * 1000L;
+        long tsLimitDate = Long.parseLong(dateFormat.format(tsLimit));
 
         return db.rawQuery(
                 "SELECT SCREEN_TIME, UNLOCKS, PICKUPS " +
                         "FROM " + HEALTH_TABLE + " " +
-                        "WHERE (TIMESTAMP > " + tsLimit + ")",
+                        "WHERE (TIMESTAMP > " + tsLimitDate + ")",
                 null
         );
     }
 
     public Cursor getPhysicalData(int numDays) {
         SQLiteDatabase db = this.getWritableDatabase();
+
         long tsCurrent = System.currentTimeMillis();
-        long tsLimit = tsCurrent - 24 * 3600 * 1000 * numDays;
+        long tsLimit = tsCurrent - numDays * 24 * 3600 * 1000L;
+        long tsLimitDate = Long.parseLong(dateFormat.format(tsLimit));
 
         return db.rawQuery(
                 "SELECT WALK_DIST, STEPS, HEIGHT_CLIMBED " +
                         "FROM " + HEALTH_TABLE + " " +
-                        "WHERE (TIMESTAMP > " + tsLimit + ")",
+                        "WHERE (TIMESTAMP > " + tsLimitDate + ")",
                 null
         );
     }
+
+//    public boolean updateHealthData(long timestamp, int screenTime, int unlocks, int pickups, int walkingDist, int steps, int heights){
+//        SQLiteDatabase db = this.getWritableDatabase();
+//        long timestampDate = Long.parseLong(dateFormat.format(timestamp));
+//
+//        return true;
+//
+//    }
 
 }
