@@ -15,7 +15,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public static final String DB_NAME = "Apollo.db";
 
     //    user data table
-    public static final String USER_TABLE = "user_table";
+    public static final String USER_TABLE = "USER_TABLE";
     public static final String USER_TABLE_ID = "ID";
     public static final String USER_TABLE_NAME = "NAME";
     public static final String USER_TABLE_AGE = "AGE";
@@ -24,7 +24,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public static final String USER_TABLE_HEIGHT = "HEIGHT";
 
     //    health table
-    public static final String HEALTH_TABLE = "user_table";
+    public static final String HEALTH_TABLE = "HEALTH_TABLE";
     public static final String HEALTH_TABLE_TIMESTAMP = "TIMESTAMP";
     public static final String HEALTH_TABLE_SCREEN_TIME = "SCREEN_TIME";
     public static final String HEALTH_TABLE_UNLOCKS = "UNLOCKS";
@@ -34,6 +34,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public static final String HEALTH_TABLE_HEIGHTS = "HEIGHT_CLIMBED";
 
     //    app data table
+    public static final String APP_TABLE = "APP_TABLE";
+    public static final String APP_TABLE_USAGE_ID = "ID";
+    public static final String APP_TABLE_NAME = "APP_NAME";
+    public static final String APP_TABLE_GENRE = "GENRE";
+    public static final String APP_TABLE_SCREEN_TIME = "SCREEN_TIME";
+    public static final String APP_TABLE_TIMESTAMP = "TIMESTAMP";
 
     private static final Format dateFormat = new SimpleDateFormat("yyyyMMdd");
 
@@ -50,29 +56,43 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                         USER_TABLE_AGE + " INTEGER," +
                         USER_TABLE_GENDER + " TEXT," +
                         USER_TABLE_WEIGHT + " FLOAT," +
-                        USER_TABLE_HEIGHT + " FLOAT)"
+                        USER_TABLE_HEIGHT + " FLOAT);"
         );
 
         sqLiteDatabase.execSQL(
                 "CREATE TABLE " + HEALTH_TABLE + " (" +
-                        HEALTH_TABLE_TIMESTAMP + " BIGINT PRIMARY KEY," +
-                        HEALTH_TABLE_SCREEN_TIME + " INTEGER," +
-                        HEALTH_TABLE_UNLOCKS + " INTEGER," +
-                        HEALTH_TABLE_PICKUPS + " INTEGER," +
-                        HEALTH_TABLE_DIST + " INTEGER," +
-                        HEALTH_TABLE_STEPS + " INTEGER," +
-                        HEALTH_TABLE_HEIGHTS + " INTEGER)"
+                        HEALTH_TABLE_TIMESTAMP + " BIGINT PRIMARY KEY, " +
+                        HEALTH_TABLE_SCREEN_TIME + " INTEGER NOT NULL, " +
+                        HEALTH_TABLE_UNLOCKS + " INTEGER NOT NULL, " +
+                        HEALTH_TABLE_PICKUPS + " INTEGER NOT NULL, " +
+                        HEALTH_TABLE_DIST + " INTEGER NOT NULL, " +
+                        HEALTH_TABLE_STEPS + " INTEGER NOT NULL, " +
+                        HEALTH_TABLE_HEIGHTS + " INTEGER NOT NULL);"
+        );
+
+        sqLiteDatabase.execSQL(
+                "CREATE TABLE " + APP_TABLE + " (" +
+                        APP_TABLE_USAGE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+                        APP_TABLE_NAME + " TEXT NOT NULL, " +
+                        APP_TABLE_GENRE + " TEXT NOT NULL, " +
+                        APP_TABLE_SCREEN_TIME + " INT NOT NULL, " +
+                        APP_TABLE_TIMESTAMP + " BIGINT NOT NULL, " +
+                        "FOREIGN KEY (" + APP_TABLE_TIMESTAMP + ") REFERENCES " + HEALTH_TABLE + " (" + HEALTH_TABLE_TIMESTAMP + "));"
         );
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
         sqLiteDatabase.execSQL(
-                "DROP TABLE IF EXISTS " + USER_TABLE
+                "DROP TABLE IF EXISTS " + USER_TABLE + ";"
         );
 
         sqLiteDatabase.execSQL(
-                "DROP TABLE IF EXISTS " + HEALTH_TABLE
+                "DROP TABLE IF EXISTS " + HEALTH_TABLE + ";"
+        );
+
+        sqLiteDatabase.execSQL(
+                "DROP TABLE IF EXISTS " + APP_TABLE + ";"
         );
 
         this.onCreate(sqLiteDatabase);
@@ -97,7 +117,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
 
         return db.rawQuery(
-                "SELECT * FROM " + USER_TABLE,
+                "SELECT * FROM " + USER_TABLE + ";",
                 null
         );
     }
@@ -146,7 +166,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return db.rawQuery(
                 "SELECT " + HEALTH_TABLE_SCREEN_TIME + ", " + HEALTH_TABLE_UNLOCKS + ", " + HEALTH_TABLE_PICKUPS + " " +
                         "FROM " + HEALTH_TABLE + " " +
-                        "WHERE (" + HEALTH_TABLE_TIMESTAMP + " > " + tsLimitDate + ")",
+                        "WHERE (" + HEALTH_TABLE_TIMESTAMP + " > " + tsLimitDate + ");",
                 null
         );
     }
@@ -161,7 +181,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return db.rawQuery(
                 "SELECT " + HEALTH_TABLE_DIST + ", " + HEALTH_TABLE_STEPS + ", " + HEALTH_TABLE_HEIGHTS + " " +
                         "FROM " + HEALTH_TABLE + " " +
-                        "WHERE (TIMESTAMP > " + tsLimitDate + ")",
+                        "WHERE (" + HEALTH_TABLE_TIMESTAMP + " > " + tsLimitDate + ");",
                 null
         );
     }
@@ -173,7 +193,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         Cursor c = db.rawQuery(
                 "SELECT 1 " +
                         "FROM " + HEALTH_TABLE + " " +
-                        "WHERE (" + HEALTH_TABLE_TIMESTAMP + " = " + timestampDate + ")",
+                        "WHERE (" + HEALTH_TABLE_TIMESTAMP + " = " + timestampDate + ");",
                 null
         );
 
@@ -192,7 +212,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                         " SET " + HEALTH_TABLE_DIST + " = " + HEALTH_TABLE_DIST + " + " + walkingDist +
                         " SET " + HEALTH_TABLE_STEPS + " = " + HEALTH_TABLE_STEPS + " + " + steps +
                         " SET " + HEALTH_TABLE_HEIGHTS + " = " + HEALTH_TABLE_HEIGHTS + " + " + heights +
-                        " WHERE " + HEALTH_TABLE_TIMESTAMP + " = " + timestampDate
+                        " WHERE " + HEALTH_TABLE_TIMESTAMP + " = " + timestampDate + ";"
         );
 
 
