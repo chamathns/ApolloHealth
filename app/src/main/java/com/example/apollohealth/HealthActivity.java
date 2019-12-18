@@ -117,17 +117,16 @@ public class HealthActivity extends Activity implements SensorEventListener, Ste
         } else if (event.sensor.getType() == Sensor.TYPE_PRESSURE) {
             float[] pValues = event.values;
             float cHeight = SensorManager.getAltitude(SensorManager.PRESSURE_STANDARD_ATMOSPHERE, pValues[0]);
-            int heightDiff = abs((int)(cHeight - initHeight));
-            if(heightDiff/3 >= 1) {
-                flights += heightDiff/3;
+            int heightDiff = abs((int) (cHeight - initHeight));
+            if (1 <= heightDiff / 3 && heightDiff/3 <= 2) {
+                flights += heightDiff / 3;
 //            pressureText.setText(String.format("%.3f mbar", pValues[0]));
                 pressureText.setText(
-                        String.format("Flights climbed: %d \nInitial: %.2f \nCurrent: %.2f",flights, initHeight, cHeight));
+                        String.format("Flights climbed: %d Diff: %d \nInitial: %.2f \nCurrent: %.2f", flights, heightDiff, initHeight, cHeight));
                 initHeight = cHeight;
-            }
-            else{
+            } else {
                 pressureText.setText(
-                        String.format("Flights climbed: %d \nInitial: %.2f \nCurrent: %.2f",flights, initHeight, cHeight));
+                        String.format("Flights climbed: %d Diff: %d \nInitial: %.2f \nCurrent: %.2f", flights, heightDiff, initHeight, cHeight));
             }
         }
     }
