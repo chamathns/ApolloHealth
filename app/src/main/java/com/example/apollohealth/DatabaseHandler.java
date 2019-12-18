@@ -21,6 +21,15 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public static final String USER_TABLE_HEIGHT = "HEIGHT";
 
     //    health table
+    public static final String HEALTH_TABLE = "user_table";
+    public static final String HEALTH_TABLE_TIMESTAMP = "TIMESTAMP";
+    public static final String HEALTH_TABLE_SCREEN_TIME = "SCREEN_TIME";
+    public static final String HEALTH_TABLE_UNLOCKS = "UNLOCKS";
+    public static final String HEALTH_TABLE_PICKUPS = "PICKUPS";
+    public static final String HEALTH_TABLE_DIST = "WALK_DIST";
+    public static final String HEALTH_TABLE_STEPS = "STEPS";
+    public static final String HEALTH_TABLE_HEIGHTS = "HEIGHT_CLIMBED";
+
     //    app data table
 
     public DatabaseHandler(@Nullable Context context) {
@@ -39,6 +48,16 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                         USER_TABLE_HEIGHT + " FLOAT)"
         );
 
+        sqLiteDatabase.execSQL(
+                "CREATE TABLE " + HEALTH_TABLE + " (" +
+                        HEALTH_TABLE_TIMESTAMP + " TEXT PRIMARY KEY," +
+                        HEALTH_TABLE_SCREEN_TIME + " INTEGER," +
+                        HEALTH_TABLE_UNLOCKS + " INTEGER," +
+                        HEALTH_TABLE_PICKUPS + " INTEGER," +
+                        HEALTH_TABLE_DIST + " INTEGER," +
+                        HEALTH_TABLE_STEPS + " INTEGER," +
+                        HEALTH_TABLE_HEIGHTS + " INTEGER)"
+        );
     }
 
     @Override
@@ -46,6 +65,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL(
                 "DROP TABLE IF EXISTS " + USER_TABLE
         );
+
+        sqLiteDatabase.execSQL(
+                "DROP TABLE IF EXISTS " + HEALTH_TABLE
+        );
+
         this.onCreate(sqLiteDatabase);
     }
 
@@ -87,6 +111,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         return true;
     }
+
+    
 
 
 }
