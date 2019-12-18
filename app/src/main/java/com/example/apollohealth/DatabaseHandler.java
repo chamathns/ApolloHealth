@@ -215,7 +215,53 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                         " WHERE " + HEALTH_TABLE_TIMESTAMP + " = " + timestampDate + ";"
         );
 
-
         return true;
+    }
+
+    public boolean insertAppData(String appName, String appGenre, long timestamp, int screenTime) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        long timestampDate = Long.parseLong(dateFormat.format(timestamp));
+
+        contentValues.put(APP_TABLE_NAME, appName);
+        contentValues.put(APP_TABLE_GENRE, appGenre);
+        contentValues.put(APP_TABLE_SCREEN_TIME, screenTime);
+        contentValues.put(APP_TABLE_TIMESTAMP, timestampDate);
+
+        long result = db.insert(APP_TABLE, null, contentValues);
+
+        return result != -1;
+    }
+
+    public Cursor getAppDataApp(int numDays) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        long tsCurrent = System.currentTimeMillis();
+        long tsLimit = tsCurrent - numDays * 24 * 3600 * 1000L;
+        long tsLimitDate = Long.parseLong(dateFormat.format(tsLimit));
+
+        return db.rawQuery(
+                "SELECT " + APP_TABLE_NAME + ", SUM(" + APP_TABLE_SCREEN_TIME + ") " +
+                        "FROM " + APP_TABLE + " " +
+                        "GROUP BY " + APP_TABLE_NAME + " " +
+                        "WHERE (" + APP_TABLE_TIMESTAMP + " > " + tsLimitDate + ");",
+                null
+        );
+    }
+
+    public Cursor getAppDataGenre(int numDays) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        long tsCurrent = System.currentTimeMillis();
+        long tsLimit = tsCurrent - numDays * 24 * 3600 * 1000L;
+        long tsLimitDate = Long.parseLong(dateFormat.format(tsLimit));
+
+        return db.rawQuery(
+                "SELECT " + APP_TABLE_GENRE + ", SUM(" + APP_TABLE_SCREEN_TIME + ") " +
+                        "FROM " + APP_TABLE + " " +
+                        "GROUP BY " + APP_TABLE_GENRE + " " +
+                        "WHERE (" + APP_TABLE_TIMESTAMP + " > " + tsLimitDate + ");",
+                null
+        );
     }
 }
