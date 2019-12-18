@@ -76,8 +76,6 @@ public class HealthActivity extends Activity implements SensorEventListener, Ste
 
             }
         });
-
-
     }
 
     public void addBottomNavigation() {
