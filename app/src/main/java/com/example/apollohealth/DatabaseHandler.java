@@ -117,7 +117,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return true;
     }
 
-    public boolean insertHealthData(long timestamp, int screenTime, int unlocks, int pickups, int walkingDist, int steps, int heights) {
+    private boolean insertHealthData(long timestamp, int screenTime, int unlocks, int pickups, int walkingDist, int steps, int heights) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
 
@@ -144,9 +144,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         long tsLimitDate = Long.parseLong(dateFormat.format(tsLimit));
 
         return db.rawQuery(
-                "SELECT SCREEN_TIME, UNLOCKS, PICKUPS " +
+                "SELECT " + HEALTH_TABLE_SCREEN_TIME + ", " + HEALTH_TABLE_UNLOCKS + ", " + HEALTH_TABLE_PICKUPS + " " +
                         "FROM " + HEALTH_TABLE + " " +
-                        "WHERE (TIMESTAMP > " + tsLimitDate + ")",
+                        "WHERE (" + HEALTH_TABLE_TIMESTAMP + " > " + tsLimitDate + ")",
                 null
         );
     }
@@ -159,19 +159,43 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         long tsLimitDate = Long.parseLong(dateFormat.format(tsLimit));
 
         return db.rawQuery(
-                "SELECT WALK_DIST, STEPS, HEIGHT_CLIMBED " +
+                "SELECT " + HEALTH_TABLE_DIST + ", " + HEALTH_TABLE_STEPS + ", " + HEALTH_TABLE_HEIGHTS + " " +
                         "FROM " + HEALTH_TABLE + " " +
                         "WHERE (TIMESTAMP > " + tsLimitDate + ")",
                 null
         );
     }
 
-//    public boolean updateHealthData(long timestamp, int screenTime, int unlocks, int pickups, int walkingDist, int steps, int heights){
-//        SQLiteDatabase db = this.getWritableDatabase();
-//        long timestampDate = Long.parseLong(dateFormat.format(timestamp));
-//
-//        return true;
-//
-//    }
+    public boolean updateHealthData(long timestamp, int screenTime, int unlocks, int pickups, int walkingDist, int steps, int heights) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        long timestampDate = Long.parseLong(dateFormat.format(timestamp));
 
+        Cursor c = db.rawQuery(
+                "SELECT 1 " +
+                        "FROM " + HEALTH_TABLE + " " +
+                        "WHERE (" + HEALTH_TABLE_TIMESTAMP + " = " + timestampDate + ")",
+                null
+        );
+
+        if (c.getCount() <= 0) {
+            c.close();
+            return insertHealthData(timestamp, screenTime, unlocks, pickups, walkingDist, steps, heights);
+        }
+
+        c.close();
+
+        db.execSQL(
+                "UPDATE " + HEALTH_TABLE +
+                        " SET " + HEALTH_TABLE_SCREEN_TIME + " = " + HEALTH_TABLE_SCREEN_TIME + " + " + screenTime +
+                        " SET " + HEALTH_TABLE_UNLOCKS + " = " + HEALTH_TABLE_UNLOCKS + " + " + unlocks +
+                        " SET " + HEALTH_TABLE_PICKUPS + " = " + HEALTH_TABLE_PICKUPS + " + " + pickups +
+                        " SET " + HEALTH_TABLE_DIST + " = " + HEALTH_TABLE_DIST + " + " + walkingDist +
+                        " SET " + HEALTH_TABLE_STEPS + " = " + HEALTH_TABLE_STEPS + " + " + steps +
+                        " SET " + HEALTH_TABLE_HEIGHTS + " = " + HEALTH_TABLE_HEIGHTS + " + " + heights +
+                        " WHERE " + HEALTH_TABLE_TIMESTAMP + " = " + timestampDate
+        );
+
+
+        return true;
+    }
 }
