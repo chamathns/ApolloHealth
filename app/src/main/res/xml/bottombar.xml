@@ -13,6 +13,6 @@
         id="@/tab_profile"
         icon="@drawable/profiles"
         activeColor="#009688"
-        inActiveColor="#d3d3d3"/>
+        inActiveColor="#d3d3d3" />
 </tabs>
 
