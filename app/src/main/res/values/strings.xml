@@ -3,7 +3,7 @@
     <string name="about_user_name">Name</string>
     <string name="user_name_text">Chamath Samarawickrama</string>
     <string name="about_you_text">About you</string>
-    <string name="about_you_description">This information lets Apollo Helath estimate distance, calories, and the intensity of your activity.</string>
+    <string name="about_you_description">This information lets Apollo Health estimate distance, calories, and the intensity of your activity.</string>
     <string name="edit_field_image">editText</string>
     <string name="about_gender">Gender</string>
     <string name="gender_text">Male</string>

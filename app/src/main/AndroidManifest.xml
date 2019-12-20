@@ -30,6 +30,12 @@
             android:label="Journal"
             android:theme="@style/AppTheme" />
 
+        <service android:name=".unlockcounter.LockerService" />
+        <receiver android:name=".unlockcounter.BroadReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"></action>
+            </intent-filter>
+        </receiver>
     </application>
 
 
