@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -14,11 +15,14 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.apollohealth.unlockcounter.LockerService;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+    public static final String LOG_TAG = "APOLLOHEALTH_MAIN";
+
     DatabaseHandler myDB;
 
     private Spinner timeSpinner;
@@ -29,6 +33,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        startService(new Intent(MainActivity.this, LockerService.class));
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -106,4 +111,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         Intent aboutIntent = new Intent(MainActivity.this, AboutActivity.class);
         startActivityForResult(aboutIntent, 1);
     }
+
+
 }
