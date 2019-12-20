@@ -4,8 +4,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
-import android.app.ActivityManager;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -27,9 +25,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     DatabaseHandler myDB;
 
-    LockerService lockerService;
-    Intent lockerServiceIntent;
-
     private Spinner timeSpinner;
     private TextView physicalTextView;
     private TextView emotionalTextView;
@@ -38,15 +33,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        startService(new Intent(MainActivity.this, LockerService.class));
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        lockerService = new LockerService(this);
-        lockerServiceIntent = new Intent(this, lockerService.getClass());
-
-        if(!isServiceRunning(lockerService.getClass())){
-            startService(lockerServiceIntent);
-        }
 
         myDB = new DatabaseHandler(this);
 
@@ -121,24 +110,5 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     public void dpClick(View view) {
         Intent aboutIntent = new Intent(MainActivity.this, AboutActivity.class);
         startActivityForResult(aboutIntent, 1);
-    }
-
-    private boolean isServiceRunning(Class<?> serviceClass) {
-        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-            if (serviceClass.getName().equals(service.service.getClassName())) {
-                Log.i ("isServiceRunning?", true+"");
-                return true;
-            }
-        }
-        Log.i ("isServiceRunning?", false+"");
-        return false;
-    }
-
-    @Override
-    protected void onDestroy() {
-        stopService(lockerServiceIntent);
-        Log.d(LOG_TAG, "Locker service stopped");
-        super.onDestroy();
     }
 }

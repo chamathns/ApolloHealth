@@ -2,7 +2,6 @@ package com.example.apollohealth.unlockcounter;
 
 import android.app.Service;
 import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.IBinder;
@@ -14,15 +13,6 @@ public class LockerService extends Service {
     public static final String LOG_TAG = "UC_SERVICE";
 
     private BroadcastReceiver mReceiver = null;
-
-    public LockerService(Context appContext) {
-        super();
-        Log.d(LOG_TAG, "Service constructor called");
-    }
-
-    public LockerService() {
-
-    }
 
     @Nullable
     @Override
@@ -44,8 +34,8 @@ public class LockerService extends Service {
         filter.addAction(Intent.ACTION_SCREEN_OFF);
 
         mReceiver = new BroadReceiver();
-
         registerReceiver(mReceiver, filter);
+        
         Log.d(LOG_TAG, "Service onCreate: mReceiver is registered.");
     }
 
@@ -53,8 +43,12 @@ public class LockerService extends Service {
     public void onDestroy() {
         super.onDestroy();
 
-        Log.d(LOG_TAG, "Unlock counter, on destroy");
-        Intent broadcastIntent =new Intent(this,BroadReceiver.class);
-        sendBroadcast(broadcastIntent);
+        if (mReceiver != null) {
+            unregisterReceiver(mReceiver);
+            Log.d(LOG_TAG, "Service onDestroy: mReceiver is unregistered.");
+        }
+        mReceiver = null;
+
+        Log.d(LOG_TAG, "Unlock counter service stopped");
     }
 }
