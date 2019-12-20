@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        
+
         myDB = new DatabaseHandler(this);
 
         profileImage = (CircleImageView) findViewById(R.id.profile_image);
