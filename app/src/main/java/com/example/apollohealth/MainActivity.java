@@ -19,6 +19,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+    DatabaseHandler myDB;
 
     private Spinner timeSpinner;
     private TextView physicalTextView;
@@ -30,6 +31,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        
+        myDB = new DatabaseHandler(this);
+
         profileImage = (CircleImageView) findViewById(R.id.profile_image);
 
         addItemsSpinner();
