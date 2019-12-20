@@ -35,7 +35,7 @@ public class LockerService extends Service {
 
         mReceiver = new BroadReceiver();
         registerReceiver(mReceiver, filter);
-        
+
         Log.d(LOG_TAG, "Service onCreate: mReceiver is registered.");
     }
 

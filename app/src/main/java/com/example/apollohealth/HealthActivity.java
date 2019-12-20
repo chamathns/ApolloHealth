@@ -43,7 +43,7 @@ public class HealthActivity extends Activity implements SensorEventListener, Ste
         addBottomNavigation();
 
         initHeight = 0;
-        metrics = new MetricGenerator(193,88);
+        metrics = new MetricGenerator(193, 88);
 
         // Get an instance of the SensorManager
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
@@ -131,12 +131,12 @@ public class HealthActivity extends Activity implements SensorEventListener, Ste
                 pressureText.setText(
                         String.format("Flights climbed: %d Diff: %d \nInitial: %.2f \nCurrent: %.2f", flights, heightDiff, initHeight, cHeight));
                 initHeight = cHeight;
-                caloryText.setText(Float.toString(metrics.caloriesBurned(numSteps,flights)));
+                caloryText.setText(Float.toString(metrics.caloriesBurned(numSteps, flights)));
             } else {
                 pressureText.setText(
                         String.format("Flights climbed: %d Diff: %d \nInitial: %.2f \nCurrent: %.2f", flights, heightDiff, initHeight, cHeight));
 
-                caloryText.setText(Float.toString(metrics.caloriesBurned(numSteps,flights)));
+                caloryText.setText(Float.toString(metrics.caloriesBurned(numSteps, flights)));
             }
         }
     }
@@ -150,7 +150,7 @@ public class HealthActivity extends Activity implements SensorEventListener, Ste
     public void step(long timeNs) {
         numSteps++;
         tvSteps.setText(TEXT_NUM_STEPS + numSteps);
-        caloryText.setText(Float.toString(metrics.caloriesBurned(numSteps,flights)));
+        caloryText.setText(Float.toString(metrics.caloriesBurned(numSteps, flights)));
     }
 
     @Override
