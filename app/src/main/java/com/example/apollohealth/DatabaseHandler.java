@@ -205,12 +205,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         db.execSQL(
                 "UPDATE " + HEALTH_TABLE +
-                        " SET " + HEALTH_TABLE_SCREEN_TIME + " = " + HEALTH_TABLE_SCREEN_TIME + " + " + screenTime +
-                        " SET " + HEALTH_TABLE_UNLOCKS + " = " + HEALTH_TABLE_UNLOCKS + " + " + unlocks +
-                        " SET " + HEALTH_TABLE_PICKUPS + " = " + HEALTH_TABLE_PICKUPS + " + " + pickups +
-                        " SET " + HEALTH_TABLE_DIST + " = " + HEALTH_TABLE_DIST + " + " + walkingDist +
-                        " SET " + HEALTH_TABLE_STEPS + " = " + HEALTH_TABLE_STEPS + " + " + steps +
-                        " SET " + HEALTH_TABLE_HEIGHTS + " = " + HEALTH_TABLE_HEIGHTS + " + " + heights +
+                        " SET " + HEALTH_TABLE_SCREEN_TIME + " = " + HEALTH_TABLE_SCREEN_TIME + " + " + screenTime + ", " +
+                        HEALTH_TABLE_UNLOCKS + " = " + HEALTH_TABLE_UNLOCKS + " + " + unlocks + ", " +
+                        HEALTH_TABLE_PICKUPS + " = " + HEALTH_TABLE_PICKUPS + " + " + pickups + ", " +
+                        HEALTH_TABLE_DIST + " = " + HEALTH_TABLE_DIST + " + " + walkingDist + ", " +
+                        HEALTH_TABLE_STEPS + " = " + HEALTH_TABLE_STEPS + " + " + steps + ", " +
+                        HEALTH_TABLE_HEIGHTS + " = " + HEALTH_TABLE_HEIGHTS + " + " + heights +
                         " WHERE " + HEALTH_TABLE_TIMESTAMP + " = " + timestampDate + ";"
         );
 
