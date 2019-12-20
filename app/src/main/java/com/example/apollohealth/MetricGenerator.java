@@ -20,7 +20,7 @@ public class MetricGenerator {
         this.weight = weight;
     }
 
-    public float stepsToKm(int steps) {
+    public float stepsToKm(float steps) {
         float kms = steps * 0.74f * 0.001f;
 
         return kms;
@@ -31,9 +31,9 @@ public class MetricGenerator {
 
         float cbWalking = ((WALKING_MET * weight * 3.5f) / 200) * (stepsToKm(steps) / WALKING_SPEED) * 60;
 
-        float cbAscending = ((ASCENDING_MET * weight * 3.5f) / 200) * (stepsToKm((int) Math.floor(meanFlights * STEPS_PER_FLIGHT)) / WALKING_SPEED_UP) * 60;
+        float cbAscending = ((ASCENDING_MET * weight * 3.5f) / 200) * (stepsToKm(meanFlights * STEPS_PER_FLIGHT) / WALKING_SPEED_UP) * 60;
 
-        float cbDescending = ((DESCENDING_MET * weight * 3.5f) / 200) * (stepsToKm((int) Math.floor(meanFlights * STEPS_PER_FLIGHT)) / WALKING_SPEED_DOWN) * 60;
+        float cbDescending = ((DESCENDING_MET * weight * 3.5f) / 200) * (stepsToKm(meanFlights * STEPS_PER_FLIGHT) / WALKING_SPEED_DOWN) * 60;
 
         float cbTotal = cbWalking + cbAscending + cbDescending;
 
