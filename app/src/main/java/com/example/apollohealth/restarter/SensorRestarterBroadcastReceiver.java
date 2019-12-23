@@ -29,7 +29,7 @@ public class SensorRestarterBroadcastReceiver extends BroadcastReceiver {
 //        Log.i(SensorRestarterBroadcastReceiver.class.getSimpleName(), "Service Stops! ooooooooooooooooohhhhhhhhhweeeeeeeeeeeeee!!!!");
 //        context.startService(new Intent(context, SensorService.class));
         Log.d("Broadcast message", "about to start timer" + context.toString());
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             scheduleJob(context);
         } else {
             ProcessMainClass bck = new ProcessMainClass();

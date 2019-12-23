@@ -1,4 +1,4 @@
-package com.example.apollohealth;
+package com.example.apollohealth.db;
 
 import android.content.ContentValues;
 import android.content.Context;

@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-import com.example.apollohealth.DatabaseHandler;
+import com.example.apollohealth.db.DatabaseHandler;
 
 public class UnlockReceiver extends BroadcastReceiver {
     public static final String LOG_TAG = "UC_SCREENEVENT";
