@@ -13,8 +13,7 @@
             android:name=".SensorRestarterBroadcastReceiver"
             android:enabled="true"
             android:exported="true"
-            android:label="RestartServiceWhenStopped">
-        </receiver>
+            android:label="RestartServiceWhenStopped"></receiver>
 
         <service
             android:name=".SensorService"
@@ -44,9 +43,20 @@
         <service
             android:name=".unlockcounter.LockerService"
             android:enabled="true" />
-
         <receiver
-            android:name=".unlockcounter.BroadReceiver"
+            android:name=".unlockcounter.UnlockReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
+        <service
+            android:name=".screentimecounter.ScreenTimeService"
+            android:enabled="true" />
+        <receiver
+            android:name=".screentimecounter.ScreenTimeReceiver"
             android:enabled="true"
             android:exported="true">
             <intent-filter>

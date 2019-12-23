@@ -15,6 +15,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.apollohealth.screentimecounter.ScreenTimeService;
 import com.example.apollohealth.unlockcounter.LockerService;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -34,6 +35,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         startService(new Intent(MainActivity.this, LockerService.class));
+        startService(new Intent(MainActivity.this, ScreenTimeService.class));
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
