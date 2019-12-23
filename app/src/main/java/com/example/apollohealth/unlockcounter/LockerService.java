@@ -33,10 +33,10 @@ public class LockerService extends Service {
         IntentFilter filter = new IntentFilter(Intent.ACTION_USER_PRESENT);
         filter.addAction(Intent.ACTION_SCREEN_OFF);
 
-        mReceiver = new BroadReceiver();
+        mReceiver = new UnlockReceiver();
         registerReceiver(mReceiver, filter);
 
-        Log.d(LOG_TAG, "Service onCreate: mReceiver is registered.");
+        Log.d(LOG_TAG, "LockerService onCreate: mReceiver is registered.");
     }
 
     @Override
@@ -45,7 +45,7 @@ public class LockerService extends Service {
 
         if (mReceiver != null) {
             unregisterReceiver(mReceiver);
-            Log.d(LOG_TAG, "Service onDestroy: mReceiver is unregistered.");
+            Log.d(LOG_TAG, "LockerService onDestroy: mReceiver is unregistered.");
         }
         mReceiver = null;
 

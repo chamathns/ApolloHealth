@@ -7,7 +7,7 @@ import android.util.Log;
 
 import com.example.apollohealth.DatabaseHandler;
 
-public class BroadReceiver extends BroadcastReceiver {
+public class UnlockReceiver extends BroadcastReceiver {
     public static final String LOG_TAG = "UC_SCREENEVENT";
 
     @Override
