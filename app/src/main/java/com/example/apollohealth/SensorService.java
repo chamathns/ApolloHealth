@@ -3,6 +3,10 @@ package com.example.apollohealth;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.Build;
 import android.os.IBinder;
 import android.util.Log;
@@ -12,12 +16,23 @@ import androidx.annotation.Nullable;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class SensorService extends Service {
+import com.example.apollohealth.db.DatabaseHandler;
+
+import static java.lang.Math.abs;
+
+public class SensorService extends Service implements SensorEventListener {
 
     protected static final int NOTIFICATION_ID = 1337;
     private static String TAG = "Service";
     private static Service mCurrentService;
     private int counter = 0;
+
+    private SensorManager sensorManager;
+    private Sensor pressureSensor;
+
+    private float initHeight;
+    private int flights = 0;
+    private MetricGenerator metrics;
 
     public SensorService() {
         super();
@@ -31,6 +46,8 @@ public class SensorService extends Service {
             restartForeground();
         }
         mCurrentService = this;
+        Log.i("Important", "On crreaaaaaaaaaaaaaaaaaaaaaaaaaaaaate");
+
     }
 
     @Override
@@ -38,6 +55,12 @@ public class SensorService extends Service {
         super.onStartCommand(intent, flags, startId);
         Log.d(TAG, "restarting Service !!");
         counter = 0;
+//        flights = 0;
+
+        sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+        pressureSensor = sensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE);
+
+        sensorManager.registerListener(this, pressureSensor, SensorManager.SENSOR_DELAY_NORMAL);
 
         // it has been killed by Android and now it is restarted. We must make sure to have reinitialised everything
         if (intent == null) {
@@ -92,6 +115,7 @@ public class SensorService extends Service {
     public void onDestroy() {
         super.onDestroy();
         Log.i(TAG, "onDestroy called");
+        sensorManager.unregisterListener(this);
         // restart the never ending service
         Intent broadcastIntent = new Intent(Globals.RESTART_INTENT);
         sendBroadcast(broadcastIntent);
@@ -170,5 +194,41 @@ public class SensorService extends Service {
 
     public static void setmCurrentService(Service mCurrentService) {
         SensorService.mCurrentService = mCurrentService;
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        if (event.sensor.getType() == Sensor.TYPE_PRESSURE) {
+//            Log.i("Sensor", "Sensor changeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
+            float[] pValues = event.values;
+            float cHeight = SensorManager.getAltitude(SensorManager.PRESSURE_STANDARD_ATMOSPHERE, pValues[0]);
+            if (initHeight == 0) {
+                initHeight = cHeight;
+            }
+            int heightDiff = abs((int) (cHeight - initHeight));
+            if (1 <= heightDiff / 3 && heightDiff / 3 <= 2) {
+                flights += heightDiff / 3;
+                Log.i("DB", "Writing flights climbed");
+                DatabaseHandler myDB = new DatabaseHandler(this);
+                myDB.updateHealthData(System.currentTimeMillis(), 0, 0, 0, 0, 0, 1);
+                myDB.close();
+//            pressureText.setText(String.format("%.3f mbar", pValues[0]));
+//                pressureText.setText(
+//                        String.format("Flights climbed: %d Diff: %d \nInitial: %.2f \nCurrent: %.2f", flights, heightDiff, initHeight, cHeight));
+                initHeight = cHeight;
+//                caloryText.setText(Float.toString(metrics.caloriesBurned(numSteps, flights)));
+            } else {
+//                Log.i("DB", "Sensor reading");
+//                pressureText.setText(
+//                        String.format("Flights climbed: %d Diff: %d \nInitial: %.2f \nCurrent: %.2f", flights, heightDiff, initHeight, cHeight));
+
+//                caloryText.setText(Float.toString(metrics.caloriesBurned(numSteps, flights)));
+            }
+        }
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int i) {
+
     }
 }

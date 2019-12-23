@@ -2,11 +2,13 @@ package com.example.apollohealth;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.database.Cursor;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -16,6 +18,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import com.example.apollohealth.db.DatabaseHandler;
 
 import static java.lang.Math.abs;
 
@@ -35,6 +39,7 @@ public class HealthActivity extends Activity implements SensorEventListener, Ste
     private float initHeight;
     private int flights = 0;
     private MetricGenerator metrics;
+    private DatabaseHandler myDB;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -58,14 +63,23 @@ public class HealthActivity extends Activity implements SensorEventListener, Ste
         startBtn = (Button) findViewById(R.id.startBtn);
         endBtn = (Button) findViewById(R.id.endBtn);
 
+        myDB = new DatabaseHandler(this);
+
 
         startBtn.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View arg0) {
 
-                numSteps = 0;
-                sensorManager.registerListener(HealthActivity.this, accel, SensorManager.SENSOR_DELAY_FASTEST);
+                Log.i("DB", "Reading from database");
+                Cursor physicalData =  myDB.getPhysicalData(3);
+                physicalData.moveToFirst();
+                String height = physicalData.getString(2);
+
+                tvSteps.setText(height);
+
+//                numSteps = 0;
+//                sensorManager.registerListener(HealthActivity.this, accel, SensorManager.SENSOR_DELAY_FASTEST);
 
             }
         });
@@ -76,7 +90,7 @@ public class HealthActivity extends Activity implements SensorEventListener, Ste
             @Override
             public void onClick(View arg0) {
 
-                sensorManager.unregisterListener(HealthActivity.this);
+//                sensorManager.unregisterListener(HealthActivity.this);
 
             }
         });
@@ -163,5 +177,6 @@ public class HealthActivity extends Activity implements SensorEventListener, Ste
     protected void onPause() {
         super.onPause();
         sensorManager.unregisterListener(this);
+        myDB.close();
     }
 }
