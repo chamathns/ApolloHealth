@@ -4,16 +4,19 @@ import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.apollohealth.restarter.SensorRestarterBroadcastReceiver;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-public class JournalActivity extends Activity {
+public class JournalActivity extends AppCompatActivity {
 
     Intent mServiceIntent;
     private SensorService mSensorService;
@@ -27,13 +30,13 @@ public class JournalActivity extends Activity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ctx = this;
-
+//
         setContentView(R.layout.activity_journal);
-        mSensorService = new SensorService((getCtx()));
-        mServiceIntent = new Intent(getCtx(), mSensorService.getClass());
-        if(!isMyServiceRunning(mSensorService.getClass())){
-            startService(mServiceIntent);
-        }
+//        mSensorService = new SensorService((getCtx()));
+//        mServiceIntent = new Intent(getCtx(), mSensorService.getClass());
+//        if(!isMyServiceRunning(mSensorService.getClass())){
+//            startService(mServiceIntent);
+//        }
 
         addBottomNavigation();
 
@@ -52,12 +55,23 @@ public class JournalActivity extends Activity {
     }
 
     @Override
-    protected void onDestroy() {
-        stopService(mServiceIntent);
-        Log.i("MAINACT", "onDestroy!");
-        super.onDestroy();
-
+    protected void onResume() {
+        super.onResume();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+            SensorRestarterBroadcastReceiver.scheduleJob(getApplicationContext());
+        } else {
+            ProcessMainClass bck = new ProcessMainClass();
+            bck.launchService(getApplicationContext());
+        }
     }
+
+//    @Override
+//    protected void onDestroy() {
+//        stopService(mServiceIntent);
+//        Log.i("MAINACT", "onDestroy!");
+//        super.onDestroy();
+//
+//    }
 
 
     public void addBottomNavigation() {
