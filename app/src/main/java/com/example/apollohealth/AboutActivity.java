@@ -1,23 +1,66 @@
 package com.example.apollohealth;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentActivity;
 
+import com.example.apollohealth.ui.dialog.UsernameDialog;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-public class AboutActivity extends Activity {
+import customfonts.MyTextView_Roboto_Regular;
+
+public class AboutActivity extends FragmentActivity implements UsernameDialog.UserNameDialogListener {
+
+    private MyTextView_Roboto_Regular textview_username;
+    private MyTextView_Roboto_Regular textview_gender;
+    private MyTextView_Roboto_Regular textview_height;
+    private MyTextView_Roboto_Regular textview_weight;
+    private ImageView imageview_username;
+    private ImageView imageview_gender;
+    private ImageView imageview_height;
+    private ImageView imageview_weight;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_about);
+
+        textview_username = (MyTextView_Roboto_Regular) findViewById(R.id.textview_username);
+        imageview_username = (ImageView) findViewById(R.id.imageview_edit_username);
+
+        addEditUserNameDialog(imageview_username,textview_username);
+
         addBottomNavigation();
+
+    }
+
+    public void addEditUserNameDialog(ImageView imageview_username, MyTextView_Roboto_Regular textview_username){
+        imageview_username.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openEditUserNameDialog();
+            }
+        });
+
+        textview_username.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openEditUserNameDialog();
+            }
+        });
+
+    }
+
+    public void openEditUserNameDialog() {
+        UsernameDialog usernameDialog = new UsernameDialog();
+        usernameDialog.show(getSupportFragmentManager(),"edit username");
 
     }
 
@@ -50,5 +93,15 @@ public class AboutActivity extends Activity {
                 return false;
             }
         });
+    }
+
+    @Override
+    public void onDialogPositiveClick(String userName) {
+        textview_username.setText(userName);
+    }
+
+    @Override
+    public void onDialogNegativeClick(DialogFragment dialog) {
+
     }
 }
