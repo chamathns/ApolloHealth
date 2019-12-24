@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.example.apollohealth">
 
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    <uses-permission android:name="android.permission.RECEIVE_LAUNCH_BROADCASTS"/>
-
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.RECEIVE_LAUNCH_BROADCASTS" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission
+        android:name="android.permission.PACKAGE_USAGE_STATS"
+        tools:ignore="ProtectedPermissions" />
 
     <application
         android:allowBackup="true"
@@ -14,20 +17,21 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
         <receiver
             android:name=".restarter.SensorRestarterBroadcastReceiver"
             android:enabled="true"
             android:exported="true"
-            android:label="RestartServiceWhenStopped"></receiver>
+            android:label="RestartServiceWhenStopped" />
 
-        <service android:name=".restarter.JobService"
+        <service
+            android:name=".restarter.JobService"
             android:permission="android.permission.BIND_JOB_SERVICE" />
-
         <service
             android:name=".SensorService"
             android:clearTaskOnLaunch="true"
-            android:excludeFromRecents="true"
             android:enabled="true"
+            android:excludeFromRecents="true"
             android:exported="true" />
 
         <activity android:name=".MainActivity">
@@ -43,16 +47,21 @@
             android:theme="@style/AppTheme" />
         <activity
             android:name=".HealthActivity"
-            android:label="Helath"
+            android:label="Health"
             android:theme="@style/AppTheme" />
         <activity
             android:name=".JournalActivity"
             android:label="Journal"
             android:theme="@style/AppTheme" />
+        <activity
+            android:name=".AppMonitorActivity"
+            android:label="AppMonitor"
+            android:theme="@style/AppTheme" />
 
         <service
             android:name=".unlockcounter.LockerService"
             android:enabled="true" />
+
         <receiver
             android:name=".unlockcounter.UnlockReceiver"
             android:enabled="true"
@@ -65,6 +74,7 @@
         <service
             android:name=".screentimecounter.ScreenTimeService"
             android:enabled="true" />
+
         <receiver
             android:name=".screentimecounter.ScreenTimeReceiver"
             android:enabled="true"

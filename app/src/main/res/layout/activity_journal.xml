@@ -7,8 +7,7 @@
     android:background="#FFFFFF"
     tools:context=".MainActivity">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
@@ -19,6 +18,12 @@
             android:text="activity_journal.xml"
             android:textSize="20sp"
             android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/btn_nav_app_monitor"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="App Monitor" />
 
     </LinearLayout>
 

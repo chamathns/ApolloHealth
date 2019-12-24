@@ -65,12 +65,10 @@ public class HealthActivity extends Activity implements SensorEventListener, Ste
 
         myDB = new DatabaseHandler(this);
 
-
         startBtn.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View arg0) {
-
                 Log.i("DB", "Reading from database");
                 Cursor physicalData =  myDB.getPhysicalData(3);
                 physicalData.moveToFirst();

@@ -1,6 +1,5 @@
 package com.example.apollohealth;
 
-import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
@@ -8,6 +7,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -21,6 +22,8 @@ public class JournalActivity extends AppCompatActivity {
     Intent mServiceIntent;
     private SensorService mSensorService;
     Context ctx;
+
+    private Button btnNavToAppMonitor;
 
     public Context getCtx() {
         return ctx;
@@ -38,26 +41,39 @@ public class JournalActivity extends AppCompatActivity {
 //            startService(mServiceIntent);
 //        }
 
+        btnNavToAppMonitor = findViewById(R.id.btn_nav_app_monitor);
+        btnNavToAppMonitor.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                goToAppMonitor();
+            }
+        });
+
         addBottomNavigation();
 
+    }
+
+    public void goToAppMonitor(){
+        Intent intent = new Intent(JournalActivity.this, AppMonitorActivity.class);
+        startActivity(intent);
     }
 
     private boolean isMyServiceRunning(Class<?> serviceClass) {
         ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
         for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
             if (serviceClass.getName().equals(service.service.getClassName())) {
-                Log.i ("isMyServiceRunning?", true+"");
+                Log.i("isMyServiceRunning?", true + "");
                 return true;
             }
         }
-        Log.i ("isMyServiceRunning?", false+"");
+        Log.i("isMyServiceRunning?", false + "");
         return false;
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             SensorRestarterBroadcastReceiver.scheduleJob(getApplicationContext());
         } else {
             ProcessMainClass bck = new ProcessMainClass();
@@ -81,7 +97,6 @@ public class JournalActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                 final int result = 1;
                 switch (menuItem.getItemId()) {
-
                     case R.id.action_profile:
                         Intent profileIntent = new Intent(JournalActivity.this, MainActivity.class);
                         startActivityForResult(profileIntent, result);
