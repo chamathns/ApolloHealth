@@ -5,37 +5,49 @@ import android.app.usage.UsageStats;
 import android.app.usage.UsageStatsManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.MenuItem;
-
-import com.google.android.material.bottomnavigation.BottomNavigationView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Map;
 
 public class AppMonitorActivity extends AppCompatActivity {
     public static final int MY_PERMISSIONS_REQUEST_PACKAGE_USAGE_STATS = 0;
+    public static final String LOG_TAG = "AM_ACTIVITY";
 
     private class UsageStat {
         private String packageName;
         private long usageTime;
+        private String appName;
+        private Drawable icon;
 
         private UsageStat(String packageName, long usageTime) {
             this.packageName = packageName;
             this.usageTime = usageTime;
+        }
+
+        public void setAppName(ApplicationInfo app, PackageManager packageManager) {
+            this.appName = (String) packageManager.getApplicationLabel(app);
+        }
+
+        public void setIcon(ApplicationInfo app, PackageManager packageManager) {
+            this.icon = packageManager.getApplicationIcon(app);
         }
 
         public String getPackageName() {
@@ -46,10 +58,18 @@ public class AppMonitorActivity extends AppCompatActivity {
             return this.usageTime;
         }
 
+        public String getAppName() {
+            return this.appName;
+        }
+
+        public Drawable getIcon() {
+            return this.icon;
+        }
+
         @NonNull
         @Override
         public String toString() {
-            return this.packageName + ": " + this.usageTime;
+            return "Package: " + this.packageName + "\nApp: " + this.appName + "\nIcon: " + this.icon + "\nUsage Time (ms): " + this.usageTime;
         }
     }
 
@@ -59,57 +79,14 @@ public class AppMonitorActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_app_monitor);
 
-        AppOpsManager appOps = (AppOpsManager) getSystemService(Context.APP_OPS_SERVICE);
-        int mode = appOps.checkOpNoThrow(AppOpsManager.OPSTR_GET_USAGE_STATS, android.os.Process.myUid(), getPackageName());
+        List<UsageStat> usageStats = getTopUsedApps(3, 5);
 
-        Log.d("MAIN_TAG", "------------------------------------");
-
-        if (mode == AppOpsManager.MODE_ALLOWED) {
-            Log.d("MAIN_TAG", "MODE_ALLOWED");
-        } else {
-            Log.d("MAIN_TAG", "MODE_NOT_ALLOWED");
-            startActivityForResult(new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS), MY_PERMISSIONS_REQUEST_PACKAGE_USAGE_STATS);
+        for (UsageStat stat : usageStats) {
+            Log.d(LOG_TAG, stat.toString());
+            Log.d(LOG_TAG, "\n");
         }
-
-        Log.d("MAIN_TAG", "------------------------------------");
-
-        long endMillis = System.currentTimeMillis();
-        long startMillis = endMillis - 24 * 60 * 60 * 1000L;
-
-        UsageStatsManager mUsageStatsManager = (UsageStatsManager) getApplicationContext().getSystemService(Context.USAGE_STATS_SERVICE);
-        Map<String, UsageStats> lUsageStatsMap = mUsageStatsManager.queryAndAggregateUsageStats(startMillis, endMillis);
-
-        ArrayList<UsageStat> usageStats = new ArrayList<>();
-
-        Log.d("MAIN_TAG", String.valueOf(lUsageStatsMap.size()));
-
-        Log.d("MAIN_TAG", "------------------------------------");
-
-        for (Map.Entry<String, UsageStats> entry : lUsageStatsMap.entrySet()) {
-            String packageName = entry.getKey();
-            long totalTimeUsageInMillis = lUsageStatsMap.get(packageName).getTotalTimeInForeground();
-
-            usageStats.add(new UsageStat(packageName, totalTimeUsageInMillis));
-        }
-
-        Collections.sort(usageStats, new Comparator<UsageStat>() {
-            @Override
-            public int compare(UsageStat us1, UsageStat us2) {
-                return Long.compare(us2.getUsageTime(), us1.getUsageTime());
-            }
-        });
-
-        for (UsageStat usageStat:usageStats){
-            Log.d("MAIN_TAG", usageStat.toString());
-        }
-
-        Log.d("MAIN_TAG", "------------------------------------");
-
-
 
         addBottomNavigation();
-
-
 
 //        BottomNavigationView navView = findViewById(R.id.nav_view);
 //        // Passing each menu ID as a set of Ids because each
@@ -120,6 +97,57 @@ public class AppMonitorActivity extends AppCompatActivity {
 //        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
 //        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
 //        NavigationUI.setupWithNavController(navView, navController);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    private List<UsageStat> getTopUsedApps(int numDays, int numApps) {
+        AppOpsManager appOps = (AppOpsManager) getSystemService(Context.APP_OPS_SERVICE);
+        int mode = appOps.checkOpNoThrow(AppOpsManager.OPSTR_GET_USAGE_STATS, android.os.Process.myUid(), getPackageName());
+
+        if (mode == AppOpsManager.MODE_ALLOWED) {
+            Log.d(LOG_TAG, "MODE_ALLOWED");
+        } else {
+            Log.d(LOG_TAG, "MODE_NOT_ALLOWED");
+            startActivityForResult(new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS), MY_PERMISSIONS_REQUEST_PACKAGE_USAGE_STATS);
+        }
+
+        long endMillis = System.currentTimeMillis();
+        long startMillis = endMillis - numDays * 24 * 60 * 60 * 1000L;
+
+        UsageStatsManager mUsageStatsManager = (UsageStatsManager) getApplicationContext().getSystemService(Context.USAGE_STATS_SERVICE);
+        Map<String, UsageStats> lUsageStatsMap = mUsageStatsManager.queryAndAggregateUsageStats(startMillis, endMillis);
+
+        ArrayList<UsageStat> usageStats = new ArrayList<>();
+        PackageManager packageManager = getPackageManager();
+
+        for (Map.Entry<String, UsageStats> entry : lUsageStatsMap.entrySet()) {
+            String packageName = entry.getKey();
+            long totalTimeUsageInMillis = lUsageStatsMap.get(packageName).getTotalTimeInForeground();
+
+            UsageStat stat = new UsageStat(packageName, totalTimeUsageInMillis);
+
+            try {
+                ApplicationInfo app = this.getPackageManager().getApplicationInfo(stat.getPackageName(), 0);
+
+                stat.setAppName(app, packageManager);
+                stat.setIcon(app, packageManager);
+            } catch (PackageManager.NameNotFoundException e) {
+                Toast toast = Toast.makeText(this, "error in getting icon", Toast.LENGTH_SHORT);
+                toast.show();
+                e.printStackTrace();
+            }
+
+            usageStats.add(stat);
+        }
+
+        Collections.sort(usageStats, new Comparator<UsageStat>() {
+            @Override
+            public int compare(UsageStat us1, UsageStat us2) {
+                return Long.compare(us2.getUsageTime(), us1.getUsageTime());
+            }
+        });
+
+        return usageStats.subList(0, numApps);
     }
 
     public void addBottomNavigation() {
