@@ -117,6 +117,7 @@
                         android:padding="10dp">
 
                         <customfonts.MyTextView_Roboto_Regular
+                            android:id="@+id/stepsText"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
@@ -131,7 +132,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:paddingTop="1dp"
-                            android:text="steps"
+                            android:text="Steps"
                             android:textAlignment="center"
                             android:textColor="#9b9b9b"
                             android:textSize="14sp" />
@@ -146,6 +147,7 @@
                         android:padding="10dp">
 
                         <customfonts.MyTextView_Roboto_Regular
+                            android:id="@+id/caloriesText"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
@@ -160,7 +162,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:paddingTop="1dp"
-                            android:text="Cal"
+                            android:text="Calories"
                             android:textAlignment="center"
                             android:textColor="#9b9b9b"
                             android:textSize="14sp" />
@@ -174,6 +176,7 @@
                         android:padding="10dp">
 
                         <customfonts.MyTextView_Roboto_Regular
+                            android:id="@+id/flightText"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
@@ -188,7 +191,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:paddingTop="1dp"
-                            android:text="km"
+                            android:text="Flights"
                             android:textAlignment="center"
                             android:textColor="#9b9b9b"
                             android:textSize="14sp" />
