@@ -107,7 +107,7 @@ public class AppMonitorActivity extends AppCompatActivity {
 
 
 
-//        addBottomNavigation();
+        addBottomNavigation();
 
 
 
@@ -122,35 +122,35 @@ public class AppMonitorActivity extends AppCompatActivity {
 //        NavigationUI.setupWithNavController(navView, navController);
     }
 
-//    public void addBottomNavigation() {
-//        BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
-//        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-//            @Override
-//            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-//                final int result = 1;
-//                switch (menuItem.getItemId()) {
-//
-//                    case R.id.action_profile:
-//                        Intent profileIntent = new Intent(HealthActivity.this, MainActivity.class);
-//                        startActivityForResult(profileIntent, result);
-//                        break;
-//
-//                    case R.id.action_health:
-//                        Intent healthIntent = new Intent(HealthActivity.this, HealthActivity.class);
-//                        startActivityForResult(healthIntent, result);
-//                        break;
-//
-//                    case R.id.action_journal:
-//                        Intent journalIntent = new Intent(HealthActivity.this, JournalActivity.class);
-//                        startActivityForResult(journalIntent, result);
-//                        break;
-////                        startActivity(journalIntent);
-//                    default:
-//                        throw new IllegalStateException("Unexpected value: " + menuItem.getItemId());
-//                }
-//                return false;
-//            }
-//        });
-//    }
+    public void addBottomNavigation() {
+        BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                final int result = 1;
+                switch (menuItem.getItemId()) {
+
+                    case R.id.action_profile:
+                        Intent profileIntent = new Intent(AppMonitorActivity.this, MainActivity.class);
+                        startActivityForResult(profileIntent, result);
+                        break;
+
+                    case R.id.action_health:
+                        Intent healthIntent = new Intent(AppMonitorActivity.this, HealthActivity.class);
+                        startActivityForResult(healthIntent, result);
+                        break;
+
+                    case R.id.action_journal:
+                        Intent journalIntent = new Intent(AppMonitorActivity.this, JournalActivity.class);
+                        startActivityForResult(journalIntent, result);
+                        break;
+//                        startActivity(journalIntent);
+                    default:
+                        throw new IllegalStateException("Unexpected value: " + menuItem.getItemId());
+                }
+                return false;
+            }
+        });
+    }
 
 }
