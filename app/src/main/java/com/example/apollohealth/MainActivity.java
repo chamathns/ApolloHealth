@@ -146,6 +146,16 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 duration = 365;
         }
 
+        Cursor physicalData = myDB.getPhysicalData(duration);
+        physicalData.moveToFirst();
+        if (physicalData.moveToFirst()) {
+            height = physicalData.getString(2);
+        }
+
+        flightText.setText(String.valueOf(height));
+
+        caloriesText.setText(String.valueOf(metrics.caloriesBurned(0, Integer.parseInt(height))));
+
         physicalTextView.setText(parent.getItemAtPosition(pos).toString());
         emotionalTextView.setText(parent.getItemAtPosition(pos).toString());
 
@@ -161,5 +171,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     public void dpClick(View view) {
         Intent aboutIntent = new Intent(MainActivity.this, AboutActivity.class);
         startActivityForResult(aboutIntent, 1);
+    }
+
+    protected void onPause() {
+        super.onPause();
+        myDB.close();
     }
 }

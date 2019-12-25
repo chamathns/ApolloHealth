@@ -32,6 +32,11 @@
             android:text="TextView"
             android:textSize="25sp" />
 
+        <com.jjoe64.graphview.GraphView
+            android:id="@+id/graph"
+            android:layout_width="match_parent"
+            android:layout_height="262dp" />
+
     </LinearLayout>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
