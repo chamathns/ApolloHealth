@@ -23,19 +23,12 @@ import com.example.apollohealth.db.DatabaseHandler;
 
 import static java.lang.Math.abs;
 
-public class HealthActivity extends Activity implements SensorEventListener, StepListener {
+public class HealthActivity extends Activity {
 
-    private TextView tvSteps;
     private Button startBtn;
-    private Button endBtn;
     private TextView pressureText;
     private TextView caloryText;
-    private StepDetector simpleStepDetector;
-    private SensorManager sensorManager;
-    private Sensor accel;
-    private Sensor pressureSensor;
-    private static final String TEXT_NUM_STEPS = "Number of Steps: ";
-    private int numSteps;
+
     private float initHeight;
     private int flights = 0;
     private MetricGenerator metrics;
@@ -50,18 +43,9 @@ public class HealthActivity extends Activity implements SensorEventListener, Ste
         initHeight = 0;
         metrics = new MetricGenerator(193, 88);
 
-        // Get an instance of the SensorManager
-        sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
-        accel = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        pressureSensor = sensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE);
-        simpleStepDetector = new StepDetector();
-        simpleStepDetector.registerListener(this);
-
-        tvSteps = (TextView) findViewById(R.id.test_text);
         pressureText = (TextView) findViewById(R.id.pressureText);
         caloryText = (TextView) findViewById(R.id.caloryText);
         startBtn = (Button) findViewById(R.id.startBtn);
-        endBtn = (Button) findViewById(R.id.endBtn);
 
         myDB = new DatabaseHandler(this);
 
@@ -74,24 +58,13 @@ public class HealthActivity extends Activity implements SensorEventListener, Ste
                 physicalData.moveToFirst();
                 String height = physicalData.getString(2);
 
-                tvSteps.setText(height);
+                pressureText.setText(String.format("Flights climbed: %s", height));
 
-//                numSteps = 0;
-//                sensorManager.registerListener(HealthActivity.this, accel, SensorManager.SENSOR_DELAY_FASTEST);
-
-            }
-        });
-
-
-        endBtn.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View arg0) {
-
-//                sensorManager.unregisterListener(HealthActivity.this);
+                caloryText.setText(String.format("Calories burned: %.2f", metrics.caloriesBurned(0, Integer.parseInt(height))));
 
             }
         });
+
     }
 
     public void addBottomNavigation() {
@@ -126,55 +99,13 @@ public class HealthActivity extends Activity implements SensorEventListener, Ste
     }
 
     @Override
-    public void onSensorChanged(SensorEvent event) {
-        if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
-            simpleStepDetector.updateAccel(
-                    event.timestamp, event.values[0], event.values[1], event.values[2]);
-        } else if (event.sensor.getType() == Sensor.TYPE_PRESSURE) {
-            float[] pValues = event.values;
-            float cHeight = SensorManager.getAltitude(SensorManager.PRESSURE_STANDARD_ATMOSPHERE, pValues[0]);
-            if (initHeight == 0) {
-                initHeight = cHeight;
-            }
-            int heightDiff = abs((int) (cHeight - initHeight));
-            if (1 <= heightDiff / 3 && heightDiff / 3 <= 2) {
-                flights += heightDiff / 3;
-//            pressureText.setText(String.format("%.3f mbar", pValues[0]));
-                pressureText.setText(
-                        String.format("Flights climbed: %d Diff: %d \nInitial: %.2f \nCurrent: %.2f", flights, heightDiff, initHeight, cHeight));
-                initHeight = cHeight;
-                caloryText.setText(Float.toString(metrics.caloriesBurned(numSteps, flights)));
-            } else {
-                pressureText.setText(
-                        String.format("Flights climbed: %d Diff: %d \nInitial: %.2f \nCurrent: %.2f", flights, heightDiff, initHeight, cHeight));
-
-                caloryText.setText(Float.toString(metrics.caloriesBurned(numSteps, flights)));
-            }
-        }
-    }
-
-    @Override
-    public void onAccuracyChanged(Sensor sensor, int i) {
-
-    }
-
-    @Override
-    public void step(long timeNs) {
-        numSteps++;
-        tvSteps.setText(TEXT_NUM_STEPS + numSteps);
-        caloryText.setText(Float.toString(metrics.caloriesBurned(numSteps, flights)));
-    }
-
-    @Override
     protected void onResume() {
         super.onResume();
-        sensorManager.registerListener(this, pressureSensor, SensorManager.SENSOR_DELAY_UI);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        sensorManager.unregisterListener(this);
         myDB.close();
     }
 }

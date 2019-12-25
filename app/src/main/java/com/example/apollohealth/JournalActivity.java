@@ -41,13 +41,13 @@ public class JournalActivity extends AppCompatActivity {
 //            startService(mServiceIntent);
 //        }
 
-        btnNavToAppMonitor = findViewById(R.id.btn_nav_app_monitor);
-        btnNavToAppMonitor.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                goToAppMonitor();
-            }
-        });
+//        btnNavToAppMonitor = findViewById(R.id.btn_nav_app_monitor);
+//        btnNavToAppMonitor.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                goToAppMonitor();
+//            }
+//        });
 
         addBottomNavigation();
 
@@ -73,12 +73,6 @@ public class JournalActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            SensorRestarterBroadcastReceiver.scheduleJob(getApplicationContext());
-        } else {
-            ProcessMainClass bck = new ProcessMainClass();
-            bck.launchService(getApplicationContext());
-        }
     }
 
 //    @Override

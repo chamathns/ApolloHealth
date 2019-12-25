@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.apollohealth.db.DatabaseHandler;
+import com.example.apollohealth.restarter.SensorRestarterBroadcastReceiver;
 import com.example.apollohealth.screentimecounter.ScreenTimeService;
 import com.example.apollohealth.unlockcounter.LockerService;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -45,6 +47,16 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         addItemsSpinner();
         addBottomNavigation();
+    }
+
+    protected void onResume() {
+        super.onResume();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            SensorRestarterBroadcastReceiver.scheduleJob(getApplicationContext());
+        } else {
+            ProcessMainClass bck = new ProcessMainClass();
+            bck.launchService(getApplicationContext());
+        }
     }
 
     public void addBottomNavigation() {

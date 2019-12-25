@@ -212,17 +212,8 @@ public class SensorService extends Service implements SensorEventListener {
                 DatabaseHandler myDB = new DatabaseHandler(this);
                 myDB.updateHealthData(System.currentTimeMillis(), 0, 0, 0, 0, 0, 1);
                 myDB.close();
-//            pressureText.setText(String.format("%.3f mbar", pValues[0]));
-//                pressureText.setText(
-//                        String.format("Flights climbed: %d Diff: %d \nInitial: %.2f \nCurrent: %.2f", flights, heightDiff, initHeight, cHeight));
                 initHeight = cHeight;
-//                caloryText.setText(Float.toString(metrics.caloriesBurned(numSteps, flights)));
             } else {
-//                Log.i("DB", "Sensor reading");
-//                pressureText.setText(
-//                        String.format("Flights climbed: %d Diff: %d \nInitial: %.2f \nCurrent: %.2f", flights, heightDiff, initHeight, cHeight));
-
-//                caloryText.setText(Float.toString(metrics.caloriesBurned(numSteps, flights)));
             }
         }
     }
