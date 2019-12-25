@@ -31,6 +31,7 @@ public class HealthActivity extends Activity {
 
     private float initHeight;
     private int flights = 0;
+    private String height = "0";
     private MetricGenerator metrics;
     private DatabaseHandler myDB;
 
@@ -53,14 +54,13 @@ public class HealthActivity extends Activity {
 
             @Override
             public void onClick(View arg0) {
-                Log.i("DB", "Reading from database");
-                Cursor physicalData =  myDB.getPhysicalData(3);
-                physicalData.moveToFirst();
-                String height = physicalData.getString(2);
-
-                pressureText.setText(String.format("Flights climbed: %s", height));
-
-                caloryText.setText(String.format("Calories burned: %.2f", metrics.caloriesBurned(0, Integer.parseInt(height))));
+//                Cursor physicalData =  myDB.getPhysicalData(3);
+//                physicalData.moveToFirst();
+//                String height = physicalData.getString(2);
+//
+//                pressureText.setText(String.format("Flights climbed: %s", height));
+//
+//                caloryText.setText(String.format("Calories burned: %.2f", metrics.caloriesBurned(0, Integer.parseInt(height))));
 
             }
         });
@@ -101,6 +101,17 @@ public class HealthActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
+
+        Log.i("DB", "Reading from database");
+        Cursor physicalData = myDB.getPhysicalData(3);
+        physicalData.moveToFirst();
+        if (physicalData.moveToFirst()) {
+            height = physicalData.getString(2);
+        }
+
+        pressureText.setText(String.format("Flights climbed: %s", height));
+
+        caloryText.setText(String.format("Calories burned: %.2f", metrics.caloriesBurned(0, Integer.parseInt(height))));
     }
 
     @Override
