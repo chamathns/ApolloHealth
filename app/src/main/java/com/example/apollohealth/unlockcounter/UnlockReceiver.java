@@ -10,8 +10,8 @@ import com.example.apollohealth.db.DatabaseHandler;
 
 public class UnlockReceiver extends BroadcastReceiver {
     public static final String LOG_TAG = "UC_SCREENEVENT";
-    Context ctx;
-
+//    Context ctx;
+//
 //    public UnlockReceiver(Context appCtx) {
 //        this.ctx = appCtx;
 //    }

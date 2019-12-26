@@ -13,11 +13,11 @@ import androidx.annotation.Nullable;
 public class UnlockCounterService extends Service {
     public static final String LOG_TAG = "UC_SERVICE";
     private BroadcastReceiver mReceiver = null;
-//    Context ctx;
+    Context ctx;
 
     public UnlockCounterService(Context appCtx) {
         super();
-//        this.ctx = appCtx;
+        this.ctx = appCtx;
         Log.i(LOG_TAG, "Constructor called");
     }
 
@@ -37,7 +37,8 @@ public class UnlockCounterService extends Service {
         super.onDestroy();
         Log.i(LOG_TAG, "onDestroy");
 
-        Intent broadcastIntent = new Intent(this, UnlockReceiver.class);
+//        Intent broadcastIntent = new Intent(this, UnlockReceiver.class);
+        Intent broadcastIntent = new Intent(this, UnlockCounterRestarterBroadcastReceiver.class);
         sendBroadcast(broadcastIntent);
         stopUnlockCounter();
     }

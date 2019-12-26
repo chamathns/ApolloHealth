@@ -17,7 +17,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
+        <receiver
+            android:name=".unlockcounter.UnlockCounterRestarterBroadcastReceiver"
+            android:enabled="true"
+            android:exported="true"></receiver>
         <receiver
             android:name=".restarter.SensorRestarterBroadcastReceiver"
             android:enabled="true"
@@ -66,7 +69,7 @@
             android:name=".unlockcounter.UnlockReceiver"
             android:enabled="true"
             android:exported="true"
-            android:label="ReceiveScreenUnlockEvents"></receiver>
+            android:label="ReceiveScreenUnlockEvents" />
 
         <service
             android:name=".screentimecounter.ScreenTimeService"
@@ -81,4 +84,5 @@
             </intent-filter>
         </receiver>
     </application>
+
 </manifest>

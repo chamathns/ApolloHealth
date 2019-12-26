@@ -70,7 +70,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         flightText = (TextView) findViewById(R.id.flightText);
         caloriesText = (TextView) findViewById(R.id.caloriesText);
 
-
         unlockCounterService = new UnlockCounterService(getCtx());
         unlockCounterServiceIntent = new Intent(getCtx(), unlockCounterService.getClass());
         if (!isServiceRunning(unlockCounterService.getClass())) {
@@ -112,13 +111,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         }
         Log.i(LOG_TAG, "ServiceRunning: FALSE");
         return false;
-    }
-
-    @Override
-    protected void onDestroy() {
-        stopService(unlockCounterServiceIntent);
-        Log.i(LOG_TAG, "onDestroy");
-        super.onDestroy();
     }
 
     public void addBottomNavigation() {
@@ -168,8 +160,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         timeSpinner.setAdapter(adapter);
     }
 
-    public void onItemSelected(AdapterView<?> parent, View view,
-                               int pos, long id) {
+    public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
         switch (pos) {
             case 0:
                 duration = 3;
@@ -197,9 +188,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         physicalTextView.setText(parent.getItemAtPosition(pos).toString());
         emotionalTextView.setText(parent.getItemAtPosition(pos).toString());
 
-        Toast.makeText(parent.getContext(),
+        Toast.makeText(
+                parent.getContext(),
                 "Report Type : " + parent.getItemAtPosition(pos).toString(),
-                Toast.LENGTH_SHORT).show();
+                Toast.LENGTH_SHORT)
+                .show();
     }
 
     public void onNothingSelected(AdapterView<?> parent) {
@@ -214,5 +207,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     protected void onPause() {
         super.onPause();
         myDB.close();
+    }
+
+    @Override
+    protected void onDestroy() {
+        stopService(unlockCounterServiceIntent);
+        Log.i(LOG_TAG, "onDestroy");
+        super.onDestroy();
     }
 }
