@@ -18,9 +18,13 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <receiver
-            android:name=".unlockcounter.UnlockCounterRestarterBroadcastReceiver"
+            android:name=".screentimecounter.ScreenTimerRestarterBroadcastReceiver"
             android:enabled="true"
             android:exported="true"></receiver>
+        <receiver
+            android:name=".unlockcounter.UnlockCounterRestarterBroadcastReceiver"
+            android:enabled="true"
+            android:exported="true" />
         <receiver
             android:name=".restarter.SensorRestarterBroadcastReceiver"
             android:enabled="true"
@@ -72,7 +76,7 @@
             android:label="ReceiveScreenUnlockEvents" />
 
         <service
-            android:name=".screentimecounter.ScreenTimeService"
+            android:name=".screentimecounter.ScreenTimerService"
             android:enabled="true" />
 
         <receiver

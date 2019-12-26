@@ -21,6 +21,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.apollohealth.db.DatabaseHandler;
 import com.example.apollohealth.restarter.SensorRestarterBroadcastReceiver;
+import com.example.apollohealth.screentimecounter.ScreenTimerService;
 import com.example.apollohealth.unlockcounter.UnlockCounterService;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -49,6 +50,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     Intent unlockCounterServiceIntent;
     private UnlockCounterService unlockCounterService;
 
+    Intent screenTimeServiceIntent;
+    private ScreenTimerService screenTimerService;
+
     public Context getCtx() {
         return ctx;
     }
@@ -59,7 +63,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         super.onCreate(savedInstanceState);
         ctx = this;
 ////        startService(new Intent(MainActivity.this, UnlockCounterService.class));
-////        startService(new Intent(MainActivity.this, ScreenTimeService.class));
+////        startService(new Intent(MainActivity.this, ScreenTimerService.class));
 
         setContentView(R.layout.activity_main);
 
@@ -74,6 +78,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         unlockCounterServiceIntent = new Intent(getCtx(), unlockCounterService.getClass());
         if (!isServiceRunning(unlockCounterService.getClass())) {
             startService(unlockCounterServiceIntent);
+        }
+
+        screenTimerService = new ScreenTimerService(getCtx());
+        screenTimeServiceIntent = new Intent(getCtx(), screenTimerService.getClass());
+        if (!isServiceRunning(screenTimerService.getClass())) {
+            startService(screenTimeServiceIntent);
         }
 
         addItemsSpinner();
@@ -212,6 +222,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     protected void onDestroy() {
         stopService(unlockCounterServiceIntent);
+        stopService(screenTimeServiceIntent);
         Log.i(LOG_TAG, "onDestroy");
         super.onDestroy();
     }
