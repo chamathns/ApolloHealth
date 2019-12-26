@@ -29,7 +29,7 @@ public class ScreenTimeService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        Log.d(LOG_TAG, "Screen time service started");
+        Log.i(LOG_TAG, "Screen time service started");
 
         IntentFilter filter = new IntentFilter();
         filter.addAction(Intent.ACTION_SCREEN_ON);
@@ -38,7 +38,7 @@ public class ScreenTimeService extends Service {
         mReceiver = new ScreenTimeReceiver();
         registerReceiver(mReceiver, filter);
 
-        Log.d(LOG_TAG, "ScreenTimeService onCreate: mReceiver is registered.");
+        Log.i(LOG_TAG, "ScreenTimeService onCreate: mReceiver is registered.");
     }
 
     @Override
@@ -47,10 +47,10 @@ public class ScreenTimeService extends Service {
 
         if (mReceiver != null) {
             unregisterReceiver(mReceiver);
-            Log.d(LOG_TAG, "ScreenTimeService onDestroy: mReceiver is unregistered.");
+            Log.i(LOG_TAG, "ScreenTimeService onDestroy: mReceiver is unregistered.");
         }
         mReceiver = null;
 
-        Log.d(LOG_TAG, "Screen time service stopped");
+        Log.i(LOG_TAG, "Screen time service stopped");
     }
 }

@@ -59,17 +59,14 @@
             android:theme="@style/AppTheme" />
 
         <service
-            android:name=".unlockcounter.LockerService"
+            android:name=".unlockcounter.UnlockCounterService"
             android:enabled="true" />
 
         <receiver
             android:name=".unlockcounter.UnlockReceiver"
             android:enabled="true"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-            </intent-filter>
-        </receiver>
+            android:exported="true"
+            android:label="ReceiveScreenUnlockEvents"></receiver>
 
         <service
             android:name=".screentimecounter.ScreenTimeService"
@@ -84,5 +81,4 @@
             </intent-filter>
         </receiver>
     </application>
-
 </manifest>

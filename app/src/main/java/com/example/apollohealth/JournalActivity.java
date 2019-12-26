@@ -53,7 +53,7 @@ public class JournalActivity extends AppCompatActivity {
 
     }
 
-    public void goToAppMonitor(){
+    public void goToAppMonitor() {
         Intent intent = new Intent(JournalActivity.this, AppMonitorActivity.class);
         startActivity(intent);
     }

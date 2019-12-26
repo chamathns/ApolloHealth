@@ -79,11 +79,11 @@ public class AppMonitorActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_app_monitor);
 
-        List<UsageStat> usageStats = getTopUsedApps(3, 5);
+        List<UsageStat> usageStats = getTopUsedApps(3, 10);
 
         for (UsageStat stat : usageStats) {
-            Log.d(LOG_TAG, stat.toString());
-            Log.d(LOG_TAG, "\n");
+            Log.v(LOG_TAG, stat.toString());
+            Log.v(LOG_TAG, "\n");
         }
 
         addBottomNavigation();
@@ -105,9 +105,9 @@ public class AppMonitorActivity extends AppCompatActivity {
         int mode = appOps.checkOpNoThrow(AppOpsManager.OPSTR_GET_USAGE_STATS, android.os.Process.myUid(), getPackageName());
 
         if (mode == AppOpsManager.MODE_ALLOWED) {
-            Log.d(LOG_TAG, "MODE_ALLOWED");
+            Log.i(LOG_TAG, "MODE_ALLOWED");
         } else {
-            Log.d(LOG_TAG, "MODE_NOT_ALLOWED");
+            Log.i(LOG_TAG, "MODE_NOT_ALLOWED");
             startActivityForResult(new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS), MY_PERMISSIONS_REQUEST_PACKAGE_USAGE_STATS);
         }
 

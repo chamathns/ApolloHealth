@@ -15,14 +15,14 @@ public class ScreenTimeReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Log.d(LOG_TAG, "ScreenTimeService onReceive");
+        Log.i(LOG_TAG, "ScreenTimeService onReceive");
 
         if (intent.getAction().equals(Intent.ACTION_SCREEN_ON)) {
             startTime = System.currentTimeMillis();
         } else if (intent.getAction().equals(Intent.ACTION_SCREEN_OFF)) {
             endTime = System.currentTimeMillis();
             screenOnTime = Integer.parseInt(String.valueOf((endTime - startTime)/1000));
-            Log.d(LOG_TAG, "Screen on time: " + screenOnTime + " seconds");
+            Log.i(LOG_TAG, "Screen on time: " + screenOnTime + " seconds");
 
             DatabaseHandler myDB = new DatabaseHandler(context);
             myDB.updateHealthData(System.currentTimeMillis(), screenOnTime, 0, 0, 0, 0, 0);

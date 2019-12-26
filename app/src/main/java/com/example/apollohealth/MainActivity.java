@@ -1,10 +1,11 @@
 package com.example.apollohealth;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.app.ActivityManager;
+import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -13,9 +14,12 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.apollohealth.db.DatabaseHandler;
-import com.example.apollohealth.screentimecounter.ScreenTimeService;
-import com.example.apollohealth.unlockcounter.LockerService;
+import com.example.apollohealth.unlockcounter.UnlockCounterService;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -23,6 +27,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     public static final String LOG_TAG = "APOLLOHEALTH_MAIN";
 
+    Context ctx;
     DatabaseHandler myDB;
 
     private Spinner timeSpinner;
@@ -31,20 +36,54 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private CircleImageView profileImage;
 //    private View mainView;
 
+    Intent unlockCounterServiceIntent;
+    private UnlockCounterService unlockCounterService;
+
+    public Context getCtx() {
+        return ctx;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        startService(new Intent(MainActivity.this, LockerService.class));
-        startService(new Intent(MainActivity.this, ScreenTimeService.class));
-
         super.onCreate(savedInstanceState);
+        ctx = this;
+////        startService(new Intent(MainActivity.this, UnlockCounterService.class));
+////        startService(new Intent(MainActivity.this, ScreenTimeService.class));
+
         setContentView(R.layout.activity_main);
 
         myDB = new DatabaseHandler(this);
-
         profileImage = (CircleImageView) findViewById(R.id.profile_image);
+
+        unlockCounterService = new UnlockCounterService(getCtx());
+        unlockCounterServiceIntent = new Intent(getCtx(), unlockCounterService.getClass());
+        if (!isServiceRunning(unlockCounterService.getClass())) {
+            startService(unlockCounterServiceIntent);
+        }
 
         addItemsSpinner();
         addBottomNavigation();
+    }
+
+    private boolean isServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                Log.i(LOG_TAG, "ServiceRunning: TRUE");
+                return true;
+            }
+        }
+        Log.i(LOG_TAG, "ServiceRunning: FALSE");
+        return false;
+    }
+
+    @Override
+    protected void onDestroy() {
+        stopService(unlockCounterServiceIntent);
+        Log.i(LOG_TAG, "onDestroy");
+        super.onDestroy();
     }
 
     public void addBottomNavigation() {
