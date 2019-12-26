@@ -27,7 +27,7 @@ public class MetricGenerator {
     }
 
     public float caloriesBurned(int steps, int flights) {
-        float meanFlights = flights / 2;
+        float meanFlights = (float) flights / 2;
 
         float cbWalking = ((WALKING_MET * weight * 3.5f) / 200) * (stepsToKm(steps) / WALKING_SPEED) * 60;
 

@@ -12,22 +12,8 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/test_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="activity_health.xml"
-            android:textSize="20sp"
-            android:textStyle="bold" />
-
         <Button
             android:id="@+id/startBtn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Button" />
-
-        <Button
-            android:id="@+id/endBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Button" />
@@ -42,9 +28,14 @@
         <TextView
             android:id="@+id/caloryText"
             android:layout_width="match_parent"
-            android:layout_height="70dp"
+            android:layout_height="97dp"
             android:text="TextView"
             android:textSize="25sp" />
+
+        <com.jjoe64.graphview.GraphView
+            android:id="@+id/graph"
+            android:layout_width="match_parent"
+            android:layout_height="262dp" />
 
     </LinearLayout>
 

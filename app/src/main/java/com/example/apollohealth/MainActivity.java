@@ -3,6 +3,7 @@ package com.example.apollohealth;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -19,6 +20,7 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.apollohealth.db.DatabaseHandler;
+import com.example.apollohealth.restarter.SensorRestarterBroadcastReceiver;
 import com.example.apollohealth.unlockcounter.UnlockCounterService;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -34,6 +36,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private TextView physicalTextView;
     private TextView emotionalTextView;
     private CircleImageView profileImage;
+    private TextView flightText;
+    private TextView caloriesText;
+    private TextView stepsText;
+
+    private MetricGenerator metrics;
+
+    private String height = "0";
+    private int duration;
 //    private View mainView;
 
     Intent unlockCounterServiceIntent;
@@ -54,7 +64,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         setContentView(R.layout.activity_main);
 
         myDB = new DatabaseHandler(this);
+        metrics = new MetricGenerator(193, 88);
+
         profileImage = (CircleImageView) findViewById(R.id.profile_image);
+        flightText = (TextView) findViewById(R.id.flightText);
+        caloriesText = (TextView) findViewById(R.id.caloriesText);
+
 
         unlockCounterService = new UnlockCounterService(getCtx());
         unlockCounterServiceIntent = new Intent(getCtx(), unlockCounterService.getClass());
@@ -64,6 +79,26 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         addItemsSpinner();
         addBottomNavigation();
+    }
+
+    protected void onResume() {
+        super.onResume();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            SensorRestarterBroadcastReceiver.scheduleJob(getApplicationContext());
+        } else {
+            ProcessMainClass bck = new ProcessMainClass();
+            bck.launchService(getApplicationContext());
+        }
+
+        Cursor physicalData = myDB.getPhysicalData(duration);
+        physicalData.moveToFirst();
+        if (physicalData.moveToFirst()) {
+            height = physicalData.getString(2);
+        }
+
+        flightText.setText(String.valueOf(height));
+
+        caloriesText.setText(String.valueOf(metrics.caloriesBurned(0, Integer.parseInt(height))));
     }
 
     private boolean isServiceRunning(Class<?> serviceClass) {
@@ -135,6 +170,29 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     public void onItemSelected(AdapterView<?> parent, View view,
                                int pos, long id) {
+        switch (pos) {
+            case 0:
+                duration = 3;
+                break;
+            case 1:
+                duration = 7;
+                break;
+            case 2:
+                duration = 30;
+                break;
+            case 3:
+                duration = 365;
+        }
+
+        Cursor physicalData = myDB.getPhysicalData(duration);
+        physicalData.moveToFirst();
+        if (physicalData.moveToFirst()) {
+            height = physicalData.getString(2);
+        }
+
+        flightText.setText(String.valueOf(height));
+
+        caloriesText.setText(String.valueOf(metrics.caloriesBurned(0, Integer.parseInt(height))));
 
         physicalTextView.setText(parent.getItemAtPosition(pos).toString());
         emotionalTextView.setText(parent.getItemAtPosition(pos).toString());
@@ -151,5 +209,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     public void dpClick(View view) {
         Intent aboutIntent = new Intent(MainActivity.this, AboutActivity.class);
         startActivityForResult(aboutIntent, 1);
+    }
+
+    protected void onPause() {
+        super.onPause();
+        myDB.close();
     }
 }
