@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.MenuItem;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -58,6 +59,16 @@ public class AppMonitorActivity extends AppCompatActivity {
             return this.usageTime;
         }
 
+        public String getUsageTimeString() {
+            int seconds = (int) this.usageTime / 1000;
+
+            int hours = seconds / 3600;
+            int minutes = (seconds % 3600) / 60;
+            seconds = (seconds % 3600) % 60;
+
+            return hours + "hrs " + minutes + "mins " + seconds + "seconds";
+        }
+
         public String getAppName() {
             return this.appName;
         }
@@ -69,7 +80,7 @@ public class AppMonitorActivity extends AppCompatActivity {
         @NonNull
         @Override
         public String toString() {
-            return "Package: " + this.packageName + "\nApp: " + this.appName + "\nIcon: " + this.icon + "\nUsage Time (ms): " + this.usageTime;
+            return "\nPackage: " + this.packageName + "\nApp: " + this.appName + "\nIcon: " + this.icon + "\nUsage Time: " + this.getUsageTimeString();
         }
     }
 
@@ -79,7 +90,7 @@ public class AppMonitorActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_app_monitor);
 
-        List<UsageStat> usageStats = getTopUsedApps(3, 10);
+        List<UsageStat> usageStats = getTopUsedApps(1, 10);
 
         for (UsageStat stat : usageStats) {
             Log.v(LOG_TAG, stat.toString());

@@ -3,7 +3,6 @@ package com.example.apollohealth;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -14,7 +13,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.apollohealth.restarter.SensorRestarterBroadcastReceiver;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class JournalActivity extends AppCompatActivity {
@@ -41,13 +39,13 @@ public class JournalActivity extends AppCompatActivity {
 //            startService(mServiceIntent);
 //        }
 
-//        btnNavToAppMonitor = findViewById(R.id.btn_nav_app_monitor);
-//        btnNavToAppMonitor.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                goToAppMonitor();
-//            }
-//        });
+        btnNavToAppMonitor = findViewById(R.id.btn_nav_app_monitor);
+        btnNavToAppMonitor.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                goToAppMonitor();
+            }
+        });
 
         addBottomNavigation();
 
