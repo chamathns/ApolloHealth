@@ -51,8 +51,8 @@
 
                         <ImageView
                             android:id="@+id/app1Icon"
-                            android:layout_width="80dp"
-                            android:layout_height="80dp"
+                            android:layout_width="60dp"
+                            android:layout_height="60dp"
                             android:layout_margin="10dp"
                             android:padding="5dp"
                             app:srcCompat="@mipmap/ic_launcher"
@@ -60,7 +60,7 @@
 
                         <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="80dp"
+                            android:layout_height="wrap_content"
                             android:layout_margin="10dp"
                             android:orientation="vertical">
 
@@ -71,7 +71,7 @@
                                 android:layout_gravity="start"
                                 android:text="App name"
                                 android:textColor="#000000"
-                                android:textSize="30dp" />
+                                android:textSize="20dp" />
 
                             <TextView
                                 android:id="@+id/app1Usage"
@@ -80,7 +80,7 @@
                                 android:layout_gravity="start"
                                 android:text="App usage"
                                 android:textColor="#555555"
-                                android:textSize="25dp" />
+                                android:textSize="15dp" />
                         </LinearLayout>
                     </LinearLayout>
                 </GridLayout>
@@ -104,8 +104,8 @@
 
                         <ImageView
                             android:id="@+id/app2Icon"
-                            android:layout_width="80dp"
-                            android:layout_height="80dp"
+                            android:layout_width="60dp"
+                            android:layout_height="60dp"
                             android:layout_margin="10dp"
                             android:padding="5dp"
                             app:srcCompat="@mipmap/ic_launcher"
@@ -113,7 +113,7 @@
 
                         <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="80dp"
+                            android:layout_height="wrap_content"
                             android:layout_margin="10dp"
                             android:orientation="vertical">
 
@@ -124,7 +124,7 @@
                                 android:layout_gravity="start"
                                 android:text="App name"
                                 android:textColor="#000000"
-                                android:textSize="30dp" />
+                                android:textSize="20dp" />
 
                             <TextView
                                 android:id="@+id/app2Usage"
@@ -133,7 +133,7 @@
                                 android:layout_gravity="start"
                                 android:text="App usage"
                                 android:textColor="#555555"
-                                android:textSize="25dp" />
+                                android:textSize="15dp" />
                         </LinearLayout>
                     </LinearLayout>
                 </GridLayout>
@@ -157,8 +157,8 @@
 
                         <ImageView
                             android:id="@+id/app3Icon"
-                            android:layout_width="80dp"
-                            android:layout_height="80dp"
+                            android:layout_width="60dp"
+                            android:layout_height="60dp"
                             android:layout_margin="10dp"
                             android:padding="5dp"
                             app:srcCompat="@mipmap/ic_launcher"
@@ -166,7 +166,7 @@
 
                         <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="80dp"
+                            android:layout_height="wrap_content"
                             android:layout_margin="10dp"
                             android:orientation="vertical">
 
@@ -177,7 +177,7 @@
                                 android:layout_gravity="start"
                                 android:text="App name"
                                 android:textColor="#000000"
-                                android:textSize="30dp" />
+                                android:textSize="20dp" />
 
                             <TextView
                                 android:id="@+id/app3Usage"
@@ -186,7 +186,7 @@
                                 android:layout_gravity="start"
                                 android:text="App usage"
                                 android:textColor="#555555"
-                                android:textSize="25dp" />
+                                android:textSize="15dp" />
                         </LinearLayout>
                     </LinearLayout>
                 </GridLayout>
@@ -210,8 +210,8 @@
 
                         <ImageView
                             android:id="@+id/app4Icon"
-                            android:layout_width="80dp"
-                            android:layout_height="80dp"
+                            android:layout_width="60dp"
+                            android:layout_height="60dp"
                             android:layout_margin="10dp"
                             android:padding="5dp"
                             app:srcCompat="@mipmap/ic_launcher"
@@ -219,7 +219,7 @@
 
                         <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="80dp"
+                            android:layout_height="wrap_content"
                             android:layout_margin="10dp"
                             android:orientation="vertical">
 
@@ -230,7 +230,7 @@
                                 android:layout_gravity="start"
                                 android:text="App name"
                                 android:textColor="#000000"
-                                android:textSize="30dp" />
+                                android:textSize="20dp" />
 
                             <TextView
                                 android:id="@+id/app4Usage"
@@ -239,7 +239,7 @@
                                 android:layout_gravity="start"
                                 android:text="App usage"
                                 android:textColor="#555555"
-                                android:textSize="25dp" />
+                                android:textSize="15dp" />
                         </LinearLayout>
                     </LinearLayout>
                 </GridLayout>
@@ -263,8 +263,8 @@
 
                         <ImageView
                             android:id="@+id/app5Icon"
-                            android:layout_width="80dp"
-                            android:layout_height="80dp"
+                            android:layout_width="60dp"
+                            android:layout_height="60dp"
                             android:layout_margin="10dp"
                             android:padding="5dp"
                             app:srcCompat="@mipmap/ic_launcher"
@@ -272,7 +272,7 @@
 
                         <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="80dp"
+                            android:layout_height="wrap_content"
                             android:layout_margin="10dp"
                             android:orientation="vertical">
 
@@ -283,7 +283,7 @@
                                 android:layout_gravity="start"
                                 android:text="App name"
                                 android:textColor="#000000"
-                                android:textSize="30dp" />
+                                android:textSize="20dp" />
 
                             <TextView
                                 android:id="@+id/app5Usage"
@@ -292,7 +292,7 @@
                                 android:layout_gravity="start"
                                 android:text="App usage"
                                 android:textColor="#555555"
-                                android:textSize="25dp" />
+                                android:textSize="15dp" />
                         </LinearLayout>
                     </LinearLayout>
                 </GridLayout>
@@ -316,8 +316,8 @@
 
                         <ImageView
                             android:id="@+id/app6Icon"
-                            android:layout_width="80dp"
-                            android:layout_height="80dp"
+                            android:layout_width="60dp"
+                            android:layout_height="60dp"
                             android:layout_margin="10dp"
                             android:padding="5dp"
                             app:srcCompat="@mipmap/ic_launcher"
@@ -325,7 +325,7 @@
 
                         <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="80dp"
+                            android:layout_height="wrap_content"
                             android:layout_margin="10dp"
                             android:orientation="vertical">
 
@@ -336,7 +336,7 @@
                                 android:layout_gravity="start"
                                 android:text="App name"
                                 android:textColor="#000000"
-                                android:textSize="30dp" />
+                                android:textSize="20dp" />
 
                             <TextView
                                 android:id="@+id/app6Usage"
@@ -345,7 +345,7 @@
                                 android:layout_gravity="start"
                                 android:text="App usage"
                                 android:textColor="#555555"
-                                android:textSize="25dp" />
+                                android:textSize="15dp" />
                         </LinearLayout>
                     </LinearLayout>
                 </GridLayout>
@@ -369,8 +369,8 @@
 
                         <ImageView
                             android:id="@+id/app7Icon"
-                            android:layout_width="80dp"
-                            android:layout_height="80dp"
+                            android:layout_width="60dp"
+                            android:layout_height="60dp"
                             android:layout_margin="10dp"
                             android:padding="5dp"
                             app:srcCompat="@mipmap/ic_launcher"
@@ -378,7 +378,7 @@
 
                         <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="80dp"
+                            android:layout_height="wrap_content"
                             android:layout_margin="10dp"
                             android:orientation="vertical">
 
@@ -389,7 +389,7 @@
                                 android:layout_gravity="start"
                                 android:text="App name"
                                 android:textColor="#000000"
-                                android:textSize="30dp" />
+                                android:textSize="20dp" />
 
                             <TextView
                                 android:id="@+id/app7Usage"
@@ -398,7 +398,7 @@
                                 android:layout_gravity="start"
                                 android:text="App usage"
                                 android:textColor="#555555"
-                                android:textSize="25dp" />
+                                android:textSize="15dp" />
                         </LinearLayout>
                     </LinearLayout>
                 </GridLayout>
@@ -422,8 +422,8 @@
 
                         <ImageView
                             android:id="@+id/app8Icon"
-                            android:layout_width="80dp"
-                            android:layout_height="80dp"
+                            android:layout_width="60dp"
+                            android:layout_height="60dp"
                             android:layout_margin="10dp"
                             android:padding="5dp"
                             app:srcCompat="@mipmap/ic_launcher"
@@ -431,7 +431,7 @@
 
                         <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="80dp"
+                            android:layout_height="wrap_content"
                             android:layout_margin="10dp"
                             android:orientation="vertical">
 
@@ -442,7 +442,7 @@
                                 android:layout_gravity="start"
                                 android:text="App name"
                                 android:textColor="#000000"
-                                android:textSize="30dp" />
+                                android:textSize="20dp" />
 
                             <TextView
                                 android:id="@+id/app8Usage"
@@ -451,7 +451,7 @@
                                 android:layout_gravity="start"
                                 android:text="App usage"
                                 android:textColor="#555555"
-                                android:textSize="25dp" />
+                                android:textSize="15dp" />
                         </LinearLayout>
                     </LinearLayout>
                 </GridLayout>
@@ -475,8 +475,8 @@
 
                         <ImageView
                             android:id="@+id/app9Icon"
-                            android:layout_width="80dp"
-                            android:layout_height="80dp"
+                            android:layout_width="60dp"
+                            android:layout_height="60dp"
                             android:layout_margin="10dp"
                             android:padding="5dp"
                             app:srcCompat="@mipmap/ic_launcher"
@@ -484,7 +484,7 @@
 
                         <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="80dp"
+                            android:layout_height="wrap_content"
                             android:layout_margin="10dp"
                             android:orientation="vertical">
 
@@ -495,7 +495,7 @@
                                 android:layout_gravity="start"
                                 android:text="App name"
                                 android:textColor="#000000"
-                                android:textSize="30dp" />
+                                android:textSize="20dp" />
 
                             <TextView
                                 android:id="@+id/app9Usage"
@@ -504,7 +504,7 @@
                                 android:layout_gravity="start"
                                 android:text="App usage"
                                 android:textColor="#555555"
-                                android:textSize="25dp" />
+                                android:textSize="15dp" />
                         </LinearLayout>
                     </LinearLayout>
                 </GridLayout>
@@ -528,8 +528,8 @@
 
                         <ImageView
                             android:id="@+id/app10Icon"
-                            android:layout_width="80dp"
-                            android:layout_height="80dp"
+                            android:layout_width="60dp"
+                            android:layout_height="60dp"
                             android:layout_margin="10dp"
                             android:padding="5dp"
                             app:srcCompat="@mipmap/ic_launcher"
@@ -537,7 +537,7 @@
 
                         <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="80dp"
+                            android:layout_height="wrap_content"
                             android:layout_margin="10dp"
                             android:orientation="vertical">
 
@@ -548,7 +548,7 @@
                                 android:layout_gravity="start"
                                 android:text="App name"
                                 android:textColor="#000000"
-                                android:textSize="30dp" />
+                                android:textSize="20dp" />
 
                             <TextView
                                 android:id="@+id/app10Usage"
@@ -557,7 +557,7 @@
                                 android:layout_gravity="start"
                                 android:text="App usage"
                                 android:textColor="#555555"
-                                android:textSize="25dp" />
+                                android:textSize="15dp" />
                         </LinearLayout>
                     </LinearLayout>
                 </GridLayout>
