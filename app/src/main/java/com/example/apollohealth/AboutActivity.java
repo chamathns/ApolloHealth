@@ -14,6 +14,7 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentActivity;
 
 import com.example.apollohealth.ui.dialog.UserHeightDialog;
+import com.example.apollohealth.ui.dialog.UserWeightDialog;
 import com.example.apollohealth.ui.dialog.UsernameDialog;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -21,7 +22,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import customfonts.MyTextView_Roboto_Regular;
 
-public class AboutActivity extends FragmentActivity implements UsernameDialog.UserNameDialogListener, UserHeightDialog.UserHeightDialogListener {
+public class AboutActivity extends FragmentActivity implements UsernameDialog.UserNameDialogListener, UserHeightDialog.UserHeightDialogListener, UserWeightDialog.UserWeightDialogListener {
 
     private MyTextView_Roboto_Regular textview_username;
     private MyTextView_Roboto_Regular textview_gender;
@@ -47,14 +48,15 @@ public class AboutActivity extends FragmentActivity implements UsernameDialog.Us
         imageview_height = (ImageView) findViewById(R.id.imageview_edit_height);
         imageview_weight = (ImageView) findViewById(R.id.imageview_edit_weight);
 
-        addEditUserNameDialog(imageview_username,textview_username);
+        addEditUserNameDialog(imageview_username, textview_username);
         addEditGenderDialog(imageview_gender, textview_gender);
         addEditHeightDialog(imageview_height, textview_height);
+        addEditWeightDialog(imageview_weight, textview_weight);
         addBottomNavigation();
 
     }
 
-    public void addEditUserNameDialog(ImageView imageview_username, MyTextView_Roboto_Regular textview_username){
+    public void addEditUserNameDialog(ImageView imageview_username, MyTextView_Roboto_Regular textview_username) {
         imageview_username.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -71,31 +73,29 @@ public class AboutActivity extends FragmentActivity implements UsernameDialog.Us
 
     }
 
-    public void addEditHeightDialog(ImageView imageview_height, MyTextView_Roboto_Regular textview_height){
-        imageview_height.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openEditUserHeightDialog();
-            }
-        });
-
-        textview_height.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openEditUserHeightDialog();
-            }
-        });
-
-    }
-    public void openEditUserHeightDialog() {
-        UserHeightDialog userHeightDialog = new UserHeightDialog();
-        userHeightDialog.show(getSupportFragmentManager(),"edit user height");
-    }
-
     public void openEditUserNameDialog() {
         UsernameDialog usernameDialog = new UsernameDialog();
-        usernameDialog.show(getSupportFragmentManager(),"edit username");
+        usernameDialog.show(getSupportFragmentManager(), "edit username");
+    }
 
+    @Override
+    public void onUserNameDialogPositiveClick(String userName) {
+        if (userName.matches("[a-zA-Z]+")) {
+            textview_username.setText(userName);
+        } else if (!StringUtils.isEmpty(userName)) {
+            new AlertDialog.Builder(this)
+                    .setTitle("User name is not valid")
+                    .setMessage("Your name should only include letters")
+
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            // Continue with delete operation
+                        }
+                    })
+
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .show();
+        }
     }
 
     public void addBottomNavigation() {
@@ -128,7 +128,8 @@ public class AboutActivity extends FragmentActivity implements UsernameDialog.Us
             }
         });
     }
-    public void addEditGenderDialog(ImageView imageview_gender, MyTextView_Roboto_Regular textview_gender){
+
+    public void addEditGenderDialog(ImageView imageview_gender, MyTextView_Roboto_Regular textview_gender) {
         imageview_gender.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -161,10 +162,9 @@ public class AboutActivity extends FragmentActivity implements UsernameDialog.Us
         genderDialog.setSingleChoiceItems(gender, -1, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                if (gender[which] == "Male"){
+                if (gender[which] == "Male") {
                     textview_gender.setText("Male");
-                }
-                else if (gender[which] == "Female"){
+                } else if (gender[which] == "Female") {
                     textview_gender.setText("Female");
                 }
             }
@@ -172,30 +172,27 @@ public class AboutActivity extends FragmentActivity implements UsernameDialog.Us
         genderDialog.show();
     }
 
-    @Override
-    public void onUserNameDialogPositiveClick(String userName) {
-        if (userName.matches("[a-zA-Z]+")){
-            textview_username.setText(userName);
-        }
-        else if (!StringUtils.isEmpty(userName)){
-            new AlertDialog.Builder(this)
-                    .setTitle("User name is not valid")
-                    .setMessage("Your name should only include letters")
 
-                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            // Continue with delete operation
-                        }
-                    })
+    public void addEditHeightDialog(ImageView imageview_height, MyTextView_Roboto_Regular textview_height) {
+        imageview_height.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openEditUserHeightDialog();
+            }
+        });
 
-                    .setIcon(android.R.drawable.ic_dialog_alert)
-                    .show();
-        }
+        textview_height.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openEditUserHeightDialog();
+            }
+        });
+
     }
 
-    @Override
-    public void onUserNameDialogNegativeClick(DialogFragment dialog) {
-
+    public void openEditUserHeightDialog() {
+        UserHeightDialog userHeightDialog = new UserHeightDialog();
+        userHeightDialog.show(getSupportFragmentManager(), "edit user height");
     }
 
     @Override
@@ -204,8 +201,45 @@ public class AboutActivity extends FragmentActivity implements UsernameDialog.Us
 
     }
 
+    public void addEditWeightDialog(ImageView imageview_weight, MyTextView_Roboto_Regular textview_weight) {
+        imageview_weight.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openEditUserWeightDialog();
+            }
+        });
+
+        textview_weight.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openEditUserWeightDialog();
+            }
+        });
+
+    }
+
+    public void openEditUserWeightDialog() {
+        UserWeightDialog userWeightDialog = new UserWeightDialog();
+        userWeightDialog.show(getSupportFragmentManager(), "edit user height");
+    }
+
+    @Override
+    public void onUserWeightDialogPositiveClick(String userWeight) {
+        textview_weight.setText(userWeight + " kg");
+    }
+
+    @Override
+    public void onUserNameDialogNegativeClick(DialogFragment dialog) {
+
+    }
+
     @Override
     public void onUserHeightDialogNegativeClick(DialogFragment dialog) {
+
+    }
+
+    @Override
+    public void onUserWeightDialogNegativeClick(DialogFragment dialog) {
 
     }
 }
