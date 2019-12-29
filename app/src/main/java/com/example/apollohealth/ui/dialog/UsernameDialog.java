@@ -19,8 +19,8 @@ public class UsernameDialog extends DialogFragment {
 
 
     public interface UserNameDialogListener {
-        public void onDialogPositiveClick(String username);
-        public void onDialogNegativeClick(DialogFragment dialog);
+        public void onUserNameDialogPositiveClick(String username);
+        public void onUserNameDialogNegativeClick(DialogFragment dialog);
     }
     UserNameDialogListener listener;
 
@@ -49,7 +49,7 @@ public class UsernameDialog extends DialogFragment {
                 .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        listener.onDialogNegativeClick(UsernameDialog.this);
+                        listener.onUserNameDialogNegativeClick(UsernameDialog.this);
 
                     }
                 })
@@ -57,7 +57,7 @@ public class UsernameDialog extends DialogFragment {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         String username = editTextUsername.getText().toString();
-                        listener.onDialogPositiveClick(username);
+                        listener.onUserNameDialogPositiveClick(username);
 
                     }
                 });

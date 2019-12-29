@@ -1,5 +1,7 @@
 package com.example.apollohealth;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -13,6 +15,8 @@ import androidx.fragment.app.FragmentActivity;
 
 import com.example.apollohealth.ui.dialog.UsernameDialog;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import org.apache.commons.lang3.StringUtils;
 
 import customfonts.MyTextView_Roboto_Regular;
 
@@ -33,9 +37,13 @@ public class AboutActivity extends FragmentActivity implements UsernameDialog.Us
         setContentView(R.layout.activity_about);
 
         textview_username = (MyTextView_Roboto_Regular) findViewById(R.id.textview_username);
+        textview_gender = (MyTextView_Roboto_Regular) findViewById(R.id.textview_gender);
+
         imageview_username = (ImageView) findViewById(R.id.imageview_edit_username);
+        imageview_gender = (ImageView) findViewById(R.id.imageview_edit_gender);
 
         addEditUserNameDialog(imageview_username,textview_username);
+        addEditGenderDialog(imageview_gender, textview_gender);
 
         addBottomNavigation();
 
@@ -94,14 +102,73 @@ public class AboutActivity extends FragmentActivity implements UsernameDialog.Us
             }
         });
     }
+    public void addEditGenderDialog(ImageView imageview_gender, MyTextView_Roboto_Regular textview_gender){
+        imageview_gender.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openEditGenderDialog();
+            }
+        });
 
-    @Override
-    public void onDialogPositiveClick(String userName) {
-        textview_username.setText(userName);
+        textview_gender.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openEditGenderDialog();
+            }
+        });
+    }
+
+    public void openEditGenderDialog() {
+        final CharSequence[] gender = {"Male", "Female"};
+        AlertDialog.Builder genderDialog = new AlertDialog.Builder(this);
+        genderDialog.setTitle("Select your gender");
+        genderDialog.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                // Continue with ok
+            }
+        });
+        genderDialog.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                // Continue with cancel
+            }
+        });
+        genderDialog.setSingleChoiceItems(gender, -1, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if (gender[which] == "Male"){
+                    textview_gender.setText("Male");
+                }
+                else if (gender[which] == "Female"){
+                    textview_gender.setText("Female");
+                }
+            }
+        });
+        genderDialog.show();
     }
 
     @Override
-    public void onDialogNegativeClick(DialogFragment dialog) {
+    public void onUserNameDialogPositiveClick(String userName) {
+        if (userName.matches("[a-zA-Z]+")){
+            textview_username.setText(userName);
+        }
+        else if (!StringUtils.isEmpty(userName)){
+            new AlertDialog.Builder(this)
+                    .setTitle("User name is not valid")
+                    .setMessage("Your name should only include letters")
+
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            // Continue with delete operation
+                        }
+                    })
+
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .show();
+        }
+    }
+
+    @Override
+    public void onUserNameDialogNegativeClick(DialogFragment dialog) {
 
     }
 }
