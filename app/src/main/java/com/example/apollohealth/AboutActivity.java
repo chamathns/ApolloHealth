@@ -13,6 +13,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentActivity;
 
+import com.example.apollohealth.ui.dialog.UserHeightDialog;
 import com.example.apollohealth.ui.dialog.UsernameDialog;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -20,7 +21,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import customfonts.MyTextView_Roboto_Regular;
 
-public class AboutActivity extends FragmentActivity implements UsernameDialog.UserNameDialogListener {
+public class AboutActivity extends FragmentActivity implements UsernameDialog.UserNameDialogListener, UserHeightDialog.UserHeightDialogListener {
 
     private MyTextView_Roboto_Regular textview_username;
     private MyTextView_Roboto_Regular textview_gender;
@@ -38,13 +39,17 @@ public class AboutActivity extends FragmentActivity implements UsernameDialog.Us
 
         textview_username = (MyTextView_Roboto_Regular) findViewById(R.id.textview_username);
         textview_gender = (MyTextView_Roboto_Regular) findViewById(R.id.textview_gender);
+        textview_height = (MyTextView_Roboto_Regular) findViewById(R.id.textview_height);
+        textview_weight = (MyTextView_Roboto_Regular) findViewById(R.id.textview_weight);
 
         imageview_username = (ImageView) findViewById(R.id.imageview_edit_username);
         imageview_gender = (ImageView) findViewById(R.id.imageview_edit_gender);
+        imageview_height = (ImageView) findViewById(R.id.imageview_edit_height);
+        imageview_weight = (ImageView) findViewById(R.id.imageview_edit_weight);
 
         addEditUserNameDialog(imageview_username,textview_username);
         addEditGenderDialog(imageview_gender, textview_gender);
-
+        addEditHeightDialog(imageview_height, textview_height);
         addBottomNavigation();
 
     }
@@ -64,6 +69,27 @@ public class AboutActivity extends FragmentActivity implements UsernameDialog.Us
             }
         });
 
+    }
+
+    public void addEditHeightDialog(ImageView imageview_height, MyTextView_Roboto_Regular textview_height){
+        imageview_height.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openEditUserHeightDialog();
+            }
+        });
+
+        textview_height.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openEditUserHeightDialog();
+            }
+        });
+
+    }
+    public void openEditUserHeightDialog() {
+        UserHeightDialog userHeightDialog = new UserHeightDialog();
+        userHeightDialog.show(getSupportFragmentManager(),"edit user height");
     }
 
     public void openEditUserNameDialog() {
@@ -169,6 +195,17 @@ public class AboutActivity extends FragmentActivity implements UsernameDialog.Us
 
     @Override
     public void onUserNameDialogNegativeClick(DialogFragment dialog) {
+
+    }
+
+    @Override
+    public void onUserHeightDialogPositiveClick(String userHeight) {
+        textview_height.setText(userHeight + " cm");
+
+    }
+
+    @Override
+    public void onUserHeightDialogNegativeClick(DialogFragment dialog) {
 
     }
 }
