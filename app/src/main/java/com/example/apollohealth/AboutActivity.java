@@ -80,7 +80,7 @@ public class AboutActivity extends FragmentActivity implements UsernameDialog.Us
 
     @Override
     public void onUserNameDialogPositiveClick(String userName) {
-        if (userName.matches("[a-zA-Z]+")) {
+        if (userName.matches("^[A-Za-z\\s]{1,}[\\.]{0,1}[A-Za-z\\s]{0,}$")) {
             textview_username.setText(userName);
         } else if (!StringUtils.isEmpty(userName)) {
             new AlertDialog.Builder(this)
