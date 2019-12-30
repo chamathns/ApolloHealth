@@ -7,13 +7,18 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,38 +38,7 @@ public class AppMonitorActivity extends AppCompatActivity {
     public static final int MY_PERMISSIONS_REQUEST_PACKAGE_USAGE_STATS = 0;
     public static final String LOG_TAG = "AM_ACTIVITY";
 
-    ImageView app1Icon;
-    ImageView app2Icon;
-    ImageView app3Icon;
-    ImageView app4Icon;
-    ImageView app5Icon;
-    ImageView app6Icon;
-    ImageView app7Icon;
-    ImageView app8Icon;
-    ImageView app9Icon;
-    ImageView app10Icon;
-
-    TextView app1Name;
-    TextView app2Name;
-    TextView app3Name;
-    TextView app4Name;
-    TextView app5Name;
-    TextView app6Name;
-    TextView app7Name;
-    TextView app8Name;
-    TextView app9Name;
-    TextView app10Name;
-
-    TextView app1Usage;
-    TextView app2Usage;
-    TextView app3Usage;
-    TextView app4Usage;
-    TextView app5Usage;
-    TextView app6Usage;
-    TextView app7Usage;
-    TextView app8Usage;
-    TextView app9Usage;
-    TextView app10Usage;
+    LinearLayout container;
 
     private class UsageStat {
         private String packageName;
@@ -136,106 +110,11 @@ public class AppMonitorActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_app_monitor);
 
-        app1Icon = findViewById(R.id.app1Icon);
-        app1Name = findViewById(R.id.app1Name);
-        app1Usage = findViewById(R.id.app1Usage);
-
-        app2Icon = findViewById(R.id.app2Icon);
-        app2Name = findViewById(R.id.app2Name);
-        app2Usage = findViewById(R.id.app2Usage);
-
-        app3Icon = findViewById(R.id.app3Icon);
-        app3Name = findViewById(R.id.app3Name);
-        app3Usage = findViewById(R.id.app3Usage);
-
-        app4Icon = findViewById(R.id.app4Icon);
-        app4Name = findViewById(R.id.app4Name);
-        app4Usage = findViewById(R.id.app4Usage);
-
-        app5Icon = findViewById(R.id.app5Icon);
-        app5Name = findViewById(R.id.app5Name);
-        app5Usage = findViewById(R.id.app5Usage);
-
-        app6Icon = findViewById(R.id.app6Icon);
-        app6Name = findViewById(R.id.app6Name);
-        app6Usage = findViewById(R.id.app6Usage);
-
-        app7Icon = findViewById(R.id.app7Icon);
-        app7Name = findViewById(R.id.app7Name);
-        app7Usage = findViewById(R.id.app7Usage);
-
-        app8Icon = findViewById(R.id.app8Icon);
-        app8Name = findViewById(R.id.app8Name);
-        app8Usage = findViewById(R.id.app8Usage);
-
-        app9Icon = findViewById(R.id.app9Icon);
-        app9Name = findViewById(R.id.app9Name);
-        app9Usage = findViewById(R.id.app9Usage);
-
-        app10Icon = findViewById(R.id.app10Icon);
-        app10Name = findViewById(R.id.app10Name);
-        app10Usage = findViewById(R.id.app10Usage);
-
+        container = findViewById(R.id.container);
         List<UsageStat> usageStats = getTopUsedApps(3, 10);
-
-        app1Icon.setImageDrawable(usageStats.get(0).getIcon());
-        app1Name.setText(usageStats.get(0).getAppName());
-        app1Usage.setText(usageStats.get(0).getUsageTimeString());
-
-        app2Icon.setImageDrawable(usageStats.get(1).getIcon());
-        app2Name.setText(usageStats.get(1).getAppName());
-        app2Usage.setText(usageStats.get(1).getUsageTimeString());
-
-        app3Icon.setImageDrawable(usageStats.get(2).getIcon());
-        app3Name.setText(usageStats.get(2).getAppName());
-        app3Usage.setText(usageStats.get(2).getUsageTimeString());
-
-        app4Icon.setImageDrawable(usageStats.get(3).getIcon());
-        app4Name.setText(usageStats.get(3).getAppName());
-        app4Usage.setText(usageStats.get(3).getUsageTimeString());
-
-        app5Icon.setImageDrawable(usageStats.get(4).getIcon());
-        app5Name.setText(usageStats.get(4).getAppName());
-        app5Usage.setText(usageStats.get(4).getUsageTimeString());
-
-        app6Icon.setImageDrawable(usageStats.get(5).getIcon());
-        app6Name.setText(usageStats.get(5).getAppName());
-        app6Usage.setText(usageStats.get(5).getUsageTimeString());
-
-        app7Icon.setImageDrawable(usageStats.get(6).getIcon());
-        app7Name.setText(usageStats.get(6).getAppName());
-        app7Usage.setText(usageStats.get(6).getUsageTimeString());
-
-        app8Icon.setImageDrawable(usageStats.get(7).getIcon());
-        app8Name.setText(usageStats.get(7).getAppName());
-        app8Usage.setText(usageStats.get(7).getUsageTimeString());
-
-        app9Icon.setImageDrawable(usageStats.get(8).getIcon());
-        app9Name.setText(usageStats.get(8).getAppName());
-        app9Usage.setText(usageStats.get(8).getUsageTimeString());
-
-        app10Icon.setImageDrawable(usageStats.get(9).getIcon());
-        app10Name.setText(usageStats.get(9).getAppName());
-        app10Usage.setText(usageStats.get(9).getUsageTimeString());
-
-//        for (UsageStat stat : usageStats) {
-//            Log.v(LOG_TAG, stat.toString());
-//            Log.v(LOG_TAG, "\n");
-//
-//            app1Icon.setImageDrawable(stat.getIcon());
-//        }
+        createUIApps(container, usageStats);
 
         addBottomNavigation();
-
-//        BottomNavigationView navView = findViewById(R.id.nav_view);
-//        // Passing each menu ID as a set of Ids because each
-//        // menu should be considered as top level destinations.
-//        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
-//                R.id.navigation_home, R.id.navigation_dashboard, R.id.navigation_notifications)
-//                .build();
-//        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-//        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
-//        NavigationUI.setupWithNavController(navView, navController);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -287,6 +166,76 @@ public class AppMonitorActivity extends AppCompatActivity {
         });
 
         return usageStats.subList(0, numApps);
+    }
+
+    public void createUIApps(LinearLayout container, List<UsageStat> appUsageList) {
+        for (UsageStat stat : appUsageList) {
+            View separator = new View(this);
+            separator.setLayoutParams(new ViewGroup.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    5
+            ));
+            separator.setBackgroundColor(Color.parseColor("#C0C0C0"));
+            container.addView(separator);
+
+            TextView nameText = new TextView(this);
+            nameText.setLayoutParams(new ViewGroup.LayoutParams(
+                    ViewGroup.LayoutParams.WRAP_CONTENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT
+            ));
+            nameText.setGravity(Gravity.START);
+            nameText.setText(stat.getAppName());
+            nameText.setTextColor(Color.parseColor("#000000"));
+            nameText.setTextSize(25);
+
+            TextView usageText = new TextView(this);
+            usageText.setLayoutParams(new ViewGroup.LayoutParams(
+                    ViewGroup.LayoutParams.WRAP_CONTENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT
+            ));
+            usageText.setGravity(Gravity.START);
+            usageText.setText(stat.getUsageTimeString());
+            usageText.setTextColor(Color.parseColor("#555555"));
+            usageText.setTextSize(20);
+
+            LinearLayout vLayout = new LinearLayout(this);
+            vLayout.setOrientation(LinearLayout.VERTICAL);
+            LinearLayout.LayoutParams vLayoutParams = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT);
+            vLayoutParams.setMargins(15, 15, 15, 15);
+            vLayout.setLayoutParams(vLayoutParams);
+
+            vLayout.addView(nameText);
+            vLayout.addView(usageText);
+
+            ImageView appIcon = new ImageView(this);
+            LinearLayout.LayoutParams imgViewParams = new LinearLayout.LayoutParams(120, 120);
+            imgViewParams.setMargins(25, 25, 25, 25);
+            appIcon.setLayoutParams(imgViewParams);
+            appIcon.setImageDrawable(stat.getIcon());
+
+            LinearLayout hLayout = new LinearLayout(this);
+            hLayout.setOrientation(LinearLayout.HORIZONTAL);
+            LinearLayout.LayoutParams hLayoutParams = new LinearLayout.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT
+            );
+            hLayout.setLayoutParams(hLayoutParams);
+
+            hLayout.addView(appIcon);
+            hLayout.addView(vLayout);
+
+            container.addView(hLayout);
+        }
+
+        View end = new View(this);
+        end.setLayoutParams(new ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                150
+        ));
+        end.setBackgroundColor(Color.parseColor("#FFFFFF"));
+        container.addView(end);
     }
 
     public void addBottomNavigation() {
