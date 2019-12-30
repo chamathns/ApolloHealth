@@ -21,6 +21,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import com.example.apollohealth.db.DatabaseHandler;
 import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.series.BarGraphSeries;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 
@@ -62,14 +63,25 @@ public class HealthActivity extends Activity {
         });
 
         GraphView graph = (GraphView) findViewById(R.id.graph);
-        LineGraphSeries<DataPoint> series = new LineGraphSeries<>(new DataPoint[] {
+        LineGraphSeries<DataPoint> lineSeries = new LineGraphSeries<>(new DataPoint[] {
                 new DataPoint(0, 1),
                 new DataPoint(1, 5),
                 new DataPoint(2, 3),
                 new DataPoint(3, 2),
                 new DataPoint(4, 6)
         });
-        graph.addSeries(series);
+        BarGraphSeries<DataPoint> barSeries = new BarGraphSeries<>(new DataPoint[] {
+                new DataPoint(0, -1),
+                new DataPoint(1, 5),
+                new DataPoint(2, 3),
+                new DataPoint(3, 2),
+                new DataPoint(4, 6),
+                new DataPoint(5, 2)
+        });
+
+        graph.addSeries(barSeries);
+        barSeries.setSpacing(25);
+        barSeries.setDrawValuesOnTop(true);
 
     }
 
@@ -110,14 +122,32 @@ public class HealthActivity extends Activity {
 
         Log.i("DB", "Reading from database");
         Cursor physicalData = myDB.getPhysicalData(3);
-        physicalData.moveToFirst();
-        if (physicalData.moveToFirst()) {
-            height = physicalData.getString(2);
+
+        if(physicalData != null) {
+            Log.i("DB", "ifffffffffffffffffffffffffffffffffffff");
+            physicalData.moveToFirst();
+
+            for(int i=0; i< physicalData.getCount(); i++){
+                Log.i("DB", "looooooooooooooooooooooooooop" + physicalData.getCount());
+                flights += Integer.parseInt(physicalData.getString(2));
+                height = physicalData.getString(2);
+
+                physicalData.moveToNext();
+            }
         }
+//        physicalData.moveToFirst();
+//        if (physicalData.moveToFirst()) {
+//            Log.i("DB", "ifffffffffffffffffffffffffffffffffffff");
+//            while(physicalData.moveToNext()){
+//                Log.i("DB", "looooooooooooooooooooooooooop");
+//                flights += Integer.parseInt(physicalData.getString(2));
+//                height = physicalData.getString(2);
+//            }
+//        }
 
-        pressureText.setText(String.format("Flights climbed: %s", height));
+        pressureText.setText(String.format("Flights climbed: %d     %s",flights, height));
 
-        caloryText.setText(String.format("Calories burned: %.2f", metrics.caloriesBurned(0, Integer.parseInt(height))));
+        caloryText.setText(String.format("Calories burned: %.2f", metrics.caloriesBurned(0, flights)));
     }
 
     @Override

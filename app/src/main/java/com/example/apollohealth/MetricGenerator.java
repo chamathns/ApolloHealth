@@ -44,7 +44,7 @@ public class MetricGenerator {
         float heightInMeters = height/100;
 
         float bmi = weight/(heightInMeters * heightInMeters);
-        
+
         return bmi;
     }
 }
