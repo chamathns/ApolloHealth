@@ -33,13 +33,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public static final String HEALTH_TABLE_STEPS = "STEPS";
     public static final String HEALTH_TABLE_HEIGHTS = "HEIGHT_CLIMBED";
 
-    //    app data table
-    public static final String APP_TABLE = "APP_TABLE";
-    public static final String APP_TABLE_NAME = "APP_NAME";
-    public static final String APP_TABLE_GENRE = "GENRE";
-    public static final String APP_TABLE_SCREEN_TIME = "SCREEN_TIME";
-    public static final String APP_TABLE_TIMESTAMP = "TIMESTAMP";
-
     private static final Format dateFormat = new SimpleDateFormat("yyyyMMdd");
 
     public DatabaseHandler(@Nullable Context context) {
@@ -68,16 +61,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                         HEALTH_TABLE_STEPS + " INTEGER NOT NULL, " +
                         HEALTH_TABLE_HEIGHTS + " INTEGER NOT NULL);"
         );
-
-        sqLiteDatabase.execSQL(
-                "CREATE TABLE " + APP_TABLE + " (" +
-                        APP_TABLE_NAME + " TEXT NOT NULL, " +
-                        APP_TABLE_GENRE + " TEXT NOT NULL, " +
-                        APP_TABLE_SCREEN_TIME + " INT NOT NULL, " +
-                        APP_TABLE_TIMESTAMP + " BIGINT NOT NULL, " +
-                        "PRIMARY KEY (" + APP_TABLE_NAME + ", " + APP_TABLE_TIMESTAMP + "), " +
-                        "FOREIGN KEY (" + APP_TABLE_TIMESTAMP + ") REFERENCES " + HEALTH_TABLE + " (" + HEALTH_TABLE_TIMESTAMP + "));"
-        );
     }
 
     @Override
@@ -88,10 +71,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         sqLiteDatabase.execSQL(
                 "DROP TABLE IF EXISTS " + HEALTH_TABLE + ";"
-        );
-
-        sqLiteDatabase.execSQL(
-                "DROP TABLE IF EXISTS " + APP_TABLE + ";"
         );
 
         this.onCreate(sqLiteDatabase);
@@ -212,82 +191,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                         HEALTH_TABLE_STEPS + " = " + HEALTH_TABLE_STEPS + " + " + steps + ", " +
                         HEALTH_TABLE_HEIGHTS + " = " + HEALTH_TABLE_HEIGHTS + " + " + heights +
                         " WHERE " + HEALTH_TABLE_TIMESTAMP + " = " + timestampDate + ";"
-        );
-
-        return true;
-    }
-
-    public boolean insertAppData(String appName, String appGenre, long timestamp, int screenTime) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues contentValues = new ContentValues();
-        long timestampDate = Long.parseLong(dateFormat.format(timestamp));
-
-        contentValues.put(APP_TABLE_NAME, appName);
-        contentValues.put(APP_TABLE_GENRE, appGenre);
-        contentValues.put(APP_TABLE_SCREEN_TIME, screenTime);
-        contentValues.put(APP_TABLE_TIMESTAMP, timestampDate);
-
-        long result = db.insert(APP_TABLE, null, contentValues);
-
-        return result != -1;
-    }
-
-    public Cursor getAppDataApp(int numDays) {
-        SQLiteDatabase db = this.getWritableDatabase();
-
-        long tsCurrent = System.currentTimeMillis();
-        long tsLimit = tsCurrent - numDays * 24 * 3600 * 1000L;
-        long tsLimitDate = Long.parseLong(dateFormat.format(tsLimit));
-
-        return db.rawQuery(
-                "SELECT " + APP_TABLE_NAME + ", SUM(" + APP_TABLE_SCREEN_TIME + ")" +
-                        " FROM " + APP_TABLE +
-                        " GROUP BY " + APP_TABLE_NAME +
-                        " WHERE (" + APP_TABLE_TIMESTAMP + " > " + tsLimitDate + ");",
-                null
-        );
-    }
-
-    public Cursor getAppDataGenre(int numDays) {
-        SQLiteDatabase db = this.getWritableDatabase();
-
-        long tsCurrent = System.currentTimeMillis();
-        long tsLimit = tsCurrent - numDays * 24 * 3600 * 1000L;
-        long tsLimitDate = Long.parseLong(dateFormat.format(tsLimit));
-
-        return db.rawQuery(
-                "SELECT " + APP_TABLE_GENRE + ", SUM(" + APP_TABLE_SCREEN_TIME + ")" +
-                        " FROM " + APP_TABLE +
-                        " GROUP BY " + APP_TABLE_GENRE +
-                        " WHERE (" + APP_TABLE_TIMESTAMP + " > " + tsLimitDate + ");",
-                null
-        );
-    }
-
-    public boolean updateAppData(String appName, String appGenre, long timestamp, int screenTime) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        long timestampDate = Long.parseLong(dateFormat.format(timestamp));
-
-        Cursor c = db.rawQuery(
-                "SELECT 1" +
-                        " FROM " + APP_TABLE +
-                        " WHERE (" + APP_TABLE_NAME + " = " + appName + ")" +
-                        " AND (" + APP_TABLE_TIMESTAMP + " = " + timestampDate + ");",
-                null
-        );
-
-        if (c.getCount() <= 0) {
-            c.close();
-            return insertAppData(appName, appGenre, timestamp, screenTime);
-        }
-
-        c.close();
-
-        db.execSQL(
-                "UPDATE " + APP_TABLE +
-                        " SET " + APP_TABLE_SCREEN_TIME + " = " + APP_TABLE_SCREEN_TIME + " + " + screenTime +
-                        " WHERE (" + APP_TABLE_NAME + " = " + appName + ")" +
-                        " AND (" + APP_TABLE_TIMESTAMP + " = " + timestampDate + ");"
         );
 
         return true;
