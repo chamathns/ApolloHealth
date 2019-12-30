@@ -3,10 +3,6 @@ package com.example.apollohealth;
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
-import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -17,15 +13,12 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-
 import com.example.apollohealth.db.DatabaseHandler;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.BarGraphSeries;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
-
-import static java.lang.Math.abs;
 
 public class HealthActivity extends Activity {
 
@@ -63,14 +56,14 @@ public class HealthActivity extends Activity {
         });
 
         GraphView graph = (GraphView) findViewById(R.id.graph);
-        LineGraphSeries<DataPoint> lineSeries = new LineGraphSeries<>(new DataPoint[] {
+        LineGraphSeries<DataPoint> lineSeries = new LineGraphSeries<>(new DataPoint[]{
                 new DataPoint(0, 1),
                 new DataPoint(1, 5),
                 new DataPoint(2, 3),
                 new DataPoint(3, 2),
                 new DataPoint(4, 6)
         });
-        BarGraphSeries<DataPoint> barSeries = new BarGraphSeries<>(new DataPoint[] {
+        BarGraphSeries<DataPoint> barSeries = new BarGraphSeries<>(new DataPoint[]{
                 new DataPoint(0, -1),
                 new DataPoint(1, 5),
                 new DataPoint(2, 3),
@@ -123,11 +116,11 @@ public class HealthActivity extends Activity {
         Log.i("DB", "Reading from database");
         Cursor physicalData = myDB.getPhysicalData(3);
 
-        if(physicalData != null) {
+        if (physicalData != null) {
             Log.i("DB", "ifffffffffffffffffffffffffffffffffffff");
             physicalData.moveToFirst();
 
-            for(int i=0; i< physicalData.getCount(); i++){
+            for (int i = 0; i < physicalData.getCount(); i++) {
                 Log.i("DB", "looooooooooooooooooooooooooop" + physicalData.getCount());
                 flights += Integer.parseInt(physicalData.getString(2));
                 height = physicalData.getString(2);
@@ -145,7 +138,7 @@ public class HealthActivity extends Activity {
 //            }
 //        }
 
-        pressureText.setText(String.format("Flights climbed: %d     %s",flights, height));
+        pressureText.setText(String.format("Flights climbed: %d     %s", flights, height));
 
         caloryText.setText(String.format("Calories burned: %.2f", metrics.caloriesBurned(0, flights)));
     }
