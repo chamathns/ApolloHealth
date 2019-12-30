@@ -56,10 +56,9 @@ public class AboutActivity extends FragmentActivity implements UsernameDialog.Us
 
         myDB = new DatabaseHandler(this);
         Cursor userData = myDB.getUserData();
-        if (!userData.moveToFirst()){
-            myDB.insertUserData("John Doe", 20,"Male", 60, 170);
-        }
-        else{
+        if (!userData.moveToFirst()) {
+            myDB.insertUserData("John Doe", 20, "Male", 60, 170);
+        } else {
             userData.moveToFirst();
             username = userData.getString(1);
             age = Integer.parseInt(userData.getString(2));
@@ -114,7 +113,7 @@ public class AboutActivity extends FragmentActivity implements UsernameDialog.Us
             textview_username.setText(userName);
 
             this.username = userName;
-            myDB.updateUserData("1", username,age, gender, Float.parseFloat(weight), Float.parseFloat(height));
+            myDB.updateUserData("1", username, age, gender, Float.parseFloat(weight), Float.parseFloat(height));
             textview_username.setText(username);
 
         } else if (!StringUtils.isEmpty(userName)) {
@@ -198,10 +197,10 @@ public class AboutActivity extends FragmentActivity implements UsernameDialog.Us
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 if (gender[which] == "Male") {
-                    myDB.updateUserData("1", username,age, "Male", Float.parseFloat(weight), Float.parseFloat(height));
+                    myDB.updateUserData("1", username, age, "Male", Float.parseFloat(weight), Float.parseFloat(height));
                     textview_gender.setText("Male");
                 } else if (gender[which] == "Female") {
-                    myDB.updateUserData("1", username,age, "Female", Float.parseFloat(weight), Float.parseFloat(height));
+                    myDB.updateUserData("1", username, age, "Female", Float.parseFloat(weight), Float.parseFloat(height));
                     textview_gender.setText("Female");
                 }
             }
@@ -235,7 +234,7 @@ public class AboutActivity extends FragmentActivity implements UsernameDialog.Us
     @Override
     public void onUserHeightDialogPositiveClick(String userHeight) {
         this.height = userHeight;
-        myDB.updateUserData("1", username,age, gender, Float.parseFloat(weight), Float.parseFloat(height));
+        myDB.updateUserData("1", username, age, gender, Float.parseFloat(weight), Float.parseFloat(height));
         textview_height.setText(height + " cm");
 
     }
@@ -265,7 +264,7 @@ public class AboutActivity extends FragmentActivity implements UsernameDialog.Us
     @Override
     public void onUserWeightDialogPositiveClick(String userWeight) {
         this.weight = userWeight;
-        myDB.updateUserData("1", username,age, gender, Float.parseFloat(weight), Float.parseFloat(height));
+        myDB.updateUserData("1", username, age, gender, Float.parseFloat(weight), Float.parseFloat(height));
         textview_weight.setText(weight + " kg");
     }
 

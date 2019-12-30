@@ -19,6 +19,7 @@ public class ProcessMainClass {
             serviceIntent = new Intent(context, SensorService.class);
         }
     }
+
     /**
      * launching the service
      */

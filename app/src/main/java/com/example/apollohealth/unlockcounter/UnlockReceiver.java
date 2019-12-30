@@ -1,6 +1,5 @@
 package com.example.apollohealth.unlockcounter;
 
-import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;

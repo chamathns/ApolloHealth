@@ -1,7 +1,6 @@
 package com.example.apollohealth;
 
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -13,10 +12,10 @@ import android.util.Log;
 
 import androidx.annotation.Nullable;
 
+import com.example.apollohealth.db.DatabaseHandler;
+
 import java.util.Timer;
 import java.util.TimerTask;
-
-import com.example.apollohealth.db.DatabaseHandler;
 
 import static java.lang.Math.abs;
 

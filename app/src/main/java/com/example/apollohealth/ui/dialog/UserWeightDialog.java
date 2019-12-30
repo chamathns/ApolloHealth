@@ -13,13 +13,15 @@ import androidx.fragment.app.DialogFragment;
 
 import com.example.apollohealth.R;
 
-public class UserWeightDialog extends DialogFragment  {
+public class UserWeightDialog extends DialogFragment {
     private NumberPicker numberPickerWeight;
 
     public interface UserWeightDialogListener {
         public void onUserWeightDialogPositiveClick(String userWeight);
+
         public void onUserWeightDialogNegativeClick(DialogFragment dialog);
     }
+
     UserWeightDialogListener listener;
 
     @Override

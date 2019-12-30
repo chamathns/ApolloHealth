@@ -9,11 +9,11 @@ import android.content.Intent;
 import android.os.Build;
 import android.util.Log;
 
-import static android.content.Context.JOB_SCHEDULER_SERVICE;
-
 import androidx.annotation.RequiresApi;
 
 import com.example.apollohealth.ProcessMainClass;
+
+import static android.content.Context.JOB_SCHEDULER_SERVICE;
 
 public class SensorRestarterBroadcastReceiver extends BroadcastReceiver {
 

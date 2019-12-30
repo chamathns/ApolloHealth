@@ -17,11 +17,12 @@ public class UsernameDialog extends DialogFragment {
     private EditText editTextUsername;
 
 
-
     public interface UserNameDialogListener {
         public void onUserNameDialogPositiveClick(String username);
+
         public void onUserNameDialogNegativeClick(DialogFragment dialog);
     }
+
     UserNameDialogListener listener;
 
     @Override

@@ -5,23 +5,23 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.NumberPicker;
 
 import androidx.fragment.app.DialogFragment;
 
 import com.example.apollohealth.R;
 
-public class UserHeightDialog extends DialogFragment  {
+public class UserHeightDialog extends DialogFragment {
     private NumberPicker numberPickerHeight;
 
     public interface UserHeightDialogListener {
         public void onUserHeightDialogPositiveClick(String userHeight);
+
         public void onUserHeightDialogNegativeClick(DialogFragment dialog);
     }
+
     UserHeightDialogListener listener;
 
     @Override

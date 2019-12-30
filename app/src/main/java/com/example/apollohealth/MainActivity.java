@@ -108,11 +108,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         if (userData.moveToFirst()) {
             displayText = userData.getString(1);
             displayName.setText(String.format("Hi, %s", displayText));
-        }
-        else {
+        } else {
             displayName.setText(String.format("Hi, %s", displayText));
         }
-
 
 
         Cursor physicalData = myDB.getPhysicalData(duration);

@@ -21,7 +21,7 @@ public class ScreenTimeReceiver extends BroadcastReceiver {
             startTime = System.currentTimeMillis();
         } else if (intent.getAction().equals(Intent.ACTION_SCREEN_OFF)) {
             endTime = System.currentTimeMillis();
-            screenOnTime = Integer.parseInt(String.valueOf((endTime - startTime)/1000));
+            screenOnTime = Integer.parseInt(String.valueOf((endTime - startTime) / 1000));
 
             DatabaseHandler myDB = new DatabaseHandler(context);
             myDB.updateHealthData(System.currentTimeMillis(), screenOnTime, 0, 0, 0, 0, 0);
