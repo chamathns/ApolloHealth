@@ -180,7 +180,7 @@ public class AppMonitorActivity extends AppCompatActivity {
             String packageName = entry.getKey();
             long totalTimeUsageInMillis = lUsageStatsMap.get(packageName).getTotalTimeInForeground();
 
-            if (!(totalTimeUsageInMillis > 0)) {
+            if (!((totalTimeUsageInMillis / 1000) > 0)) {
                 continue;
             }
 
