@@ -7,32 +7,30 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.EditText;
+import android.widget.NumberPicker;
 
 import androidx.fragment.app.DialogFragment;
 
 import com.example.apollohealth.R;
 
-public class UsernameDialog extends DialogFragment {
-    private EditText editTextUsername;
+public class UserWeightDialog extends DialogFragment  {
+    private NumberPicker numberPickerWeight;
 
-
-
-    public interface UserNameDialogListener {
-        public void onUserNameDialogPositiveClick(String username);
-        public void onUserNameDialogNegativeClick(DialogFragment dialog);
+    public interface UserWeightDialogListener {
+        public void onUserWeightDialogPositiveClick(String userWeight);
+        public void onUserWeightDialogNegativeClick(DialogFragment dialog);
     }
-    UserNameDialogListener listener;
+    UserWeightDialogListener listener;
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
 
         try {
-            listener = (UserNameDialogListener) context;
+            listener = (UserWeightDialogListener) context;
         } catch (Exception e) {
             throw new ClassCastException(context.toString() +
-                    "must implement UserNameDialogListener");
+                    "must implement UserWeightDialogListener");
         }
 
     }
@@ -42,26 +40,30 @@ public class UsernameDialog extends DialogFragment {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = requireActivity().getLayoutInflater();
-        View view = inflater.inflate(R.layout.dialog_about_username, null);
-
+        View view = inflater.inflate(R.layout.dialog_about_weight, null);
+        numberPickerWeight = view.findViewById(R.id.numberPickerWeight);
+        numberPickerWeight.setMinValue(20);
+        numberPickerWeight.setMaxValue(300);
+        numberPickerWeight.setWrapSelectorWheel(false);
+        numberPickerWeight.setValue(88);
         builder.setView(view)
-                .setTitle("Enter your name")
+                .setTitle("Set your weight")
+
                 .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        listener.onUserNameDialogNegativeClick(UsernameDialog.this);
+                        listener.onUserWeightDialogNegativeClick(UserWeightDialog.this);
 
                     }
                 })
                 .setPositiveButton("ok", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        String username = editTextUsername.getText().toString();
-                        listener.onUserNameDialogPositiveClick(username);
+                        String userWeight = String.valueOf(numberPickerWeight.getValue());
+                        listener.onUserWeightDialogPositiveClick(userWeight);
 
                     }
                 });
-        editTextUsername = view.findViewById(R.id.edit_username);
         return builder.create();
     }
 

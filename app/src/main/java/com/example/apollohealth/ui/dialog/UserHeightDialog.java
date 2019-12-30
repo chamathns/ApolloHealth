@@ -5,34 +5,34 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.NumberPicker;
 
 import androidx.fragment.app.DialogFragment;
 
 import com.example.apollohealth.R;
 
-public class UsernameDialog extends DialogFragment {
-    private EditText editTextUsername;
+public class UserHeightDialog extends DialogFragment  {
+    private NumberPicker numberPickerHeight;
 
-
-
-    public interface UserNameDialogListener {
-        public void onUserNameDialogPositiveClick(String username);
-        public void onUserNameDialogNegativeClick(DialogFragment dialog);
+    public interface UserHeightDialogListener {
+        public void onUserHeightDialogPositiveClick(String userHeight);
+        public void onUserHeightDialogNegativeClick(DialogFragment dialog);
     }
-    UserNameDialogListener listener;
+    UserHeightDialogListener listener;
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
 
         try {
-            listener = (UserNameDialogListener) context;
+            listener = (UserHeightDialogListener) context;
         } catch (Exception e) {
             throw new ClassCastException(context.toString() +
-                    "must implement UserNameDialogListener");
+                    "must implement UserHeightDialogListener");
         }
 
     }
@@ -42,26 +42,30 @@ public class UsernameDialog extends DialogFragment {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = requireActivity().getLayoutInflater();
-        View view = inflater.inflate(R.layout.dialog_about_username, null);
-
+        View view = inflater.inflate(R.layout.dialog_about_height, null);
+        numberPickerHeight = view.findViewById(R.id.numberPickerHeight);
+        numberPickerHeight.setMinValue(100);
+        numberPickerHeight.setMaxValue(250);
+        numberPickerHeight.setWrapSelectorWheel(false);
+        numberPickerHeight.setValue(193);
         builder.setView(view)
-                .setTitle("Enter your name")
+                .setTitle("Set your height")
+
                 .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        listener.onUserNameDialogNegativeClick(UsernameDialog.this);
+                        listener.onUserHeightDialogNegativeClick(UserHeightDialog.this);
 
                     }
                 })
                 .setPositiveButton("ok", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        String username = editTextUsername.getText().toString();
-                        listener.onUserNameDialogPositiveClick(username);
+                        String userHeight = String.valueOf(numberPickerHeight.getValue());
+                        listener.onUserHeightDialogPositiveClick(userHeight);
 
                     }
                 });
-        editTextUsername = view.findViewById(R.id.edit_username);
         return builder.create();
     }
 
