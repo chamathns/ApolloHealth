@@ -131,15 +131,15 @@ public class AppMonitorActivity extends AppCompatActivity {
         timePeriodSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                if(i == 0) {
+                if (i == 0) {
                     loadData(container, 1, 10);
-                } else if (i==1){
+                } else if (i == 1) {
                     loadData(container, 3, 10);
-                } else if (i==2){
+                } else if (i == 2) {
                     loadData(container, 7, 10);
-                } else if (i==3){
+                } else if (i == 3) {
                     loadData(container, 30, 10);
-                } else if (i==4){
+                } else if (i == 4) {
                     loadData(container, 365, 10);
                 } else {
                     Log.i(LOG_TAG, "Invalid selection");
@@ -180,6 +180,10 @@ public class AppMonitorActivity extends AppCompatActivity {
             String packageName = entry.getKey();
             long totalTimeUsageInMillis = lUsageStatsMap.get(packageName).getTotalTimeInForeground();
 
+            if (!(totalTimeUsageInMillis > 0)) {
+                continue;
+            }
+
             UsageStat stat = new UsageStat(packageName, totalTimeUsageInMillis);
 
             try {
@@ -202,6 +206,10 @@ public class AppMonitorActivity extends AppCompatActivity {
                 return Long.compare(us2.getUsageTime(), us1.getUsageTime());
             }
         });
+
+        if (usageStats.size() <= numApps) {
+            return usageStats;
+        }
 
         return usageStats.subList(0, numApps);
     }
