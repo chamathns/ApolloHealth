@@ -17,8 +17,11 @@ import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,6 +42,7 @@ public class AppMonitorActivity extends AppCompatActivity {
     public static final String LOG_TAG = "AM_ACTIVITY";
 
     LinearLayout container;
+    Spinner timePeriodSpinner;
 
     private class UsageStat {
         private String packageName;
@@ -111,8 +115,42 @@ public class AppMonitorActivity extends AppCompatActivity {
         setContentView(R.layout.activity_app_monitor);
 
         container = findViewById(R.id.container);
-        List<UsageStat> usageStats = getTopUsedApps(3, 10);
-        createUIApps(container, usageStats);
+        loadData(container, 1, 10);
+
+        timePeriodSpinner = findViewById(R.id.time_period_spinner);
+        List<String> timePeriods = new ArrayList<String>();
+        timePeriods.add("1-day Report");
+        timePeriods.add("3-day Report");
+        timePeriods.add("Weekly Report");
+        timePeriods.add("Monthly Report");
+        timePeriods.add("Yearly Report");
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_item, timePeriods);
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        timePeriodSpinner.setAdapter(dataAdapter);
+        timePeriodSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                if (i == 0) {
+                    loadData(container, 1, 10);
+                } else if (i == 1) {
+                    loadData(container, 3, 10);
+                } else if (i == 2) {
+                    loadData(container, 7, 10);
+                } else if (i == 3) {
+                    loadData(container, 30, 10);
+                } else if (i == 4) {
+                    loadData(container, 365, 10);
+                } else {
+                    Log.i(LOG_TAG, "Invalid selection");
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
 
         addBottomNavigation();
     }
@@ -142,6 +180,10 @@ public class AppMonitorActivity extends AppCompatActivity {
             String packageName = entry.getKey();
             long totalTimeUsageInMillis = lUsageStatsMap.get(packageName).getTotalTimeInForeground();
 
+            if (!(totalTimeUsageInMillis > 0)) {
+                continue;
+            }
+
             UsageStat stat = new UsageStat(packageName, totalTimeUsageInMillis);
 
             try {
@@ -165,10 +207,22 @@ public class AppMonitorActivity extends AppCompatActivity {
             }
         });
 
+        if (usageStats.size() <= numApps) {
+            return usageStats;
+        }
+
         return usageStats.subList(0, numApps);
     }
 
-    public void createUIApps(LinearLayout container, List<UsageStat> appUsageList) {
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    private void loadData(LinearLayout container, int numDays, int numApps) {
+        container.removeAllViews();
+
+        List<UsageStat> usageStats = getTopUsedApps(numDays, numApps);
+        createUIApps(container, usageStats);
+    }
+
+    private void createUIApps(LinearLayout container, List<UsageStat> appUsageList) {
         for (UsageStat stat : appUsageList) {
             View separator = new View(this);
             separator.setLayoutParams(new ViewGroup.LayoutParams(
