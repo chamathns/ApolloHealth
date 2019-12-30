@@ -110,10 +110,14 @@ public class AboutActivity extends FragmentActivity implements UsernameDialog.Us
     @Override
     public void onUserNameDialogPositiveClick(String userName) {
 <<<<<<< HEAD
+<<<<<<< HEAD
         if (userName.matches("^[A-Za-z\\s]{1,}[\\.]{0,1}[A-Za-z\\s]{0,}$")) {
             textview_username.setText(userName);
 =======
         if (userName.matches("[a-zA-Z]+ [a-zA-Z]+")) {
+=======
+        if (userName.matches("[a-zA-Z]+")) {
+>>>>>>> 6ab4bd88ac6dda5a06a0cbeb76963912878ba9a5
             this.username = userName;
             myDB.updateUserData("1", username,age, gender, Float.parseFloat(weight), Float.parseFloat(height));
             textview_username.setText(username);

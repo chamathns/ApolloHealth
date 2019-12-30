@@ -28,6 +28,7 @@
                 app:civ_border_color="#FF000000" />
 
             <customfonts.MyTextView_Roboto_Regular
+                android:id="@+id/displayName"
                 android:layout_width="148dp"
                 android:layout_height="42dp"
                 android:layout_marginStart="18.4dp"
