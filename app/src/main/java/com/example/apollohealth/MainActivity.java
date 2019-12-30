@@ -25,6 +25,7 @@ import com.example.apollohealth.screentimecounter.ScreenTimerService;
 import com.example.apollohealth.unlockcounter.UnlockCounterService;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import customfonts.MyTextView_Roboto_Regular;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
@@ -40,11 +41,13 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private TextView flightText;
     private TextView caloriesText;
     private TextView stepsText;
+    private MyTextView_Roboto_Regular displayName;
 
     private MetricGenerator metrics;
 
-    private String height = "0";
+    private String flight = "0";
     private int duration;
+    private String displayText = "John";
 //    private View mainView;
 
     Intent unlockCounterServiceIntent;
@@ -73,6 +76,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         profileImage = (CircleImageView) findViewById(R.id.profile_image);
         flightText = (TextView) findViewById(R.id.flightText);
         caloriesText = (TextView) findViewById(R.id.caloriesText);
+        displayName = (MyTextView_Roboto_Regular) findViewById((R.id.displayName));
 
         unlockCounterService = new UnlockCounterService(getCtx());
         unlockCounterServiceIntent = new Intent(getCtx(), unlockCounterService.getClass());
@@ -99,15 +103,27 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             bck.launchService(getApplicationContext());
         }
 
+        Cursor userData = myDB.getUserData();
+        userData.moveToFirst();
+        if (userData.moveToFirst()) {
+            displayText = userData.getString(1);
+            displayName.setText(String.format("Hi, %s", displayText));
+        }
+        else {
+            displayName.setText(String.format("Hi, %s", displayText));
+        }
+
+
+
         Cursor physicalData = myDB.getPhysicalData(duration);
         physicalData.moveToFirst();
         if (physicalData.moveToFirst()) {
-            height = physicalData.getString(2);
+            flight = physicalData.getString(2);
         }
 
-        flightText.setText(String.valueOf(height));
+        flightText.setText(String.valueOf(flight));
 
-        caloriesText.setText(String.valueOf(metrics.caloriesBurned(0, Integer.parseInt(height))));
+        caloriesText.setText(String.valueOf(metrics.caloriesBurned(0, Integer.parseInt(flight))));
     }
 
     private boolean isServiceRunning(Class<?> serviceClass) {
@@ -188,12 +204,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         Cursor physicalData = myDB.getPhysicalData(duration);
         physicalData.moveToFirst();
         if (physicalData.moveToFirst()) {
-            height = physicalData.getString(2);
+            flight = physicalData.getString(2);
         }
 
-        flightText.setText(String.valueOf(height));
+        flightText.setText(String.valueOf(flight));
 
-        caloriesText.setText(String.valueOf(metrics.caloriesBurned(0, Integer.parseInt(height))));
+        caloriesText.setText(String.valueOf(metrics.caloriesBurned(0, Integer.parseInt(flight))));
 
         physicalTextView.setText(parent.getItemAtPosition(pos).toString());
         emotionalTextView.setText(parent.getItemAtPosition(pos).toString());

@@ -1,17 +1,17 @@
 <resources>
     <string name="app_name">ApolloHealth</string>
     <string name="about_user_name">Name</string>
-    <string name="user_name_text">Chamath Samarawickrama</string>
+    <string name="user_name_text">John Doe</string>
     <string name="about_you_text">About you</string>
     <string name="about_you_description">This information lets Apollo Health estimate distance, calories, and the intensity of your activity.</string>
     <string name="edit_field_image">editText</string>
     <string name="about_gender">Gender</string>
     <string name="gender_text">Male</string>
     <string name="about_height">Height</string>
-    <string name="height_text">193 cm</string>
+    <string name="height_text">170 cm</string>
     <string name="about_weight">Weight</string>
-    <string name="weight_text">88 kg</string>
-    <string name="username_greeting_text">Hi, Chamath</string>
+    <string name="weight_text">60 kg</string>
+    <string name="username_greeting_text">Hi, John</string>
 
     <string-array name="timeframe_report_array">
         <item>3-day Report</item>

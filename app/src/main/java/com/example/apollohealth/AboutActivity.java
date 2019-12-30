@@ -3,6 +3,7 @@ package com.example.apollohealth;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -13,6 +14,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentActivity;
 
+import com.example.apollohealth.db.DatabaseHandler;
 import com.example.apollohealth.ui.dialog.UserHeightDialog;
 import com.example.apollohealth.ui.dialog.UserWeightDialog;
 import com.example.apollohealth.ui.dialog.UsernameDialog;
@@ -33,6 +35,15 @@ public class AboutActivity extends FragmentActivity implements UsernameDialog.Us
     private ImageView imageview_height;
     private ImageView imageview_weight;
 
+    private String username;
+    private int age;
+    private String gender;
+    private String height;
+    private String weight;
+
+    private MetricGenerator metrics;
+    private DatabaseHandler myDB;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,6 +53,24 @@ public class AboutActivity extends FragmentActivity implements UsernameDialog.Us
         textview_gender = (MyTextView_Roboto_Regular) findViewById(R.id.textview_gender);
         textview_height = (MyTextView_Roboto_Regular) findViewById(R.id.textview_height);
         textview_weight = (MyTextView_Roboto_Regular) findViewById(R.id.textview_weight);
+
+        myDB = new DatabaseHandler(this);
+        Cursor userData = myDB.getUserData();
+        if (!userData.moveToFirst()){
+            myDB.insertUserData("John Doe", 20,"Male", 60, 170);
+        }
+        else{
+            userData.moveToFirst();
+            username = userData.getString(1);
+            age = Integer.parseInt(userData.getString(2));
+            gender = userData.getString(3);
+            weight = userData.getString(4);
+            height = userData.getString(5);
+            textview_username.setText(username);
+            textview_gender.setText(gender);
+            textview_weight.setText(weight);
+            textview_height.setText(height);
+        }
 
         imageview_username = (ImageView) findViewById(R.id.imageview_edit_username);
         imageview_gender = (ImageView) findViewById(R.id.imageview_edit_gender);
@@ -80,8 +109,14 @@ public class AboutActivity extends FragmentActivity implements UsernameDialog.Us
 
     @Override
     public void onUserNameDialogPositiveClick(String userName) {
-        if (userName.matches("[a-zA-Z]+")) {
+
+        if (userName.matches("^[A-Za-z\\s]{1,}[\\.]{0,1}[A-Za-z\\s]{0,}$")) {
             textview_username.setText(userName);
+
+            this.username = userName;
+            myDB.updateUserData("1", username,age, gender, Float.parseFloat(weight), Float.parseFloat(height));
+            textview_username.setText(username);
+
         } else if (!StringUtils.isEmpty(userName)) {
             new AlertDialog.Builder(this)
                     .setTitle("User name is not valid")
@@ -163,8 +198,10 @@ public class AboutActivity extends FragmentActivity implements UsernameDialog.Us
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 if (gender[which] == "Male") {
+                    myDB.updateUserData("1", username,age, "Male", Float.parseFloat(weight), Float.parseFloat(height));
                     textview_gender.setText("Male");
                 } else if (gender[which] == "Female") {
+                    myDB.updateUserData("1", username,age, "Female", Float.parseFloat(weight), Float.parseFloat(height));
                     textview_gender.setText("Female");
                 }
             }
@@ -197,7 +234,9 @@ public class AboutActivity extends FragmentActivity implements UsernameDialog.Us
 
     @Override
     public void onUserHeightDialogPositiveClick(String userHeight) {
-        textview_height.setText(userHeight + " cm");
+        this.height = userHeight;
+        myDB.updateUserData("1", username,age, gender, Float.parseFloat(weight), Float.parseFloat(height));
+        textview_height.setText(height + " cm");
 
     }
 
@@ -225,7 +264,9 @@ public class AboutActivity extends FragmentActivity implements UsernameDialog.Us
 
     @Override
     public void onUserWeightDialogPositiveClick(String userWeight) {
-        textview_weight.setText(userWeight + " kg");
+        this.weight = userWeight;
+        myDB.updateUserData("1", username,age, gender, Float.parseFloat(weight), Float.parseFloat(height));
+        textview_weight.setText(weight + " kg");
     }
 
     @Override
