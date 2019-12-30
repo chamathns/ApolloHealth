@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     private MetricGenerator metrics;
 
-    private String height = "0";
+    private String flight = "0";
     private int duration;
     private String displayText = "John";
 //    private View mainView;
@@ -118,12 +118,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         Cursor physicalData = myDB.getPhysicalData(duration);
         physicalData.moveToFirst();
         if (physicalData.moveToFirst()) {
-            height = physicalData.getString(2);
+            flight = physicalData.getString(2);
         }
 
-        flightText.setText(String.valueOf(height));
+        flightText.setText(String.valueOf(flight));
 
-        caloriesText.setText(String.valueOf(metrics.caloriesBurned(0, Integer.parseInt(height))));
+        caloriesText.setText(String.valueOf(metrics.caloriesBurned(0, Integer.parseInt(flight))));
     }
 
     private boolean isServiceRunning(Class<?> serviceClass) {
@@ -204,12 +204,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         Cursor physicalData = myDB.getPhysicalData(duration);
         physicalData.moveToFirst();
         if (physicalData.moveToFirst()) {
-            height = physicalData.getString(2);
+            flight = physicalData.getString(2);
         }
 
-        flightText.setText(String.valueOf(height));
+        flightText.setText(String.valueOf(flight));
 
-        caloriesText.setText(String.valueOf(metrics.caloriesBurned(0, Integer.parseInt(height))));
+        caloriesText.setText(String.valueOf(metrics.caloriesBurned(0, Integer.parseInt(flight))));
 
         physicalTextView.setText(parent.getItemAtPosition(pos).toString());
         emotionalTextView.setText(parent.getItemAtPosition(pos).toString());

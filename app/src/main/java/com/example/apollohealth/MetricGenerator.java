@@ -39,4 +39,12 @@ public class MetricGenerator {
 
         return cbTotal;
     }
+
+    public float calculateBMI(float height, float weight){
+        float heightInMeters = height/100;
+
+        float bmi = weight/(heightInMeters * heightInMeters);
+        
+        return bmi;
+    }
 }
