@@ -36,7 +36,7 @@ public class HealthActivity extends Activity implements AdapterView.OnItemSelect
 
     private float initHeight;
     private int flights = 0;
-    private int duration;
+    private int duration = 3;
     private int column;
     private int steps;
     private String height = "0";
@@ -162,18 +162,19 @@ public class HealthActivity extends Activity implements AdapterView.OnItemSelect
     public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long l) {
         if(adapterView.getId() == R.id.typeSpinner){
             Log.i("Spinner", "Changeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
+            flights =0;
             switch (pos) {
                 case 0:
-                    column = 2;
+                    column = 1;
                     break;
                 case 1:
-                    column = 1;
+                    column = 2;
                     break;
                 case 2:
 //                    duration = 30;
             }
         }
-        else if (adapterView.getId() == R.id.durationSpinner){
+        else if (adapterView.getId() == R.id.durationSpinner) {
             flights = 0;
             switch (pos) {
                 case 0:
@@ -188,36 +189,35 @@ public class HealthActivity extends Activity implements AdapterView.OnItemSelect
                 case 3:
                     duration = 365;
             }
-
-            Log.i("DB", "Reading from database");
-            physicalData = myDB.getPhysicalData(duration);
-            DataPoint dp[] = new DataPoint[duration];
-
-            if (physicalData != null) {
-                Log.i("DB", "ifffffffffffffffffffffffffffffffffffff");
-                physicalData.moveToFirst();
-                for (int i = 0; i < physicalData.getCount(); i++) {
-                    Log.i("DB", "looooooooooooooooooooooooooop" + physicalData.getCount());
-                    String tempFlight = physicalData.getString(column);
-                    flights += Integer.parseInt(tempFlight);
-                    dp[i] = new DataPoint(i+1,Double.parseDouble(tempFlight));
-                    height = tempFlight;
-
-                    physicalData.moveToNext();
-                }
-            }
-
-            sensorText.setText(String.format("Flights climbed: %d     %s", flights, height));
-
-            caloryText.setText(String.format("Calories burned: %.2f", metrics.caloriesBurned(0, flights)));
-
-            BarGraphSeries barSeries = new BarGraphSeries<>(dp);
-            graph.addSeries(barSeries);
-            barSeries.setSpacing(10);
-            barSeries.setDrawValuesOnTop(true);
-
-
         }
+
+        Log.i("DB", "Reading from database");
+        physicalData = myDB.getPhysicalData(duration);
+        DataPoint dp[] = new DataPoint[duration];
+
+        if (physicalData != null) {
+            Log.i("DB", "ifffffffffffffffffffffffffffffffffffff");
+            physicalData.moveToFirst();
+            for (int i = 0; i < physicalData.getCount(); i++) {
+                Log.i("DB", "looooooooooooooooooooooooooop" + column);
+                String tempFlight = physicalData.getString(column);
+                flights += Integer.parseInt(tempFlight);
+                dp[i] = new DataPoint(i+1,Double.parseDouble(tempFlight));
+                height = tempFlight;
+
+                physicalData.moveToNext();
+            }
+        }
+
+        sensorText.setText(String.format("Flights climbed: %d     %s", flights, height));
+
+        caloryText.setText(String.format("Calories burned: %.2f", metrics.caloriesBurned(0, flights)));
+
+        BarGraphSeries barSeries = new BarGraphSeries<>(dp);
+        graph.addSeries(barSeries);
+        barSeries.setSpacing(10);
+        barSeries.setDrawValuesOnTop(true);
+
     }
 
     @Override
