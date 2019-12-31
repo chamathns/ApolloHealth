@@ -28,6 +28,8 @@ public class SensorService extends Service implements SensorEventListener {
 
     private SensorManager sensorManager;
     private Sensor pressureSensor;
+    private Sensor stepDetector;
+    private Sensor stepCounter;
 
     private float initHeight;
     private int flights = 0;
@@ -69,8 +71,12 @@ public class SensorService extends Service implements SensorEventListener {
 
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         pressureSensor = sensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE);
+        stepDetector = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
+        stepCounter = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
 
         sensorManager.registerListener(this, pressureSensor, SensorManager.SENSOR_DELAY_NORMAL);
+        sensorManager.registerListener(this, stepDetector, SensorManager.SENSOR_DELAY_NORMAL );
+        sensorManager.registerListener(this, stepCounter, SensorManager.SENSOR_DELAY_NORMAL );
 
         // it has been killed by Android and now it is restarted. We must make sure to have reinitialised everything
         if (intent == null) {
