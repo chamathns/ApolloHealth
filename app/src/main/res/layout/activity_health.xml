@@ -50,10 +50,12 @@
             android:text="TextView"
             android:textSize="25sp" />
 
-        <com.jjoe64.graphview.GraphView
-            android:id="@+id/graph"
+
+        <com.anychart.AnyChartView
+            android:id="@+id/any_chart_view"
             android:layout_width="match_parent"
-            android:layout_height="262dp" />
+            android:layout_height="262dp"
+            />
 
     </LinearLayout>
 
