@@ -7,7 +7,10 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -20,14 +23,18 @@ import com.jjoe64.graphview.series.BarGraphSeries;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 
-public class HealthActivity extends Activity {
+public class HealthActivity extends Activity implements AdapterView.OnItemSelectedListener {
 
     private Button startBtn;
-    private TextView pressureText;
+    private TextView sensorText;
     private TextView caloryText;
+    private Spinner typeSpinner;
+    private Spinner durationSpinner;
 
     private float initHeight;
     private int flights = 0;
+    private int duration;
+    private int steps;
     private String height = "0";
     private MetricGenerator metrics;
     private DatabaseHandler myDB;
@@ -37,11 +44,12 @@ public class HealthActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_health);
         addBottomNavigation();
+        addItemsSpinner();
 
         initHeight = 0;
         metrics = new MetricGenerator(193, 88);
 
-        pressureText = (TextView) findViewById(R.id.pressureText);
+        sensorText = (TextView) findViewById(R.id.sensorText);
         caloryText = (TextView) findViewById(R.id.caloryText);
         startBtn = (Button) findViewById(R.id.startBtn);
 
@@ -113,39 +121,101 @@ public class HealthActivity extends Activity {
     protected void onResume() {
         super.onResume();
 
-        Log.i("DB", "Reading from database");
-        Cursor physicalData = myDB.getPhysicalData(3);
-
-        if (physicalData != null) {
-            Log.i("DB", "ifffffffffffffffffffffffffffffffffffff");
-            physicalData.moveToFirst();
-
-            for (int i = 0; i < physicalData.getCount(); i++) {
-                Log.i("DB", "looooooooooooooooooooooooooop" + physicalData.getCount());
-                flights += Integer.parseInt(physicalData.getString(2));
-                height = physicalData.getString(2);
-
-                physicalData.moveToNext();
-            }
-        }
-//        physicalData.moveToFirst();
-//        if (physicalData.moveToFirst()) {
+//        Log.i("DB", "Reading from database");
+//        Cursor physicalData = myDB.getPhysicalData(duration);
+//
+//        if (physicalData != null) {
 //            Log.i("DB", "ifffffffffffffffffffffffffffffffffffff");
-//            while(physicalData.moveToNext()){
-//                Log.i("DB", "looooooooooooooooooooooooooop");
+//            physicalData.moveToFirst();
+//
+//            for (int i = 0; i < physicalData.getCount(); i++) {
+//                Log.i("DB", "looooooooooooooooooooooooooop" + physicalData.getCount());
 //                flights += Integer.parseInt(physicalData.getString(2));
 //                height = physicalData.getString(2);
+//
+//                physicalData.moveToNext();
 //            }
 //        }
-
-        pressureText.setText(String.format("Flights climbed: %d     %s", flights, height));
-
-        caloryText.setText(String.format("Calories burned: %.2f", metrics.caloriesBurned(0, flights)));
+//
+//        pressureText.setText(String.format("Flights climbed: %d     %s", flights, height));
+//
+//        caloryText.setText(String.format("Calories burned: %.2f", metrics.caloriesBurned(0, flights)));
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         myDB.close();
+    }
+
+    public void addItemsSpinner() {
+
+        typeSpinner = (Spinner) findViewById(R.id.typeSpinner);
+        typeSpinner.setOnItemSelectedListener(this);
+
+        ArrayAdapter<CharSequence> adapterType = ArrayAdapter.createFromResource(this,
+                R.array.statistic_type_array, android.R.layout.simple_spinner_item);
+
+        adapterType.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        typeSpinner.setAdapter(adapterType);
+
+        durationSpinner = (Spinner) findViewById(R.id.durationSpinner);
+        durationSpinner.setOnItemSelectedListener(this);
+
+        ArrayAdapter<CharSequence> adapterDuration = ArrayAdapter.createFromResource(this,
+                R.array.timeframe_report_array, android.R.layout.simple_spinner_item);
+
+        adapterDuration.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        durationSpinner.setAdapter(adapterDuration);
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long l) {
+        if(adapterView.getId() == R.id.typeSpinner){
+
+        }
+        else if (adapterView.getId() == R.id.durationSpinner){
+            flights = 0;
+            switch (pos) {
+                case 0:
+                    duration = 3;
+                    break;
+                case 1:
+                    duration = 7;
+                    break;
+                case 2:
+                    duration = 30;
+                    break;
+                case 3:
+                    duration = 365;
+            }
+
+            Log.i("DB", "Reading from database");
+            Cursor physicalData = myDB.getPhysicalData(duration);
+
+            if (physicalData != null) {
+                Log.i("DB", "ifffffffffffffffffffffffffffffffffffff");
+                physicalData.moveToFirst();
+
+                for (int i = 0; i < physicalData.getCount(); i++) {
+                    Log.i("DB", "looooooooooooooooooooooooooop" + physicalData.getCount());
+                    flights += Integer.parseInt(physicalData.getString(2));
+                    height = physicalData.getString(2);
+
+                    physicalData.moveToNext();
+                }
+            }
+
+            sensorText.setText(String.format("Flights climbed: %d     %s", flights, height));
+
+            caloryText.setText(String.format("Calories burned: %.2f", metrics.caloriesBurned(0, flights)));
+        }
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) {
+
     }
 }

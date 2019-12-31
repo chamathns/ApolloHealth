@@ -13,6 +13,12 @@
     <string name="weight_text">60 kg</string>
     <string name="username_greeting_text">Hi, John</string>
 
+    <string-array name="statistic_type_array">
+        <item>Steps/Distance</item>
+        <item>Flights Climbed</item>
+        <item>Calories Burned</item>
+    </string-array>
+
     <string-array name="timeframe_report_array">
         <item>3-day Report</item>
         <item>Weekly Report</item>

@@ -18,8 +18,26 @@
             android:layout_height="wrap_content"
             android:text="Button" />
 
+        <Spinner
+            android:id="@+id/typeSpinner"
+            android:layout_width="match_parent"
+            android:layout_height="47dp"
+            android:background="@null"
+            android:entries="@array/statistic_type_array"
+            android:layoutDirection="ltr"
+            android:textAlignment="center" />
+
+        <Spinner
+            android:id="@+id/durationSpinner"
+            android:layout_width="match_parent"
+            android:layout_height="47dp"
+            android:background="@null"
+            android:entries="@array/timeframe_report_array"
+            android:layoutDirection="ltr"
+            android:textAlignment="center" />
+
         <TextView
-            android:id="@+id/pressureText"
+            android:id="@+id/sensorText"
             android:layout_width="match_parent"
             android:layout_height="97dp"
             android:text="TextView"
