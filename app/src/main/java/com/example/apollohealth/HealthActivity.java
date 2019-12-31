@@ -37,6 +37,7 @@ public class HealthActivity extends Activity implements AdapterView.OnItemSelect
     private float initHeight;
     private int flights = 0;
     private int duration;
+    private int column;
     private int steps;
     private String height = "0";
 
@@ -160,12 +161,13 @@ public class HealthActivity extends Activity implements AdapterView.OnItemSelect
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long l) {
         if(adapterView.getId() == R.id.typeSpinner){
+            Log.i("Spinner", "Changeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
             switch (pos) {
                 case 0:
-//                    duration = 3;
+                    column = 2;
                     break;
                 case 1:
-//                    duration = 7;
+                    column = 1;
                     break;
                 case 2:
 //                    duration = 30;
@@ -196,10 +198,10 @@ public class HealthActivity extends Activity implements AdapterView.OnItemSelect
                 physicalData.moveToFirst();
                 for (int i = 0; i < physicalData.getCount(); i++) {
                     Log.i("DB", "looooooooooooooooooooooooooop" + physicalData.getCount());
-                    String tempFlight = physicalData.getString(2);
+                    String tempFlight = physicalData.getString(column);
                     flights += Integer.parseInt(tempFlight);
                     dp[i] = new DataPoint(i+1,Double.parseDouble(tempFlight));
-                    height = physicalData.getString(2);
+                    height = tempFlight;
 
                     physicalData.moveToNext();
                 }

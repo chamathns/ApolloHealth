@@ -44,8 +44,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private MyTextView_Roboto_Regular displayName;
 
     private MetricGenerator metrics;
+    private Cursor physicalData;
 
-    private String flight = "0";
+    private int flight = 0;
     private int duration;
     private String displayText = "John";
 //    private View mainView;
@@ -112,16 +113,24 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             displayName.setText(String.format("Hi, %s", displayText));
         }
 
+        physicalData = myDB.getPhysicalData(duration);
 
-        Cursor physicalData = myDB.getPhysicalData(duration);
-        physicalData.moveToFirst();
-        if (physicalData.moveToFirst()) {
-            flight = physicalData.getString(2);
+        if (physicalData != null) {
+            physicalData.moveToFirst();
+            for (int i = 0; i < physicalData.getCount(); i++) {
+                String tempFlight = physicalData.getString(2);
+                flight += Integer.parseInt(tempFlight);
+
+                physicalData.moveToNext();
+            }
         }
+//        if (physicalData.moveToFirst()) {
+//            flight = physicalData.getString(2);
+//        }
 
         flightText.setText(String.valueOf(flight));
 
-        caloriesText.setText(String.valueOf(metrics.caloriesBurned(0, Integer.parseInt(flight))));
+        caloriesText.setText(String.valueOf(metrics.caloriesBurned(0, flight)));
     }
 
     private boolean isServiceRunning(Class<?> serviceClass) {
@@ -185,6 +194,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
     public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+        flight = 0;
         switch (pos) {
             case 0:
                 duration = 3;
@@ -199,15 +209,19 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 duration = 365;
         }
 
-        Cursor physicalData = myDB.getPhysicalData(duration);
-        physicalData.moveToFirst();
-        if (physicalData.moveToFirst()) {
-            flight = physicalData.getString(2);
+        physicalData = myDB.getPhysicalData(duration);
+        if (physicalData != null) {
+            physicalData.moveToFirst();
+            for (int i = 0; i < physicalData.getCount(); i++) {
+                flight += Integer.parseInt(physicalData.getString(2));
+
+                physicalData.moveToNext();
+            }
         }
 
         flightText.setText(String.valueOf(flight));
 
-        caloriesText.setText(String.valueOf(metrics.caloriesBurned(0, Integer.parseInt(flight))));
+        caloriesText.setText(String.valueOf(metrics.caloriesBurned(0, flight)));
 
         physicalTextView.setText(parent.getItemAtPosition(pos).toString());
         emotionalTextView.setText(parent.getItemAtPosition(pos).toString());
