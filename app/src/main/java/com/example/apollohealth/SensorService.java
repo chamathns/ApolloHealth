@@ -33,6 +33,17 @@ public class SensorService extends Service implements SensorEventListener {
     private int flights = 0;
     private MetricGenerator metrics;
 
+    // Steps counted in current session
+    private int mSteps = 0;
+
+    // Value of the step counter sensor when the listener was registered.
+    // (Total steps are calculated from this value.)
+    private int mCounterSteps = 0;
+
+    // Steps counted by the step counter previously. Used to keep counter consistent across rotation
+    // changes
+    private int mPreviousCounterSteps = 0;
+
     public SensorService() {
         super();
     }
@@ -214,6 +225,36 @@ public class SensorService extends Service implements SensorEventListener {
                 initHeight = cHeight;
             } else {
             }
+        }
+
+        if (event.sensor.getType() == Sensor.TYPE_STEP_DETECTOR) {
+            mSteps += event.values.length;
+
+            Log.i(TAG,
+                    "New step detected by STEP_DETECTOR sensor. Total step count: " + mSteps);
+
+
+        }else if (event.sensor.getType() == Sensor.TYPE_STEP_COUNTER) {
+
+                /*
+                A step counter event contains the total number of steps since the listener
+                was first registered. We need to keep track of this initial value to calculate the
+                number of steps taken, as the first value a listener receives is undefined.
+                 */
+            if (mCounterSteps < 1) {
+                // initial value
+                mCounterSteps = (int) event.values[0];
+            }
+
+            // Calculate steps taken based on first counter value received.
+            mSteps = (int) event.values[0] - mCounterSteps;
+
+            // Add the number of steps previously taken, otherwise the counter would start at 0.
+            // This is needed to keep the counter consistent across rotation changes.
+            mSteps = mSteps + mPreviousCounterSteps;
+
+            Log.i(TAG, "New step detected by STEP_COUNTER sensor. Total step count: " + mSteps);
+            // END_INCLUDE(sensorevent)
         }
     }
 

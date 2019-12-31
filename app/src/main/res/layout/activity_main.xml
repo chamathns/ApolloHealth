@@ -14,8 +14,8 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="72dp"
-            android:layout_marginTop="50dp"
+            android:layout_height="92dp"
+            android:layout_marginTop="40dp"
             android:orientation="horizontal">
 
             <de.hdodenhof.circleimageview.CircleImageView
@@ -23,14 +23,14 @@
                 android:layout_width="78dp"
                 android:layout_height="match_parent"
                 android:layout_marginStart="24dp"
-                android:src="@drawable/profile1"
                 android:onClick="dpClick"
+                android:src="@drawable/profile1"
                 app:civ_border_color="#FF000000" />
 
             <customfonts.MyTextView_Roboto_Regular
                 android:id="@+id/displayName"
-                android:layout_width="148dp"
-                android:layout_height="42dp"
+                android:layout_width="271dp"
+                android:layout_height="61dp"
                 android:layout_marginStart="18.4dp"
                 android:layout_marginTop="20dp"
                 android:text="@string/username_greeting_text"
