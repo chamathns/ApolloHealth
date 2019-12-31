@@ -23,6 +23,9 @@ import com.jjoe64.graphview.series.BarGraphSeries;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class HealthActivity extends Activity implements AdapterView.OnItemSelectedListener {
 
     private Button startBtn;
@@ -36,8 +39,11 @@ public class HealthActivity extends Activity implements AdapterView.OnItemSelect
     private int duration;
     private int steps;
     private String height = "0";
+
     private MetricGenerator metrics;
     private DatabaseHandler myDB;
+    private Cursor physicalData;
+    GraphView graph;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -63,26 +69,26 @@ public class HealthActivity extends Activity implements AdapterView.OnItemSelect
             }
         });
 
-        GraphView graph = (GraphView) findViewById(R.id.graph);
-        LineGraphSeries<DataPoint> lineSeries = new LineGraphSeries<>(new DataPoint[]{
-                new DataPoint(0, 1),
-                new DataPoint(1, 5),
-                new DataPoint(2, 3),
-                new DataPoint(3, 2),
-                new DataPoint(4, 6)
-        });
-        BarGraphSeries<DataPoint> barSeries = new BarGraphSeries<>(new DataPoint[]{
-                new DataPoint(0, -1),
-                new DataPoint(1, 5),
-                new DataPoint(2, 3),
-                new DataPoint(3, 2),
-                new DataPoint(4, 6),
-                new DataPoint(5, 2)
-        });
+        graph = (GraphView) findViewById(R.id.graph);
+//        LineGraphSeries<DataPoint> lineSeries = new LineGraphSeries<>(new DataPoint[]{
+//                new DataPoint(0, 1),
+//                new DataPoint(1, 5),
+//                new DataPoint(2, 3),
+//                new DataPoint(3, 2),
+//                new DataPoint(4, 6)
+//        });
+//        BarGraphSeries<DataPoint> barSeries = new BarGraphSeries<>(new DataPoint[]{
+//                new DataPoint(0, -1),
+//                new DataPoint(1, 5),
+//                new DataPoint(2, 3),
+//                new DataPoint(3, 2),
+//                new DataPoint(4, 6),
+//                new DataPoint(5, 2)
+//        });
 
-        graph.addSeries(barSeries);
-        barSeries.setSpacing(25);
-        barSeries.setDrawValuesOnTop(true);
+//        graph.addSeries(barSeries);
+//        barSeries.setSpacing(25);
+//        barSeries.setDrawValuesOnTop(true);
 
     }
 
@@ -120,26 +126,6 @@ public class HealthActivity extends Activity implements AdapterView.OnItemSelect
     @Override
     protected void onResume() {
         super.onResume();
-
-//        Log.i("DB", "Reading from database");
-//        Cursor physicalData = myDB.getPhysicalData(duration);
-//
-//        if (physicalData != null) {
-//            Log.i("DB", "ifffffffffffffffffffffffffffffffffffff");
-//            physicalData.moveToFirst();
-//
-//            for (int i = 0; i < physicalData.getCount(); i++) {
-//                Log.i("DB", "looooooooooooooooooooooooooop" + physicalData.getCount());
-//                flights += Integer.parseInt(physicalData.getString(2));
-//                height = physicalData.getString(2);
-//
-//                physicalData.moveToNext();
-//            }
-//        }
-//
-//        pressureText.setText(String.format("Flights climbed: %d     %s", flights, height));
-//
-//        caloryText.setText(String.format("Calories burned: %.2f", metrics.caloriesBurned(0, flights)));
     }
 
     @Override
@@ -174,7 +160,16 @@ public class HealthActivity extends Activity implements AdapterView.OnItemSelect
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long l) {
         if(adapterView.getId() == R.id.typeSpinner){
-
+            switch (pos) {
+                case 0:
+//                    duration = 3;
+                    break;
+                case 1:
+//                    duration = 7;
+                    break;
+                case 2:
+//                    duration = 30;
+            }
         }
         else if (adapterView.getId() == R.id.durationSpinner){
             flights = 0;
@@ -193,15 +188,17 @@ public class HealthActivity extends Activity implements AdapterView.OnItemSelect
             }
 
             Log.i("DB", "Reading from database");
-            Cursor physicalData = myDB.getPhysicalData(duration);
+            physicalData = myDB.getPhysicalData(duration);
+            DataPoint dp[] = new DataPoint[duration];
 
             if (physicalData != null) {
                 Log.i("DB", "ifffffffffffffffffffffffffffffffffffff");
                 physicalData.moveToFirst();
-
                 for (int i = 0; i < physicalData.getCount(); i++) {
                     Log.i("DB", "looooooooooooooooooooooooooop" + physicalData.getCount());
-                    flights += Integer.parseInt(physicalData.getString(2));
+                    String tempFlight = physicalData.getString(2);
+                    flights += Integer.parseInt(tempFlight);
+                    dp[i] = new DataPoint(i+1,Double.parseDouble(tempFlight));
                     height = physicalData.getString(2);
 
                     physicalData.moveToNext();
@@ -211,6 +208,13 @@ public class HealthActivity extends Activity implements AdapterView.OnItemSelect
             sensorText.setText(String.format("Flights climbed: %d     %s", flights, height));
 
             caloryText.setText(String.format("Calories burned: %.2f", metrics.caloriesBurned(0, flights)));
+
+            BarGraphSeries barSeries = new BarGraphSeries<>(dp);
+            graph.addSeries(barSeries);
+            barSeries.setSpacing(10);
+            barSeries.setDrawValuesOnTop(true);
+
+
         }
     }
 
