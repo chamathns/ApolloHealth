@@ -201,7 +201,8 @@ public class HealthActivity extends AppCompatActivity implements AdapterView.OnI
 
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long l) {
-        if (adapterView.getId() == R.id.typeSpinner) { ;
+        if (adapterView.getId() == R.id.typeSpinner) {
+            ;
             totalValue = 0;
             switch (pos) {
                 case 0:
@@ -211,8 +212,8 @@ public class HealthActivity extends AppCompatActivity implements AdapterView.OnI
                     dbColumn = 2;
                     break;
                 case 2:
+                    dbColumn = 0;
                     break;
-//                    duration = 30;
             }
         } else if (adapterView.getId() == R.id.durationSpinner) {
             totalValue = 0;
@@ -267,10 +268,17 @@ public class HealthActivity extends AppCompatActivity implements AdapterView.OnI
             sensorText.setText(String.format("Steps taken: %d", totalValue));
             dailyText.setText(String.format("Steps taken today: %d", currentValue));
             caloryText.setText(String.format("Calories burned: %.2f", metrics.caloriesBurned(totalValue, 0)));
-        } else if (dbColumn == 2)
+        } else if (dbColumn == 2) {
             sensorText.setText(String.format("Flights climbed: %d", totalValue));
             dailyText.setText(String.format("Flights climbed today: %d", currentValue));
             caloryText.setText(String.format("Calories burned: %.2f", metrics.caloriesBurned(0, totalValue)));
+        } else if (dbColumn == 0) {
+            float f = (float) totalValue;
+            sensorText.setText(String.format("Distance travelled: %d", totalValue));
+            dailyText.setText(String.format("Distance travelled today: %d", currentValue));
+            caloryText.setText(String.format("Calories burned: %.2f", metrics.caloriesBurned((int)metrics.kmsToSteps(f), 0)));
+        }
+
 
 //        Column column = cartesian.column(data);
 

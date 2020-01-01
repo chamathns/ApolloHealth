@@ -14,9 +14,9 @@
     <string name="username_greeting_text">Hi, John</string>
 
     <string-array name="statistic_type_array">
-        <item>Steps/Distance</item>
+        <item>Steps Walked</item>
         <item>Flights Climbed</item>
-        <item>Calories Burned</item>
+        <item>Distance Travelled</item>
     </string-array>
 
     <string-array name="timeframe_report_array">
