@@ -17,6 +17,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.anychart.APIlib;
 import com.anychart.AnyChart;
 import com.anychart.AnyChartView;
 import com.anychart.chart.common.dataentry.DataEntry;
@@ -24,6 +25,8 @@ import com.anychart.chart.common.dataentry.ValueDataEntry;
 import com.anychart.charts.Cartesian;
 import com.anychart.charts.Pie;
 import com.anychart.core.cartesian.series.Column;
+import com.anychart.data.Mapping;
+import com.anychart.data.Set;
 import com.anychart.enums.Anchor;
 import com.anychart.enums.HoverMode;
 import com.anychart.enums.Position;
@@ -46,8 +49,8 @@ public class HealthActivity extends AppCompatActivity implements AdapterView.OnI
 
     private float initHeight;
     private int flights = 0;
-    private int duration = 0;
-    private int dbColumn = 0;
+    private int duration = 3;
+    private int dbColumn = 1;
     private int steps;
     String tempFlight;
     public int height = 10;
@@ -58,6 +61,7 @@ public class HealthActivity extends AppCompatActivity implements AdapterView.OnI
     private Cursor physicalData;
     private AnyChartView anyChartView;
     private Cartesian cartesian;
+    private Set set;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -66,8 +70,8 @@ public class HealthActivity extends AppCompatActivity implements AdapterView.OnI
         addBottomNavigation();
         addItemsSpinner();
 
-        anyChartView = (AnyChartView) findViewById(R.id.any_chart_view);
-        cartesian = AnyChart.column();
+//        anyChartView = (AnyChartView) findViewById(R.id.any_chart_view);
+//        cartesian = AnyChart.column();
 
         initHeight = 0;
         metrics = new MetricGenerator(193, 88);
@@ -85,6 +89,35 @@ public class HealthActivity extends AppCompatActivity implements AdapterView.OnI
 
             }
         });
+
+//        anyChartView = (AnyChartView) findViewById(R.id.any_chart_view1);
+
+        physicalData = myDB.getPhysicalData(duration);
+        anyChartView = (AnyChartView) findViewById(R.id.any_chart_view1);
+
+        cartesian = AnyChart.column();
+        set = Set.instantiate();
+
+        List<DataEntry> data1 = new ArrayList<>();
+//        List<DataEntry> data2 = new ArrayList<>();
+
+        if (physicalData != null) {
+            physicalData.moveToFirst();
+            for (int i = 0; i < physicalData.getCount(); i++) {
+                String tempFlight = physicalData.getString(dbColumn);
+                height = Integer.parseInt(tempFlight);
+                data1.add(new ValueDataEntry(i + 1, height));
+                physicalData.moveToNext();
+            }
+        }
+
+        set.data(data1);
+        Mapping series1Data = set.mapAs("{ x: 'x', value: 'value' }");
+
+        Column column = cartesian.column(series1Data);
+
+        anyChartView.setChart(cartesian);
+
 
     }
 
@@ -188,12 +221,18 @@ public class HealthActivity extends AppCompatActivity implements AdapterView.OnI
             }
         }
 
+
         Log.i("DB", "Reading from database");
         physicalData = myDB.getPhysicalData(duration);
+//        anyChartView = (AnyChartView) findViewById(R.id.any_chart_view1);
+//        anyChartView.clear();
+//        APIlib.getInstance().setActiveAnyChartView(anyChartView);
+//        anyChartView.setVisibility(View.GONE);
+//        cartesian = AnyChart.column();
+//        set = Set.instantiate();
 
-        AnyChartView anyChartView = (AnyChartView) findViewById(R.id.any_chart_view);
-        Cartesian cartesian = AnyChart.column();
-        List<DataEntry> data = new ArrayList<>();
+//        List<DataEntry> data1 = new ArrayList<>();
+        List<DataEntry> data2 = new ArrayList<>();
 
         if (physicalData != null) {
 //            Log.i("DB", "ifffffffffffffffffffffffffffffffffffff");
@@ -202,14 +241,27 @@ public class HealthActivity extends AppCompatActivity implements AdapterView.OnI
                 String tempFlight = physicalData.getString(dbColumn);
                 height = Integer.parseInt(tempFlight);
                 Log.i("DB", "looooooooooooooooooooooooooop   " + i + "  " + tempFlight + "  " + dbColumn);
-                data.add(new ValueDataEntry(i + 1, height));
+                data2.add(new ValueDataEntry(i + 1, height));
+//                switch (dbColumn){
+//                    case 1:
+//                        data1.add(new ValueDataEntry(i + 1, height));
+//                        break;
+//                    case 2:
+//                        data2.add(new ValueDataEntry(i + 1, height));
+//                        break;
+//                }
 //                flights += height;
 //                flight.add(height);
                 physicalData.moveToNext();
             }
         }
 
-        Log.i("DB", "cheeeeeeeeeeeeeeeeeeeeeeeeeeeeeeck   " + data.size());
+        set.data(data2);
+//        Mapping series1Data = set.mapAs("{ x: 'x', value: 'value' }");
+
+//        Column column = cartesian.column(series1Data);
+
+//        Log.i("DB", "cheeeeeeeeeeeeeeeeeeeeeeeeeeeeeeck   " + data2.size());
         if (dbColumn == 1) {
             sensorText.setText(String.format("Steps taken: %d", flights));
             caloryText.setText(String.format("Calories burned: %.2f", metrics.caloriesBurned(0, flights)));
@@ -217,9 +269,19 @@ public class HealthActivity extends AppCompatActivity implements AdapterView.OnI
             sensorText.setText(String.format("Flights climbed: %d", flights));
             caloryText.setText(String.format("Calories burned: %.2f", metrics.caloriesBurned(0, flights)));
 
-        Column column = cartesian.column(data);
+//        Column column = cartesian.column(data);
 
-        anyChartView.setChart(cartesian);
+//        switch (dbColumn){
+//            case 1:
+//                cartesian.data(data1);
+//                break;
+//            case 2:
+//                cartesian.data(data2);
+//                break;
+//        }
+//        cartesian.data(data1);
+
+//        anyChartView.setChart(cartesian);
 
     }
 
