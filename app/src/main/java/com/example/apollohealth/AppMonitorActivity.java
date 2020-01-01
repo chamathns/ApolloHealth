@@ -35,13 +35,8 @@ import com.anychart.AnyChartView;
 import com.anychart.chart.common.dataentry.DataEntry;
 import com.anychart.chart.common.dataentry.ValueDataEntry;
 import com.anychart.charts.Pie;
-import com.anychart.charts.Radar;
-import com.anychart.core.radar.series.Line;
-import com.anychart.data.Mapping;
-import com.anychart.data.Set;
 import com.anychart.enums.Align;
 import com.anychart.enums.LegendLayout;
-import com.anychart.enums.MarkerType;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.jsoup.HttpStatusException;
@@ -63,7 +58,10 @@ public class AppMonitorActivity extends AppCompatActivity {
     public static final String GOOGLE_URL = "https://play.google.com/store/apps/details?id=";
 
     LinearLayout container;
+    AnyChartView anyChartView;
     Spinner timePeriodSpinner;
+
+    Pie pie;
 
     private class UsageStat {
         private String packageName;
@@ -166,6 +164,21 @@ public class AppMonitorActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_app_monitor);
+
+
+        anyChartView = findViewById(R.id.app_monitor_chart);
+        pie = AnyChart.pie();
+        List<DataEntry> data = new ArrayList<>();
+//        dummy data
+        data.add(new ValueDataEntry("a", 100));
+        data.add(new ValueDataEntry("b", 100));
+        pie.data(data);
+        pie.labels().position("outside");
+        pie.legend()
+                .position("center-bottom")
+                .itemsLayout(LegendLayout.HORIZONTAL)
+                .align(Align.CENTER);
+        anyChartView.setChart(pie);
 
         container = findViewById(R.id.container);
         try {
@@ -392,46 +405,37 @@ public class AppMonitorActivity extends AppCompatActivity {
         separator.setBackgroundColor(Color.parseColor("#C0C0C0"));
         container.addView(separator);
 
-//        pie chart
-//        Pie pie = AnyChart.pie();
-//        List<DataEntry> data = new ArrayList<>();
-//        for (String name : categoryTimes.keySet()) {
-//            data.add(new ValueDataEntry(name, categoryTimes.get(name)));
-//        }
-//        pie.data(data);
-//        pie.labels().position("outside");
-//        pie.legend()
-//                .position("center-bottom")
-//                .itemsLayout(LegendLayout.HORIZONTAL)
-//                .align(Align.CENTER);
-//        AnyChartView anyChartView = findViewById(R.id.app_monitor_chart);
-//        anyChartView.setChart(pie);
-
-//        radar chart
-        Radar radar = AnyChart.radar();
-        radar.yScale().minimum(0d);
-        radar.yScale().minimumGap(0d);
-        radar.yScale().ticks().interval(50d);
-        radar.xAxis().labels().padding(5d, 5d, 5d, 5d);
-        radar.legend()
-                .align(Align.CENTER)
-                .enabled(true);
         List<DataEntry> data = new ArrayList<>();
         for (String name : categoryTimes.keySet()) {
-            data.add(new ValueDataEntry(name, categoryTimes.get(name)/1000));
+            data.add(new ValueDataEntry(name, categoryTimes.get(name)));
         }
-        Set set = Set.instantiate();
-        set.data(data);
-        Mapping appUsageData = set.mapAs("{ x: 'x', value: 'value' }");
-        Line appUsageLine = radar.line(appUsageData);
-        appUsageLine.name("App Usage Time");
-        appUsageLine.markers()
-                .enabled(true)
-                .type(MarkerType.CIRCLE)
-                .size(3d);
-        radar.tooltip().format("Value: {%Value}");
-        AnyChartView anyChartView = findViewById(R.id.app_monitor_chart);
-        anyChartView.setChart(radar);
+        pie.data(data);
+        
+////        radar chart
+//        Radar radar = AnyChart.radar();
+//        radar.yScale().minimum(0d);
+//        radar.yScale().minimumGap(0d);
+//        radar.yScale().ticks().interval(50d);
+//        radar.xAxis().labels().padding(5d, 5d, 5d, 5d);
+//        radar.legend()
+//                .align(Align.CENTER)
+//                .enabled(true);
+//        List<DataEntry> data = new ArrayList<>();
+//        for (String name : categoryTimes.keySet()) {
+//            data.add(new ValueDataEntry(name, categoryTimes.get(name)/1000));
+//        }
+//        Set set = Set.instantiate();
+//        set.data(data);
+//        Mapping appUsageData = set.mapAs("{ x: 'x', value: 'value' }");
+//        Line appUsageLine = radar.line(appUsageData);
+//        appUsageLine.name("App Usage Time");
+//        appUsageLine.markers()
+//                .enabled(true)
+//                .type(MarkerType.CIRCLE)
+//                .size(3d);
+//        radar.tooltip().format("Value: {%Value}");
+//        AnyChartView anyChartView = findViewById(R.id.app_monitor_chart);
+//        anyChartView.setChart(radar);
     }
 
     public void addBottomNavigation() {
