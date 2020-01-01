@@ -114,6 +114,8 @@ public class HealthActivity extends AppCompatActivity implements AdapterView.OnI
 
         Column column = cartesian.column(series1Data);
 
+        column.color("#641783");
+
         column.tooltip()
                 .position(Position.CENTER_BOTTOM)
                 .anchor(Anchor.CENTER_BOTTOM)
@@ -122,6 +124,10 @@ public class HealthActivity extends AppCompatActivity implements AdapterView.OnI
                 .format("{%Value}");
 
         cartesian.animation(true);
+//        cartesian.background().stroke("5 #2393B7");
+//        cartesian.background().fill("#000000");
+        cartesian.dataArea().background().enabled(true);
+        cartesian.dataArea().background().fill("#2393B7 0.2");
 
         anyChartView.setChart(cartesian);
 
