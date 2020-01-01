@@ -188,7 +188,7 @@ public class SensorService extends Service implements SensorEventListener {
         Log.i(TAG, "initialising TimerTask");
         timerTask = new TimerTask() {
             public void run() {
-                Log.i("in timer", "in timer ++++  " + (counter++));
+//                Log.i("in timer", "in timer ++++  " + (counter++));
             }
         };
     }

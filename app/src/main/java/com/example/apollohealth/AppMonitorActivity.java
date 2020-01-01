@@ -9,6 +9,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -31,6 +32,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import org.jsoup.HttpStatusException;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -39,7 +45,8 @@ import java.util.Map;
 
 public class AppMonitorActivity extends AppCompatActivity {
     public static final int MY_PERMISSIONS_REQUEST_PACKAGE_USAGE_STATS = 0;
-    public static final String LOG_TAG = "AM_ACTIVITY";
+    public static final String TAG = "AM_ACTIVITY";
+//    public static final String GOOGLE_URL = "https://play.google.com/store/apps/details?id=";
 
     LinearLayout container;
     Spinner timePeriodSpinner;
@@ -142,7 +149,7 @@ public class AppMonitorActivity extends AppCompatActivity {
                 } else if (i == 4) {
                     loadData(container, 365, 10);
                 } else {
-                    Log.i(LOG_TAG, "Invalid selection");
+                    Log.i(TAG, "Invalid selection");
                 }
             }
 
@@ -161,9 +168,9 @@ public class AppMonitorActivity extends AppCompatActivity {
         int mode = appOps.checkOpNoThrow(AppOpsManager.OPSTR_GET_USAGE_STATS, android.os.Process.myUid(), getPackageName());
 
         if (mode == AppOpsManager.MODE_ALLOWED) {
-            Log.i(LOG_TAG, "MODE_ALLOWED");
+            Log.i(TAG, "MODE_ALLOWED");
         } else {
-            Log.i(LOG_TAG, "MODE_NOT_ALLOWED");
+            Log.i(TAG, "MODE_NOT_ALLOWED");
             startActivityForResult(new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS), MY_PERMISSIONS_REQUEST_PACKAGE_USAGE_STATS);
         }
 
@@ -191,6 +198,14 @@ public class AppMonitorActivity extends AppCompatActivity {
 
                 stat.setAppName(app, packageManager);
                 stat.setIcon(app, packageManager);
+
+
+                String category = String.valueOf(new FetchCategoryTask().execute(stat.getPackageName()));
+//                Log.i(TAG, "-----------------------------------------------");
+//                Log.i(TAG, category);
+//                Log.i(TAG, "-----------------------------------------------");
+
+
             } catch (PackageManager.NameNotFoundException e) {
                 Toast toast = Toast.makeText(this, "error in getting icon", Toast.LENGTH_SHORT);
                 toast.show();
@@ -323,4 +338,46 @@ public class AppMonitorActivity extends AppCompatActivity {
         });
     }
 
+
+    public final static String GOOGLE_URL = "https://play.google.com/store/apps/details?id=";
+
+    private static class FetchCategoryTask extends AsyncTask<String, Void, String> {
+        @Override
+        protected String doInBackground(String... packageName) {
+            return getCategory(packageName[0]);
+
+//            String category;
+//            pm = getPackageManager();
+//            List<ApplicationInfo> packages = pm.getInstalledApplications(PackageManager.GET_META_DATA);
+//            Iterator<ApplicationInfo> iterator = packages.iterator();
+//            //  while (iterator.hasNext()) {
+//            // ApplicationInfo packageInfo = iterator.next();
+//            String query_url = "https://play.google.com/store/apps/details?id=com.imo.android.imoim";  //GOOGLE_URL + packageInfo.packageName;
+//            Log.i(TAG, query_url);
+//            category = getCategory(query_url);
+//            Log.e("CATEGORY", category);
+//
+//            // store category or do something else
+//            //}
+//            return null;
+        }
+
+
+        private String getCategory(String packageName) {
+            String queryUrl = GOOGLE_URL + packageName;
+
+            try {
+                Log.d(TAG, "getCategory: " + queryUrl);
+                Document doc = Jsoup.connect(queryUrl).get();
+                Elements link = doc.select("a[class=\"hrTbp R8zArc\"]");
+                Log.d(TAG, "getCategory: " + link.text());
+                return link.text();
+            } catch (HttpStatusException e) {
+                return "Other";
+            } catch (Exception e) {
+                Log.e(TAG, e.toString());
+                return e.toString();
+            }
+        }
+    }
 }

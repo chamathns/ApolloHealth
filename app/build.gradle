@@ -39,4 +39,6 @@ dependencies {
     implementation 'de.hdodenhof:circleimageview:2.2.0'
     implementation 'com.roughike:bottom-bar:2.3.1'
     implementation 'org.apache.commons:commons-lang3:3.9'
+
+    implementation 'org.jsoup:jsoup:1.11.3'
 }
