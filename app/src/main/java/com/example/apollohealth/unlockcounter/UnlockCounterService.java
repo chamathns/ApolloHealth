@@ -11,14 +11,14 @@ import android.util.Log;
 import androidx.annotation.Nullable;
 
 public class UnlockCounterService extends Service {
-    public static final String LOG_TAG = "UC_SERVICE";
+    public static final String TAG = "UC_SERVICE";
     private BroadcastReceiver mReceiver = null;
     Context ctx;
 
     public UnlockCounterService(Context appCtx) {
         super();
         this.ctx = appCtx;
-        Log.i(LOG_TAG, "Constructor called");
+        Log.i(TAG, "Constructor called");
     }
 
     public UnlockCounterService() {
@@ -35,7 +35,7 @@ public class UnlockCounterService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.i(LOG_TAG, "onDestroy");
+        Log.i(TAG, "onDestroy");
 
 //        Intent broadcastIntent = new Intent(this, UnlockReceiver.class);
         Intent broadcastIntent = new Intent(this, UnlockCounterRestarterBroadcastReceiver.class);
@@ -44,7 +44,7 @@ public class UnlockCounterService extends Service {
     }
 
     public void startUnlockCounter() {
-        Log.i(LOG_TAG, "Unlock counter service started");
+        Log.i(TAG, "Unlock counter service started");
 
         IntentFilter filter = new IntentFilter();
         filter.addAction(Intent.ACTION_USER_PRESENT);
@@ -54,17 +54,17 @@ public class UnlockCounterService extends Service {
         mReceiver = new UnlockReceiver();
         registerReceiver(mReceiver, filter);
 
-        Log.i(LOG_TAG, "UnlockCounterService start: mReceiver is registered.");
+        Log.i(TAG, "UnlockCounterService start: mReceiver is registered.");
     }
 
     public void stopUnlockCounter() {
         if (mReceiver != null) {
             unregisterReceiver(mReceiver);
-            Log.i(LOG_TAG, "UnlockCounterService stop: mReceiver is unregistered.");
+            Log.i(TAG, "UnlockCounterService stop: mReceiver is unregistered.");
         }
         mReceiver = null;
 
-        Log.i(LOG_TAG, "Unlock counter service stopped");
+        Log.i(TAG, "Unlock counter service stopped");
     }
 
     @Nullable
@@ -87,7 +87,7 @@ public class UnlockCounterService extends Service {
 //    @Override
 //    public void onCreate() {
 //        super.onCreate();
-//        Log.i(LOG_TAG, "Unlock counter service started");
+//        Log.i(TAG, "Unlock counter service started");
 //
 //        IntentFilter filter = new IntentFilter(Intent.ACTION_USER_PRESENT);
 //        filter.addAction(Intent.ACTION_SCREEN_OFF);
@@ -95,7 +95,7 @@ public class UnlockCounterService extends Service {
 //        mReceiver = new UnlockReceiver();
 //        registerReceiver(mReceiver, filter);
 //
-//        Log.i(LOG_TAG, "UnlockCounterService onCreate: mReceiver is registered.");
+//        Log.i(TAG, "UnlockCounterService onCreate: mReceiver is registered.");
 //    }
 //
 //    @Override
@@ -104,11 +104,11 @@ public class UnlockCounterService extends Service {
 //
 //        if (mReceiver != null) {
 //            unregisterReceiver(mReceiver);
-//            Log.i(LOG_TAG, "UnlockCounterService onDestroy: mReceiver is unregistered.");
+//            Log.i(TAG, "UnlockCounterService onDestroy: mReceiver is unregistered.");
 //        }
 //        mReceiver = null;
 //
-//        Log.i(LOG_TAG, "Unlock counter service stopped");
+//        Log.i(TAG, "Unlock counter service stopped");
 //    }
 
 }

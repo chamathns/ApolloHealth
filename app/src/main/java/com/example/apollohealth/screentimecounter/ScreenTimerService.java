@@ -87,7 +87,7 @@ public class ScreenTimerService extends Service {
 //    @Override
 //    public void onCreate() {
 //        super.onCreate();
-//        Log.i(LOG_TAG, "Screen time service started");
+//        Log.i(TAG, "Screen time service started");
 //
 //        IntentFilter filter = new IntentFilter();
 //        filter.addAction(Intent.ACTION_SCREEN_ON);
@@ -96,7 +96,7 @@ public class ScreenTimerService extends Service {
 //        mReceiver = new ScreenTimeReceiver();
 //        registerReceiver(mReceiver, filter);
 //
-//        Log.i(LOG_TAG, "ScreenTimerService onCreate: mReceiver is registered.");
+//        Log.i(TAG, "ScreenTimerService onCreate: mReceiver is registered.");
 //    }
 //
 //    @Override
@@ -105,10 +105,10 @@ public class ScreenTimerService extends Service {
 //
 //        if (mReceiver != null) {
 //            unregisterReceiver(mReceiver);
-//            Log.i(LOG_TAG, "ScreenTimerService onDestroy: mReceiver is unregistered.");
+//            Log.i(TAG, "ScreenTimerService onDestroy: mReceiver is unregistered.");
 //        }
 //        mReceiver = null;
 //
-//        Log.i(LOG_TAG, "Screen time service stopped");
+//        Log.i(TAG, "Screen time service stopped");
 //    }
 }

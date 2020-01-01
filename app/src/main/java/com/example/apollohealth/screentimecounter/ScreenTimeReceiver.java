@@ -11,11 +11,11 @@ public class ScreenTimeReceiver extends BroadcastReceiver {
     private long startTime = System.currentTimeMillis();
     private long endTime;
     private int screenOnTime;
-    public static final String LOG_TAG = "ST_EVENT";
+    public static final String TAG = "ST_EVENT";
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Log.i(LOG_TAG, "ScreenTimerService onReceive");
+        Log.i(TAG, "ScreenTimerService onReceive");
 
         if (intent.getAction().equals(Intent.ACTION_SCREEN_ON)) {
             startTime = System.currentTimeMillis();
@@ -27,7 +27,7 @@ public class ScreenTimeReceiver extends BroadcastReceiver {
             myDB.updateHealthData(System.currentTimeMillis(), screenOnTime, 0, 0, 0, 0, 0);
             myDB.close();
 
-            Log.i(LOG_TAG, "Screen on time: " + screenOnTime + " seconds");
+            Log.i(TAG, "Screen on time: " + screenOnTime + " seconds");
         }
     }
 }
