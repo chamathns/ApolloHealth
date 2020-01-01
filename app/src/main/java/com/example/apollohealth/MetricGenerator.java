@@ -26,6 +26,12 @@ public class MetricGenerator {
         return kms;
     }
 
+    public float kmsToSteps(float kms) {
+        float steps = kms / (0.74f * 0.001f);
+
+        return steps;
+    }
+
     public float caloriesBurned(int steps, int flights) {
         float meanFlights = (float) flights / 2;
 
