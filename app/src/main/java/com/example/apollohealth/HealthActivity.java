@@ -15,23 +15,28 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.anychart.AnyChart;
 import com.anychart.AnyChartView;
 import com.anychart.chart.common.dataentry.DataEntry;
 import com.anychart.chart.common.dataentry.ValueDataEntry;
+import com.anychart.charts.Cartesian;
 import com.anychart.charts.Pie;
+import com.anychart.core.cartesian.series.Column;
+import com.anychart.enums.Anchor;
+import com.anychart.enums.HoverMode;
+import com.anychart.enums.Position;
+import com.anychart.enums.TooltipPositionMode;
+
 import com.example.apollohealth.db.DatabaseHandler;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.jjoe64.graphview.GraphView;
-import com.jjoe64.graphview.series.BarGraphSeries;
-import com.jjoe64.graphview.series.DataPoint;
-import com.jjoe64.graphview.series.LineGraphSeries;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
-public class HealthActivity extends Activity implements AdapterView.OnItemSelectedListener {
+public class HealthActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
     private Button startBtn;
     private TextView sensorText;
@@ -41,15 +46,18 @@ public class HealthActivity extends Activity implements AdapterView.OnItemSelect
 
     private float initHeight;
     private int flights = 0;
-    private int duration = 3;
-    private int column;
+    private int duration = 0;
+    private int dbColumn = 0;
     private int steps;
-    private String height = "0";
+    String tempFlight;
+    public int height = 10;
+//    public Integer height = 10;
 
     private MetricGenerator metrics;
     private DatabaseHandler myDB;
     private Cursor physicalData;
-    GraphView graph;
+    private AnyChartView anyChartView;
+    private Cartesian cartesian;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -57,6 +65,9 @@ public class HealthActivity extends Activity implements AdapterView.OnItemSelect
         setContentView(R.layout.activity_health);
         addBottomNavigation();
         addItemsSpinner();
+
+        anyChartView = (AnyChartView) findViewById(R.id.any_chart_view);
+        cartesian = AnyChart.column();
 
         initHeight = 0;
         metrics = new MetricGenerator(193, 88);
@@ -74,27 +85,6 @@ public class HealthActivity extends Activity implements AdapterView.OnItemSelect
 
             }
         });
-
-//        graph = (GraphView) findViewById(R.id.graph);
-//        LineGraphSeries<DataPoint> lineSeries = new LineGraphSeries<>(new DataPoint[]{
-//                new DataPoint(0, 1),
-//                new DataPoint(1, 5),
-//                new DataPoint(2, 3),
-//                new DataPoint(3, 2),
-//                new DataPoint(4, 6)
-//        });
-//        BarGraphSeries<DataPoint> barSeries = new BarGraphSeries<>(new DataPoint[]{
-//                new DataPoint(0, -1),
-//                new DataPoint(1, 5),
-//                new DataPoint(2, 3),
-//                new DataPoint(3, 2),
-//                new DataPoint(4, 6),
-//                new DataPoint(5, 2)
-//        });
-
-//        graph.addSeries(barSeries);
-//        barSeries.setSpacing(25);
-//        barSeries.setDrawValuesOnTop(true);
 
     }
 
@@ -165,21 +155,23 @@ public class HealthActivity extends Activity implements AdapterView.OnItemSelect
 
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long l) {
-        if(adapterView.getId() == R.id.typeSpinner){
-            Log.i("Spinner", "Changeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
-            flights =0;
+        if (adapterView.getId() == R.id.typeSpinner) {
+//            Log.i("Spinner", "Changeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
+            flights = 0;
             switch (pos) {
                 case 0:
-                    column = 1;
+                    dbColumn = 1;
+                    Log.i("Spinner", "Changeeeeeeeeeeeeeeeeeeeeeeeeeeeee1");
                     break;
                 case 1:
-                    column = 2;
+                    dbColumn = 2;
+                    Log.i("Spinner", "Changeeeeeeeeeeeeeeeeeeeeeeeeeeeee2");
                     break;
                 case 2:
+                    break;
 //                    duration = 30;
             }
-        }
-        else if (adapterView.getId() == R.id.durationSpinner) {
+        } else if (adapterView.getId() == R.id.durationSpinner) {
             flights = 0;
             switch (pos) {
                 case 0:
@@ -198,45 +190,36 @@ public class HealthActivity extends Activity implements AdapterView.OnItemSelect
 
         Log.i("DB", "Reading from database");
         physicalData = myDB.getPhysicalData(duration);
-        DataPoint dp[] = new DataPoint[duration];
+
+        AnyChartView anyChartView = (AnyChartView) findViewById(R.id.any_chart_view);
+        Cartesian cartesian = AnyChart.column();
+        List<DataEntry> data = new ArrayList<>();
 
         if (physicalData != null) {
-            Log.i("DB", "ifffffffffffffffffffffffffffffffffffff");
+//            Log.i("DB", "ifffffffffffffffffffffffffffffffffffff");
             physicalData.moveToFirst();
             for (int i = 0; i < physicalData.getCount(); i++) {
-                Log.i("DB", "looooooooooooooooooooooooooop" + column);
-                String tempFlight = physicalData.getString(column);
-                flights += Integer.parseInt(tempFlight);
-                dp[i] = new DataPoint(i+1,Double.parseDouble(tempFlight));
-                height = tempFlight;
-
+                String tempFlight = physicalData.getString(dbColumn);
+                height = Integer.parseInt(tempFlight);
+                Log.i("DB", "looooooooooooooooooooooooooop   " + i + "  " + tempFlight + "  " + dbColumn);
+                data.add(new ValueDataEntry(i + 1, height));
+//                flights += height;
+//                flight.add(height);
                 physicalData.moveToNext();
             }
         }
 
-        sensorText.setText(String.format("Flights climbed: %d     %s", flights, height));
+        Log.i("DB", "cheeeeeeeeeeeeeeeeeeeeeeeeeeeeeeck   " + data.size());
+        if (dbColumn == 1) {
+            sensorText.setText(String.format("Steps taken: %d", flights));
+            caloryText.setText(String.format("Calories burned: %.2f", metrics.caloriesBurned(0, flights)));
+        } else if (dbColumn == 2)
+            sensorText.setText(String.format("Flights climbed: %d", flights));
+            caloryText.setText(String.format("Calories burned: %.2f", metrics.caloriesBurned(0, flights)));
 
-        caloryText.setText(String.format("Calories burned: %.2f", metrics.caloriesBurned(0, flights)));
+        Column column = cartesian.column(data);
 
-        Pie pie = AnyChart.pie();
-
-        List<DataEntry> data = new ArrayList<>();
-
-        data.add(new ValueDataEntry("John", 10000));
-
-        data.add(new ValueDataEntry("Jake", 12000));
-
-        data.add(new ValueDataEntry("Peter", 18000));
-
-        pie.data(data);
-
-        AnyChartView anyChartView = (AnyChartView) findViewById(R.id.any_chart_view);
-        anyChartView.setChart(pie);
-
-//        BarGraphSeries barSeries = new BarGraphSeries<>(dp);
-//        graph.addSeries(barSeries);
-//        barSeries.setSpacing(10);
-//        barSeries.setDrawValuesOnTop(true);
+        anyChartView.setChart(cartesian);
 
     }
 
