@@ -154,7 +154,13 @@ public class AppMonitorActivity extends AppCompatActivity {
         setContentView(R.layout.activity_app_monitor);
 
         container = findViewById(R.id.container);
-        loadData(container, 1, 10);
+        try {
+            loadData(container, 1, 10);
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         timePeriodSpinner = findViewById(R.id.time_period_spinner);
         List<String> timePeriods = new ArrayList<String>();
@@ -171,15 +177,45 @@ public class AppMonitorActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 if (i == 0) {
-                    loadData(container, 1, 10);
+                    try {
+                        loadData(container, 1, 10);
+                    } catch (ExecutionException e) {
+                        e.printStackTrace();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 } else if (i == 1) {
-                    loadData(container, 3, 10);
+                    try {
+                        loadData(container, 3, 10);
+                    } catch (ExecutionException e) {
+                        e.printStackTrace();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 } else if (i == 2) {
-                    loadData(container, 7, 10);
+                    try {
+                        loadData(container, 7, 10);
+                    } catch (ExecutionException e) {
+                        e.printStackTrace();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 } else if (i == 3) {
-                    loadData(container, 30, 10);
+                    try {
+                        loadData(container, 30, 10);
+                    } catch (ExecutionException e) {
+                        e.printStackTrace();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 } else if (i == 4) {
-                    loadData(container, 365, 10);
+                    try {
+                        loadData(container, 365, 10);
+                    } catch (ExecutionException e) {
+                        e.printStackTrace();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 } else {
                     Log.i(TAG, "Invalid selection");
                 }
@@ -256,16 +292,17 @@ public class AppMonitorActivity extends AppCompatActivity {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    private void loadData(LinearLayout container, int numDays, int numApps) {
+    private void loadData(LinearLayout container, int numDays, int numApps) throws ExecutionException, InterruptedException {
         container.removeAllViews();
 
         List<UsageStat> usageStats = getTopUsedApps(numDays, numApps);
         createUIApps(container, usageStats);
     }
 
-    private void createUIApps(LinearLayout container, List<UsageStat> appUsageList) {
+    private void createUIApps(LinearLayout container, List<UsageStat> appUsageList) throws ExecutionException, InterruptedException {
         for (UsageStat stat : appUsageList) {
-//            stat.setCategory();
+            stat.setCategory();
+            Log.d(TAG, "createUIApps: " + stat.getCategory());
 
             View separator = new View(this);
             separator.setLayoutParams(new ViewGroup.LayoutParams(
