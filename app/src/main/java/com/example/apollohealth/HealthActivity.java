@@ -15,41 +15,50 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 
+import com.anychart.APIlib;
 import com.anychart.AnyChart;
 import com.anychart.AnyChartView;
 import com.anychart.chart.common.dataentry.DataEntry;
 import com.anychart.chart.common.dataentry.ValueDataEntry;
+import com.anychart.charts.Cartesian;
 import com.anychart.charts.Pie;
+import com.anychart.core.cartesian.series.Column;
+import com.anychart.data.Mapping;
+import com.anychart.data.Set;
+import com.anychart.enums.Anchor;
+import com.anychart.enums.HoverMode;
+import com.anychart.enums.Position;
+import com.anychart.enums.TooltipPositionMode;
+
 import com.example.apollohealth.db.DatabaseHandler;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.jjoe64.graphview.GraphView;
-import com.jjoe64.graphview.series.BarGraphSeries;
-import com.jjoe64.graphview.series.DataPoint;
-import com.jjoe64.graphview.series.LineGraphSeries;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
-public class HealthActivity extends Activity implements AdapterView.OnItemSelectedListener {
+public class HealthActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
     private Button startBtn;
     private TextView sensorText;
     private TextView caloryText;
+    private TextView dailyText;
     private Spinner typeSpinner;
     private Spinner durationSpinner;
 
-    private float initHeight;
-    private int flights = 0;
+    private int totalValue = 0;
     private int duration = 3;
-    private int column;
-    private int steps;
-    private String height = "0";
+    private int dbColumn = 1;
+    public int currentValue = 0;
 
     private MetricGenerator metrics;
     private DatabaseHandler myDB;
     private Cursor physicalData;
-    GraphView graph;
+    private AnyChartView anyChartView;
+    private Cartesian cartesian;
+    private Set set;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -58,11 +67,15 @@ public class HealthActivity extends Activity implements AdapterView.OnItemSelect
         addBottomNavigation();
         addItemsSpinner();
 
-        initHeight = 0;
+//        anyChartView = (AnyChartView) findViewById(R.id.any_chart_view);
+//        cartesian = AnyChart.column();
+
+//        initHeight = 0;
         metrics = new MetricGenerator(193, 88);
 
         sensorText = (TextView) findViewById(R.id.sensorText);
         caloryText = (TextView) findViewById(R.id.caloryText);
+        dailyText = (TextView) findViewById(R.id.dailyText);
         startBtn = (Button) findViewById(R.id.startBtn);
 
         myDB = new DatabaseHandler(this);
@@ -75,26 +88,49 @@ public class HealthActivity extends Activity implements AdapterView.OnItemSelect
             }
         });
 
-//        graph = (GraphView) findViewById(R.id.graph);
-//        LineGraphSeries<DataPoint> lineSeries = new LineGraphSeries<>(new DataPoint[]{
-//                new DataPoint(0, 1),
-//                new DataPoint(1, 5),
-//                new DataPoint(2, 3),
-//                new DataPoint(3, 2),
-//                new DataPoint(4, 6)
-//        });
-//        BarGraphSeries<DataPoint> barSeries = new BarGraphSeries<>(new DataPoint[]{
-//                new DataPoint(0, -1),
-//                new DataPoint(1, 5),
-//                new DataPoint(2, 3),
-//                new DataPoint(3, 2),
-//                new DataPoint(4, 6),
-//                new DataPoint(5, 2)
-//        });
+//        anyChartView = (AnyChartView) findViewById(R.id.any_chart_view1);
 
-//        graph.addSeries(barSeries);
-//        barSeries.setSpacing(25);
-//        barSeries.setDrawValuesOnTop(true);
+        physicalData = myDB.getPhysicalData(duration);
+        anyChartView = (AnyChartView) findViewById(R.id.any_chart_view1);
+
+        cartesian = AnyChart.column();
+        set = Set.instantiate();
+
+        List<DataEntry> data1 = new ArrayList<>();
+//        List<DataEntry> data2 = new ArrayList<>();
+
+        if (physicalData != null) {
+            physicalData.moveToFirst();
+            for (int i = 0; i < physicalData.getCount(); i++) {
+                String tempValue = physicalData.getString(dbColumn);
+                currentValue = Integer.parseInt(tempValue);
+                data1.add(new ValueDataEntry(i + 1, currentValue));
+                physicalData.moveToNext();
+            }
+        }
+
+        set.data(data1);
+        Mapping series1Data = set.mapAs("{ x: 'x', value: 'value' }");
+
+        Column column = cartesian.column(series1Data);
+
+        column.color("#641783");
+
+        column.tooltip()
+                .position(Position.CENTER_BOTTOM)
+                .anchor(Anchor.CENTER_BOTTOM)
+                .offsetX(0d)
+                .offsetY(5d)
+                .format("{%Value}");
+
+        cartesian.animation(true);
+//        cartesian.background().stroke("5 #2393B7");
+//        cartesian.background().fill("#000000");
+        cartesian.dataArea().background().enabled(true);
+        cartesian.dataArea().background().fill("#2393B7 0.2");
+
+        anyChartView.setChart(cartesian);
+
 
     }
 
@@ -165,22 +201,21 @@ public class HealthActivity extends Activity implements AdapterView.OnItemSelect
 
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long l) {
-        if(adapterView.getId() == R.id.typeSpinner){
-            Log.i("Spinner", "Changeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
-            flights =0;
+        if (adapterView.getId() == R.id.typeSpinner) { ;
+            totalValue = 0;
             switch (pos) {
                 case 0:
-                    column = 1;
+                    dbColumn = 1;
                     break;
                 case 1:
-                    column = 2;
+                    dbColumn = 2;
                     break;
                 case 2:
+                    break;
 //                    duration = 30;
             }
-        }
-        else if (adapterView.getId() == R.id.durationSpinner) {
-            flights = 0;
+        } else if (adapterView.getId() == R.id.durationSpinner) {
+            totalValue = 0;
             switch (pos) {
                 case 0:
                     duration = 3;
@@ -196,47 +231,60 @@ public class HealthActivity extends Activity implements AdapterView.OnItemSelect
             }
         }
 
+
         Log.i("DB", "Reading from database");
         physicalData = myDB.getPhysicalData(duration);
-        DataPoint dp[] = new DataPoint[duration];
+//        anyChartView = (AnyChartView) findViewById(R.id.any_chart_view1);
+//        anyChartView.clear();
+//        APIlib.getInstance().setActiveAnyChartView(anyChartView);
+//        anyChartView.setVisibility(View.GONE);
+//        cartesian = AnyChart.column();
+//        set = Set.instantiate();
+
+//        List<DataEntry> data1 = new ArrayList<>();
+        List<DataEntry> data2 = new ArrayList<>();
 
         if (physicalData != null) {
-            Log.i("DB", "ifffffffffffffffffffffffffffffffffffff");
+//            Log.i("DB", "ifffffffffffffffffffffffffffffffffffff");
             physicalData.moveToFirst();
             for (int i = 0; i < physicalData.getCount(); i++) {
-                Log.i("DB", "looooooooooooooooooooooooooop" + column);
-                String tempFlight = physicalData.getString(column);
-                flights += Integer.parseInt(tempFlight);
-                dp[i] = new DataPoint(i+1,Double.parseDouble(tempFlight));
-                height = tempFlight;
-
+                String tempFlight = physicalData.getString(dbColumn);
+                currentValue = Integer.parseInt(tempFlight);
+                Log.i("DB", "looooooooooooooooooooooooooop   " + i + "  " + tempFlight + "  " + dbColumn);
+                data2.add(new ValueDataEntry(i + 1, currentValue));
+                totalValue += currentValue;
                 physicalData.moveToNext();
             }
         }
 
-        sensorText.setText(String.format("Flights climbed: %d     %s", flights, height));
+        set.data(data2);
+//        Mapping series1Data = set.mapAs("{ x: 'x', value: 'value' }");
 
-        caloryText.setText(String.format("Calories burned: %.2f", metrics.caloriesBurned(0, flights)));
+//        Column column = cartesian.column(series1Data);
 
-        Pie pie = AnyChart.pie();
+//        Log.i("DB", "cheeeeeeeeeeeeeeeeeeeeeeeeeeeeeeck   " + data2.size());
+        if (dbColumn == 1) {
+            sensorText.setText(String.format("Steps taken: %d", totalValue));
+            dailyText.setText(String.format("Steps taken today: %d", currentValue));
+            caloryText.setText(String.format("Calories burned: %.2f", metrics.caloriesBurned(totalValue, 0)));
+        } else if (dbColumn == 2)
+            sensorText.setText(String.format("Flights climbed: %d", totalValue));
+            dailyText.setText(String.format("Flights climbed today: %d", currentValue));
+            caloryText.setText(String.format("Calories burned: %.2f", metrics.caloriesBurned(0, totalValue)));
 
-        List<DataEntry> data = new ArrayList<>();
+//        Column column = cartesian.column(data);
 
-        data.add(new ValueDataEntry("John", 10000));
+//        switch (dbColumn){
+//            case 1:
+//                cartesian.data(data1);
+//                break;
+//            case 2:
+//                cartesian.data(data2);
+//                break;
+//        }
+//        cartesian.data(data1);
 
-        data.add(new ValueDataEntry("Jake", 12000));
-
-        data.add(new ValueDataEntry("Peter", 18000));
-
-        pie.data(data);
-
-        AnyChartView anyChartView = (AnyChartView) findViewById(R.id.any_chart_view);
-        anyChartView.setChart(pie);
-
-//        BarGraphSeries barSeries = new BarGraphSeries<>(dp);
-//        graph.addSeries(barSeries);
-//        barSeries.setSpacing(10);
-//        barSeries.setDrawValuesOnTop(true);
+//        anyChartView.setChart(cartesian);
 
     }
 
