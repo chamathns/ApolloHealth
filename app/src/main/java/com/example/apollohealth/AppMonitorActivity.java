@@ -377,26 +377,22 @@ public class AppMonitorActivity extends AppCompatActivity {
             container.addView(hLayout);
         }
 
-        View end = new View(this);
-        end.setLayoutParams(new ViewGroup.LayoutParams(
+        View separator = new View(this);
+        separator.setLayoutParams(new ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
-                150
+                5
         ));
-        end.setBackgroundColor(Color.parseColor("#FFFFFF"));
-        container.addView(end);
+        separator.setBackgroundColor(Color.parseColor("#C0C0C0"));
+        container.addView(separator);
 
-        Log.d(TAG, "createUIApps: " + "--------------------------------");
-
+        Pie pie = AnyChart.pie();
+        List<DataEntry> data = new ArrayList<>();
         for (String name : categoryTimes.keySet()) {
-            String value = categoryTimes.get(name).toString();
-            Log.d(TAG, "createUIApps: " + name + " - " + value);
+            data.add(new ValueDataEntry(name, categoryTimes.get(name)));
         }
-
-        Log.d(TAG, "createUIApps: " + "--------------------------------");
-
-        
-
-
+        pie.data(data);
+        AnyChartView anyChartView = findViewById(R.id.app_monitor_chart);
+        anyChartView.setChart(pie);
     }
 
     public void addBottomNavigation() {
