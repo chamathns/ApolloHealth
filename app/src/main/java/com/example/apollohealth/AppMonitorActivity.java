@@ -30,6 +30,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.anychart.AnyChart;
+import com.anychart.AnyChartView;
+import com.anychart.chart.common.dataentry.DataEntry;
+import com.anychart.chart.common.dataentry.ValueDataEntry;
+import com.anychart.charts.Pie;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.jsoup.HttpStatusException;
@@ -40,6 +45,7 @@ import org.jsoup.select.Elements;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -136,7 +142,8 @@ public class AppMonitorActivity extends AppCompatActivity {
 
             try {
                 Document doc = Jsoup.connect(queryUrl).get();
-                Elements link = doc.select("a[class=\"hrTbp R8zArc\"]");
+//                Elements link = doc.select("a[class=\"hrTbp R8zArc\"]");
+                Elements link = doc.select("a[itemprop=\"genre\"]");
                 return link.text();
             } catch (HttpStatusException e) {
                 return "Other";
@@ -300,9 +307,16 @@ public class AppMonitorActivity extends AppCompatActivity {
     }
 
     private void createUIApps(LinearLayout container, List<UsageStat> appUsageList) throws ExecutionException, InterruptedException {
+        HashMap<String, Long> categoryTimes = new HashMap<String, Long>();
+
         for (UsageStat stat : appUsageList) {
             stat.setCategory();
-            Log.d(TAG, "createUIApps: " + stat.getCategory());
+
+            if (categoryTimes.containsKey(stat.getCategory())) {
+                categoryTimes.put(stat.getCategory(), categoryTimes.get(stat.getCategory()) + stat.getUsageTime());
+            } else {
+                categoryTimes.put(stat.getCategory(), stat.getUsageTime());
+            }
 
             View separator = new View(this);
             separator.setLayoutParams(new ViewGroup.LayoutParams(
@@ -370,6 +384,19 @@ public class AppMonitorActivity extends AppCompatActivity {
         ));
         end.setBackgroundColor(Color.parseColor("#FFFFFF"));
         container.addView(end);
+
+        Log.d(TAG, "createUIApps: " + "--------------------------------");
+
+        for (String name : categoryTimes.keySet()) {
+            String value = categoryTimes.get(name).toString();
+            Log.d(TAG, "createUIApps: " + name + " - " + value);
+        }
+
+        Log.d(TAG, "createUIApps: " + "--------------------------------");
+
+        
+
+
     }
 
     public void addBottomNavigation() {
