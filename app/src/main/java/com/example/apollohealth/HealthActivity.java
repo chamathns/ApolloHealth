@@ -44,17 +44,14 @@ public class HealthActivity extends AppCompatActivity implements AdapterView.OnI
     private Button startBtn;
     private TextView sensorText;
     private TextView caloryText;
+    private TextView dailyText;
     private Spinner typeSpinner;
     private Spinner durationSpinner;
 
-    private float initHeight;
-    private int flights = 0;
+    private int totalValue = 0;
     private int duration = 3;
     private int dbColumn = 1;
-    private int steps;
-    String tempFlight;
-    public int height = 10;
-//    public Integer height = 10;
+    public int currentValue = 0;
 
     private MetricGenerator metrics;
     private DatabaseHandler myDB;
@@ -73,11 +70,12 @@ public class HealthActivity extends AppCompatActivity implements AdapterView.OnI
 //        anyChartView = (AnyChartView) findViewById(R.id.any_chart_view);
 //        cartesian = AnyChart.column();
 
-        initHeight = 0;
+//        initHeight = 0;
         metrics = new MetricGenerator(193, 88);
 
         sensorText = (TextView) findViewById(R.id.sensorText);
         caloryText = (TextView) findViewById(R.id.caloryText);
+        dailyText = (TextView) findViewById(R.id.dailyText);
         startBtn = (Button) findViewById(R.id.startBtn);
 
         myDB = new DatabaseHandler(this);
@@ -104,9 +102,9 @@ public class HealthActivity extends AppCompatActivity implements AdapterView.OnI
         if (physicalData != null) {
             physicalData.moveToFirst();
             for (int i = 0; i < physicalData.getCount(); i++) {
-                String tempFlight = physicalData.getString(dbColumn);
-                height = Integer.parseInt(tempFlight);
-                data1.add(new ValueDataEntry(i + 1, height));
+                String tempValue = physicalData.getString(dbColumn);
+                currentValue = Integer.parseInt(tempValue);
+                data1.add(new ValueDataEntry(i + 1, currentValue));
                 physicalData.moveToNext();
             }
         }
@@ -115,6 +113,15 @@ public class HealthActivity extends AppCompatActivity implements AdapterView.OnI
         Mapping series1Data = set.mapAs("{ x: 'x', value: 'value' }");
 
         Column column = cartesian.column(series1Data);
+
+        column.tooltip()
+                .position(Position.CENTER_BOTTOM)
+                .anchor(Anchor.CENTER_BOTTOM)
+                .offsetX(0d)
+                .offsetY(5d)
+                .format("{%Value}");
+
+        cartesian.animation(true);
 
         anyChartView.setChart(cartesian);
 
@@ -188,24 +195,21 @@ public class HealthActivity extends AppCompatActivity implements AdapterView.OnI
 
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long l) {
-        if (adapterView.getId() == R.id.typeSpinner) {
-//            Log.i("Spinner", "Changeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
-            flights = 0;
+        if (adapterView.getId() == R.id.typeSpinner) { ;
+            totalValue = 0;
             switch (pos) {
                 case 0:
                     dbColumn = 1;
-                    Log.i("Spinner", "Changeeeeeeeeeeeeeeeeeeeeeeeeeeeee1");
                     break;
                 case 1:
                     dbColumn = 2;
-                    Log.i("Spinner", "Changeeeeeeeeeeeeeeeeeeeeeeeeeeeee2");
                     break;
                 case 2:
                     break;
 //                    duration = 30;
             }
         } else if (adapterView.getId() == R.id.durationSpinner) {
-            flights = 0;
+            totalValue = 0;
             switch (pos) {
                 case 0:
                     duration = 3;
@@ -239,19 +243,10 @@ public class HealthActivity extends AppCompatActivity implements AdapterView.OnI
             physicalData.moveToFirst();
             for (int i = 0; i < physicalData.getCount(); i++) {
                 String tempFlight = physicalData.getString(dbColumn);
-                height = Integer.parseInt(tempFlight);
+                currentValue = Integer.parseInt(tempFlight);
                 Log.i("DB", "looooooooooooooooooooooooooop   " + i + "  " + tempFlight + "  " + dbColumn);
-                data2.add(new ValueDataEntry(i + 1, height));
-//                switch (dbColumn){
-//                    case 1:
-//                        data1.add(new ValueDataEntry(i + 1, height));
-//                        break;
-//                    case 2:
-//                        data2.add(new ValueDataEntry(i + 1, height));
-//                        break;
-//                }
-//                flights += height;
-//                flight.add(height);
+                data2.add(new ValueDataEntry(i + 1, currentValue));
+                totalValue += currentValue;
                 physicalData.moveToNext();
             }
         }
@@ -263,11 +258,13 @@ public class HealthActivity extends AppCompatActivity implements AdapterView.OnI
 
 //        Log.i("DB", "cheeeeeeeeeeeeeeeeeeeeeeeeeeeeeeck   " + data2.size());
         if (dbColumn == 1) {
-            sensorText.setText(String.format("Steps taken: %d", flights));
-            caloryText.setText(String.format("Calories burned: %.2f", metrics.caloriesBurned(0, flights)));
+            sensorText.setText(String.format("Steps taken: %d", totalValue));
+            dailyText.setText(String.format("Steps taken today: %d", currentValue));
+            caloryText.setText(String.format("Calories burned: %.2f", metrics.caloriesBurned(totalValue, 0)));
         } else if (dbColumn == 2)
-            sensorText.setText(String.format("Flights climbed: %d", flights));
-            caloryText.setText(String.format("Calories burned: %.2f", metrics.caloriesBurned(0, flights)));
+            sensorText.setText(String.format("Flights climbed: %d", totalValue));
+            dailyText.setText(String.format("Flights climbed today: %d", currentValue));
+            caloryText.setText(String.format("Calories burned: %.2f", metrics.caloriesBurned(0, totalValue)));
 
 //        Column column = cartesian.column(data);
 
