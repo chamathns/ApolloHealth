@@ -44,7 +44,7 @@
             <com.anychart.AnyChartView
                 android:id="@+id/app_monitor_chart"
                 android:layout_width="match_parent"
-                android:layout_height="262dp"
+                android:layout_height="300dp"
                 android:layout_marginBottom="50dp"
                 >
             </com.anychart.AnyChartView>
