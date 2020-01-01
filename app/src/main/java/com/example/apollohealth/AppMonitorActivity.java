@@ -42,11 +42,12 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 public class AppMonitorActivity extends AppCompatActivity {
     public static final int MY_PERMISSIONS_REQUEST_PACKAGE_USAGE_STATS = 0;
     public static final String TAG = "AM_ACTIVITY";
-//    public static final String GOOGLE_URL = "https://play.google.com/store/apps/details?id=";
+    public static final String GOOGLE_URL = "https://play.google.com/store/apps/details?id=";
 
     LinearLayout container;
     Spinner timePeriodSpinner;
@@ -56,6 +57,7 @@ public class AppMonitorActivity extends AppCompatActivity {
         private long usageTime;
         private String appName;
         private Drawable icon;
+        private String category;
 
         private UsageStat(String packageName, long usageTime) {
             this.packageName = packageName;
@@ -68,6 +70,10 @@ public class AppMonitorActivity extends AppCompatActivity {
 
         public void setIcon(ApplicationInfo app, PackageManager packageManager) {
             this.icon = packageManager.getApplicationIcon(app);
+        }
+
+        public void setCategory() throws ExecutionException, InterruptedException {
+            this.category = new FetchCategoryTask().execute(this.packageName).get();
         }
 
         public String getPackageName() {
@@ -108,10 +114,36 @@ public class AppMonitorActivity extends AppCompatActivity {
             return this.icon;
         }
 
+        public String getCategory() {
+            return category;
+        }
+
         @NonNull
         @Override
         public String toString() {
             return "\nPackage: " + this.packageName + "\nApp: " + this.appName + "\nIcon: " + this.icon + "\nUsage Time: " + this.getUsageTimeString();
+        }
+    }
+
+    private static class FetchCategoryTask extends AsyncTask<String, Void, String> {
+        @Override
+        protected String doInBackground(String... packageName) {
+            return getCategory(packageName[0]);
+        }
+
+        private String getCategory(String packageName) {
+            String queryUrl = GOOGLE_URL + packageName;
+
+            try {
+                Document doc = Jsoup.connect(queryUrl).get();
+                Elements link = doc.select("a[class=\"hrTbp R8zArc\"]");
+                return link.text();
+            } catch (HttpStatusException e) {
+                return "Other";
+            } catch (Exception e) {
+                Log.e(TAG, e.toString());
+                return e.toString();
+            }
         }
     }
 
@@ -122,7 +154,13 @@ public class AppMonitorActivity extends AppCompatActivity {
         setContentView(R.layout.activity_app_monitor);
 
         container = findViewById(R.id.container);
-        loadData(container, 1, 10);
+        try {
+            loadData(container, 1, 10);
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         timePeriodSpinner = findViewById(R.id.time_period_spinner);
         List<String> timePeriods = new ArrayList<String>();
@@ -139,15 +177,45 @@ public class AppMonitorActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 if (i == 0) {
-                    loadData(container, 1, 10);
+                    try {
+                        loadData(container, 1, 10);
+                    } catch (ExecutionException e) {
+                        e.printStackTrace();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 } else if (i == 1) {
-                    loadData(container, 3, 10);
+                    try {
+                        loadData(container, 3, 10);
+                    } catch (ExecutionException e) {
+                        e.printStackTrace();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 } else if (i == 2) {
-                    loadData(container, 7, 10);
+                    try {
+                        loadData(container, 7, 10);
+                    } catch (ExecutionException e) {
+                        e.printStackTrace();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 } else if (i == 3) {
-                    loadData(container, 30, 10);
+                    try {
+                        loadData(container, 30, 10);
+                    } catch (ExecutionException e) {
+                        e.printStackTrace();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 } else if (i == 4) {
-                    loadData(container, 365, 10);
+                    try {
+                        loadData(container, 365, 10);
+                    } catch (ExecutionException e) {
+                        e.printStackTrace();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 } else {
                     Log.i(TAG, "Invalid selection");
                 }
@@ -200,12 +268,6 @@ public class AppMonitorActivity extends AppCompatActivity {
                 stat.setIcon(app, packageManager);
 
 
-                String category = String.valueOf(new FetchCategoryTask().execute(stat.getPackageName()));
-//                Log.i(TAG, "-----------------------------------------------");
-//                Log.i(TAG, category);
-//                Log.i(TAG, "-----------------------------------------------");
-
-
             } catch (PackageManager.NameNotFoundException e) {
                 Toast toast = Toast.makeText(this, "error in getting icon", Toast.LENGTH_SHORT);
                 toast.show();
@@ -230,15 +292,18 @@ public class AppMonitorActivity extends AppCompatActivity {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    private void loadData(LinearLayout container, int numDays, int numApps) {
+    private void loadData(LinearLayout container, int numDays, int numApps) throws ExecutionException, InterruptedException {
         container.removeAllViews();
 
         List<UsageStat> usageStats = getTopUsedApps(numDays, numApps);
         createUIApps(container, usageStats);
     }
 
-    private void createUIApps(LinearLayout container, List<UsageStat> appUsageList) {
+    private void createUIApps(LinearLayout container, List<UsageStat> appUsageList) throws ExecutionException, InterruptedException {
         for (UsageStat stat : appUsageList) {
+            stat.setCategory();
+            Log.d(TAG, "createUIApps: " + stat.getCategory());
+
             View separator = new View(this);
             separator.setLayoutParams(new ViewGroup.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT,
@@ -336,48 +401,5 @@ public class AppMonitorActivity extends AppCompatActivity {
                 return false;
             }
         });
-    }
-
-
-    public final static String GOOGLE_URL = "https://play.google.com/store/apps/details?id=";
-
-    private static class FetchCategoryTask extends AsyncTask<String, Void, String> {
-        @Override
-        protected String doInBackground(String... packageName) {
-            return getCategory(packageName[0]);
-
-//            String category;
-//            pm = getPackageManager();
-//            List<ApplicationInfo> packages = pm.getInstalledApplications(PackageManager.GET_META_DATA);
-//            Iterator<ApplicationInfo> iterator = packages.iterator();
-//            //  while (iterator.hasNext()) {
-//            // ApplicationInfo packageInfo = iterator.next();
-//            String query_url = "https://play.google.com/store/apps/details?id=com.imo.android.imoim";  //GOOGLE_URL + packageInfo.packageName;
-//            Log.i(TAG, query_url);
-//            category = getCategory(query_url);
-//            Log.e("CATEGORY", category);
-//
-//            // store category or do something else
-//            //}
-//            return null;
-        }
-
-
-        private String getCategory(String packageName) {
-            String queryUrl = GOOGLE_URL + packageName;
-
-            try {
-                Log.d(TAG, "getCategory: " + queryUrl);
-                Document doc = Jsoup.connect(queryUrl).get();
-                Elements link = doc.select("a[class=\"hrTbp R8zArc\"]");
-                Log.d(TAG, "getCategory: " + link.text());
-                return link.text();
-            } catch (HttpStatusException e) {
-                return "Other";
-            } catch (Exception e) {
-                Log.e(TAG, e.toString());
-                return e.toString();
-            }
-        }
     }
 }
