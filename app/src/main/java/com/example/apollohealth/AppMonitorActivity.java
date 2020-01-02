@@ -56,6 +56,7 @@ public class AppMonitorActivity extends AppCompatActivity {
     public static final int MY_PERMISSIONS_REQUEST_PACKAGE_USAGE_STATS = 0;
     public static final String TAG = "AM_ACTIVITY";
     public static final String GOOGLE_URL = "https://play.google.com/store/apps/details?id=";
+    public static final int NUM_APPS = 10;
 
     LinearLayout container;
     AnyChartView anyChartView;
@@ -182,7 +183,7 @@ public class AppMonitorActivity extends AppCompatActivity {
 
         container = findViewById(R.id.container);
         try {
-            loadData(container, 1, 10);
+            loadData(container, 1, NUM_APPS);
         } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
@@ -205,7 +206,7 @@ public class AppMonitorActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 if (i == 0) {
                     try {
-                        loadData(container, 1, 10);
+                        loadData(container, 1, NUM_APPS);
                     } catch (ExecutionException e) {
                         e.printStackTrace();
                     } catch (InterruptedException e) {
@@ -213,7 +214,7 @@ public class AppMonitorActivity extends AppCompatActivity {
                     }
                 } else if (i == 1) {
                     try {
-                        loadData(container, 3, 10);
+                        loadData(container, 3, NUM_APPS);
                     } catch (ExecutionException e) {
                         e.printStackTrace();
                     } catch (InterruptedException e) {
@@ -221,7 +222,7 @@ public class AppMonitorActivity extends AppCompatActivity {
                     }
                 } else if (i == 2) {
                     try {
-                        loadData(container, 7, 10);
+                        loadData(container, 7, NUM_APPS);
                     } catch (ExecutionException e) {
                         e.printStackTrace();
                     } catch (InterruptedException e) {
@@ -229,7 +230,7 @@ public class AppMonitorActivity extends AppCompatActivity {
                     }
                 } else if (i == 3) {
                     try {
-                        loadData(container, 30, 10);
+                        loadData(container, 30, NUM_APPS);
                     } catch (ExecutionException e) {
                         e.printStackTrace();
                     } catch (InterruptedException e) {
@@ -237,7 +238,7 @@ public class AppMonitorActivity extends AppCompatActivity {
                     }
                 } else if (i == 4) {
                     try {
-                        loadData(container, 365, 10);
+                        loadData(container, 365, NUM_APPS);
                     } catch (ExecutionException e) {
                         e.printStackTrace();
                     } catch (InterruptedException e) {
@@ -410,7 +411,7 @@ public class AppMonitorActivity extends AppCompatActivity {
             data.add(new ValueDataEntry(name, categoryTimes.get(name)));
         }
         pie.data(data);
-        
+
 ////        radar chart
 //        Radar radar = AnyChart.radar();
 //        radar.yScale().minimum(0d);
