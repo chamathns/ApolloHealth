@@ -9,6 +9,7 @@ import android.hardware.SensorManager;
 import android.os.Build;
 import android.os.IBinder;
 import android.util.Log;
+
 import androidx.annotation.Nullable;
 
 import com.example.apollohealth.db.DatabaseHandler;
@@ -139,9 +140,7 @@ public class SensorService extends Service implements SensorEventListener {
 
     @Override
     public void onTaskRemoved(Intent rootIntent) {
-
         super.onTaskRemoved(rootIntent);
-
         Log.i(TAG, "onTaskRemoved called");
         // restart the never ending service
         Intent broadcastIntent = new Intent(Globals.RESTART_INTENT);
@@ -191,7 +190,6 @@ public class SensorService extends Service implements SensorEventListener {
      * not needed
      */
     public void stoptimertask() {
-
         //stop the timer, if it's not already null
         if (timer != null) {
             timer.cancel();

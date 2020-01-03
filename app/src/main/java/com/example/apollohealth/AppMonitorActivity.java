@@ -35,6 +35,8 @@ import com.anychart.AnyChartView;
 import com.anychart.chart.common.dataentry.DataEntry;
 import com.anychart.chart.common.dataentry.ValueDataEntry;
 import com.anychart.charts.Pie;
+import com.anychart.enums.Align;
+import com.anychart.enums.LegendLayout;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.jsoup.HttpStatusException;
@@ -54,9 +56,13 @@ public class AppMonitorActivity extends AppCompatActivity {
     public static final int MY_PERMISSIONS_REQUEST_PACKAGE_USAGE_STATS = 0;
     public static final String TAG = "AM_ACTIVITY";
     public static final String GOOGLE_URL = "https://play.google.com/store/apps/details?id=";
+    public static final int NUM_APPS = 10;
 
     LinearLayout container;
+    AnyChartView anyChartView;
     Spinner timePeriodSpinner;
+
+    Pie pie;
 
     private class UsageStat {
         private String packageName;
@@ -160,9 +166,24 @@ public class AppMonitorActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_app_monitor);
 
+
+        anyChartView = findViewById(R.id.app_monitor_chart);
+        pie = AnyChart.pie();
+        List<DataEntry> data = new ArrayList<>();
+//        dummy data
+        data.add(new ValueDataEntry("a", 100));
+        data.add(new ValueDataEntry("b", 100));
+        pie.data(data);
+        pie.labels().position("outside");
+        pie.legend()
+                .position("center-bottom")
+                .itemsLayout(LegendLayout.HORIZONTAL)
+                .align(Align.CENTER);
+        anyChartView.setChart(pie);
+
         container = findViewById(R.id.container);
         try {
-            loadData(container, 1, 10);
+            loadData(container, 1, NUM_APPS);
         } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
@@ -185,7 +206,7 @@ public class AppMonitorActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 if (i == 0) {
                     try {
-                        loadData(container, 1, 10);
+                        loadData(container, 1, NUM_APPS);
                     } catch (ExecutionException e) {
                         e.printStackTrace();
                     } catch (InterruptedException e) {
@@ -193,7 +214,7 @@ public class AppMonitorActivity extends AppCompatActivity {
                     }
                 } else if (i == 1) {
                     try {
-                        loadData(container, 3, 10);
+                        loadData(container, 3, NUM_APPS);
                     } catch (ExecutionException e) {
                         e.printStackTrace();
                     } catch (InterruptedException e) {
@@ -201,7 +222,7 @@ public class AppMonitorActivity extends AppCompatActivity {
                     }
                 } else if (i == 2) {
                     try {
-                        loadData(container, 7, 10);
+                        loadData(container, 7, NUM_APPS);
                     } catch (ExecutionException e) {
                         e.printStackTrace();
                     } catch (InterruptedException e) {
@@ -209,7 +230,7 @@ public class AppMonitorActivity extends AppCompatActivity {
                     }
                 } else if (i == 3) {
                     try {
-                        loadData(container, 30, 10);
+                        loadData(container, 30, NUM_APPS);
                     } catch (ExecutionException e) {
                         e.printStackTrace();
                     } catch (InterruptedException e) {
@@ -217,7 +238,7 @@ public class AppMonitorActivity extends AppCompatActivity {
                     }
                 } else if (i == 4) {
                     try {
-                        loadData(container, 365, 10);
+                        loadData(container, 365, NUM_APPS);
                     } catch (ExecutionException e) {
                         e.printStackTrace();
                     } catch (InterruptedException e) {
@@ -385,14 +406,37 @@ public class AppMonitorActivity extends AppCompatActivity {
         separator.setBackgroundColor(Color.parseColor("#C0C0C0"));
         container.addView(separator);
 
-        Pie pie = AnyChart.pie();
         List<DataEntry> data = new ArrayList<>();
         for (String name : categoryTimes.keySet()) {
             data.add(new ValueDataEntry(name, categoryTimes.get(name)));
         }
         pie.data(data);
-        AnyChartView anyChartView = findViewById(R.id.app_monitor_chart);
-        anyChartView.setChart(pie);
+
+////        radar chart
+//        Radar radar = AnyChart.radar();
+//        radar.yScale().minimum(0d);
+//        radar.yScale().minimumGap(0d);
+//        radar.yScale().ticks().interval(50d);
+//        radar.xAxis().labels().padding(5d, 5d, 5d, 5d);
+//        radar.legend()
+//                .align(Align.CENTER)
+//                .enabled(true);
+//        List<DataEntry> data = new ArrayList<>();
+//        for (String name : categoryTimes.keySet()) {
+//            data.add(new ValueDataEntry(name, categoryTimes.get(name)/1000));
+//        }
+//        Set set = Set.instantiate();
+//        set.data(data);
+//        Mapping appUsageData = set.mapAs("{ x: 'x', value: 'value' }");
+//        Line appUsageLine = radar.line(appUsageData);
+//        appUsageLine.name("App Usage Time");
+//        appUsageLine.markers()
+//                .enabled(true)
+//                .type(MarkerType.CIRCLE)
+//                .size(3d);
+//        radar.tooltip().format("Value: {%Value}");
+//        AnyChartView anyChartView = findViewById(R.id.app_monitor_chart);
+//        anyChartView.setChart(radar);
     }
 
     public void addBottomNavigation() {

@@ -1,6 +1,5 @@
 package com.example.apollohealth;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.hardware.Sensor;
@@ -21,27 +20,21 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.anychart.APIlib;
 import com.anychart.AnyChart;
 import com.anychart.AnyChartView;
 import com.anychart.chart.common.dataentry.DataEntry;
 import com.anychart.chart.common.dataentry.ValueDataEntry;
 import com.anychart.charts.Cartesian;
-import com.anychart.charts.Pie;
 import com.anychart.core.cartesian.series.Column;
 import com.anychart.data.Mapping;
 import com.anychart.data.Set;
 import com.anychart.enums.Anchor;
-import com.anychart.enums.HoverMode;
 import com.anychart.enums.Position;
-import com.anychart.enums.TooltipPositionMode;
-
 import com.example.apollohealth.db.DatabaseHandler;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class HealthActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
@@ -282,7 +275,7 @@ public class HealthActivity extends AppCompatActivity implements AdapterView.OnI
             float f = (float) totalValue;
             sensorText.setText(String.format("Distance travelled: %d", totalValue));
             dailyText.setText(String.format("Distance travelled today: %d", currentValue));
-            caloryText.setText(String.format("Calories burned: %.2f", metrics.caloriesBurned((int)metrics.kmsToSteps(f), 0)));
+            caloryText.setText(String.format("Calories burned: %.2f", metrics.caloriesBurned((int) metrics.kmsToSteps(f), 0)));
         }
 
 

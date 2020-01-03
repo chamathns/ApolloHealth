@@ -9,22 +9,10 @@ import com.example.apollohealth.db.DatabaseHandler;
 
 public class UnlockReceiver extends BroadcastReceiver {
     public static final String TAG = "UC_SCREENEVENT";
-//    Context ctx;
-//
-//    public UnlockReceiver(Context appCtx) {
-//        this.ctx = appCtx;
-//    }
-//
-//    public UnlockReceiver() {
-//    }
 
     @Override
     public void onReceive(Context context, Intent intent) {
         Log.i(TAG, "UnlockCounterService onReceive");
-
-//        if (!isServiceRunning(UnlockCounterService.class)) {
-//            context.startService(new Intent(context, UnlockCounterService.class));
-//        }
 
         if (intent.getAction().equals(Intent.ACTION_SCREEN_OFF)) {
             Log.i(TAG, "Screen locked");
@@ -35,17 +23,4 @@ public class UnlockReceiver extends BroadcastReceiver {
             Log.i(TAG, "Screen unlocked");
         }
     }
-
-//    private boolean isServiceRunning(Class<?> serviceClass) {
-//        ActivityManager manager = (ActivityManager) ctx.getSystemService(Context.ACTIVITY_SERVICE);
-//
-//        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-//            if (serviceClass.getName().equals(service.service.getClassName())) {
-//                Log.i(TAG, "ServiceRunning: TRUE");
-//                return true;
-//            }
-//        }
-//        Log.i(TAG, "ServiceRunning: FALSE");
-//        return false;
-//    }
 }

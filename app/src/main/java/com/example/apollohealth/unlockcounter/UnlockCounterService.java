@@ -72,43 +72,4 @@ public class UnlockCounterService extends Service {
     public IBinder onBind(Intent intent) {
         return null;
     }
-
-//    @Nullable
-//    @Override
-//    public IBinder onBind(Intent intent) {
-//        return null;
-//    }
-//
-//    @Override
-//    public int onStartCommand(Intent intent, int flags, int startId) {
-//        return super.onStartCommand(intent, flags, startId);
-//    }
-//
-//    @Override
-//    public void onCreate() {
-//        super.onCreate();
-//        Log.i(TAG, "Unlock counter service started");
-//
-//        IntentFilter filter = new IntentFilter(Intent.ACTION_USER_PRESENT);
-//        filter.addAction(Intent.ACTION_SCREEN_OFF);
-//
-//        mReceiver = new UnlockReceiver();
-//        registerReceiver(mReceiver, filter);
-//
-//        Log.i(TAG, "UnlockCounterService onCreate: mReceiver is registered.");
-//    }
-//
-//    @Override
-//    public void onDestroy() {
-//        super.onDestroy();
-//
-//        if (mReceiver != null) {
-//            unregisterReceiver(mReceiver);
-//            Log.i(TAG, "UnlockCounterService onDestroy: mReceiver is unregistered.");
-//        }
-//        mReceiver = null;
-//
-//        Log.i(TAG, "Unlock counter service stopped");
-//    }
-
 }
