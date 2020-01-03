@@ -106,7 +106,7 @@ public class SensorService extends Service implements SensorEventListener {
             Log.i(TAG, "restarting foreground");
             try {
                 Notification notification = new Notification();
-                startForeground(NOTIFICATION_ID, notification.setNotification(this, "Service notification", "This is the service's notification", R.drawable.ic_history));
+                startForeground(NOTIFICATION_ID, notification.setNotification(this, "Physical Tracker", "Your movements are being tracked by ApolloHealth", R.drawable.heart));
                 Log.i(TAG, "restarting foreground successful");
                 startTimer();
             } catch (Exception e) {
