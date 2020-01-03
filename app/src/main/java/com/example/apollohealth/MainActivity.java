@@ -48,6 +48,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     private int flight = 0;
     private int duration;
+    private int steps = 0;
     private String displayText = "John";
 //    private View mainView;
 
@@ -76,6 +77,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         profileImage = (CircleImageView) findViewById(R.id.profile_image);
         flightText = (TextView) findViewById(R.id.flightText);
+        stepsText = (TextView) findViewById(R.id.stepsText);
         caloriesText = (TextView) findViewById(R.id.caloriesText);
         displayName = (MyTextView_Roboto_Regular) findViewById((R.id.displayName));
 
@@ -123,14 +125,22 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
                 physicalData.moveToNext();
             }
+
+            physicalData.moveToFirst();
+            for (int j = 0; j < physicalData.getCount(); j++) {
+                steps += Integer.parseInt(physicalData.getString(1));
+
+                physicalData.moveToNext();
+            }
         }
 //        if (physicalData.moveToFirst()) {
 //            flight = physicalData.getString(2);
 //        }
 
         flightText.setText(String.valueOf(flight));
+        stepsText.setText(String.valueOf(steps));
+        caloriesText.setText(String.format("%.2f", metrics.caloriesBurned(steps, flight)));
 
-        caloriesText.setText(String.valueOf(metrics.caloriesBurned(0, flight)));
     }
 
     private boolean isServiceRunning(Class<?> serviceClass) {
@@ -217,11 +227,18 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
                 physicalData.moveToNext();
             }
+
+            physicalData.moveToFirst();
+            for (int j = 0; j < physicalData.getCount(); j++) {
+                steps += Integer.parseInt(physicalData.getString(1));
+
+                physicalData.moveToNext();
+            }
         }
 
         flightText.setText(String.valueOf(flight));
-
-        caloriesText.setText(String.valueOf(metrics.caloriesBurned(0, flight)));
+        stepsText.setText(String.valueOf(steps));
+        caloriesText.setText(String.format("%.2f", metrics.caloriesBurned(steps, flight)));
 
         physicalTextView.setText(parent.getItemAtPosition(pos).toString());
         emotionalTextView.setText(parent.getItemAtPosition(pos).toString());

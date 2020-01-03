@@ -250,6 +250,7 @@ public class HealthActivity extends AppCompatActivity implements AdapterView.OnI
         }
 
         set.data(data2);
+        cartesian.animation(true);
 //        Mapping series1Data = set.mapAs("{ x: 'x', value: 'value' }");
 
 //        Column column = cartesian.column(series1Data);
