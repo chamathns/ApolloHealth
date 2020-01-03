@@ -75,17 +75,9 @@ public class HealthActivity extends AppCompatActivity implements AdapterView.OnI
         sensorText = (TextView) findViewById(R.id.sensorText);
         caloryText = (TextView) findViewById(R.id.caloryText);
         dailyText = (TextView) findViewById(R.id.dailyText);
-        startBtn = (Button) findViewById(R.id.startBtn);
+//        startBtn = (Button) findViewById(R.id.startBtn);
 
         myDB = new DatabaseHandler(this);
-
-        startBtn.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View arg0) {
-
-            }
-        });
 
 //        anyChartView = (AnyChartView) findViewById(R.id.any_chart_view1);
 
