@@ -11,6 +11,9 @@ public class MetricGenerator {
 
     private final float STEPS_PER_FLIGHT = 15;
 
+    private final int STEP_THRESHOLD = 5000;
+    private final int FLIGHT_THRESHOLD = 8;
+
     private float height;
     private float weight;
 
@@ -50,5 +53,19 @@ public class MetricGenerator {
         float bmi = weight / (heightInMeters * heightInMeters);
 
         return bmi;
+    }
+
+    public int getPhysicalStatus(int steps, int flights, int duration) {
+        if (steps < STEP_THRESHOLD * duration && flights < FLIGHT_THRESHOLD * duration) {
+            return 0;
+        } else if (steps >= STEP_THRESHOLD * duration && flights < FLIGHT_THRESHOLD * duration) {
+            return 1;
+        } else if (steps < STEP_THRESHOLD * duration && flights >= FLIGHT_THRESHOLD * duration) {
+            return 1;
+        } else if (steps >= STEP_THRESHOLD * duration && flights >= FLIGHT_THRESHOLD * duration) {
+            return 0;
+        }
+
+        return 0;
     }
 }

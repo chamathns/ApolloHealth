@@ -4,6 +4,7 @@ import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -41,6 +42,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private TextView flightText;
     private TextView caloriesText;
     private TextView stepsText;
+    private TextView physicalStatusText;
+    private TextView emotionalStatusText;
     private MyTextView_Roboto_Regular displayName;
 
     private MetricGenerator metrics;
@@ -79,6 +82,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         flightText = (TextView) findViewById(R.id.flightText);
         stepsText = (TextView) findViewById(R.id.stepsText);
         caloriesText = (TextView) findViewById(R.id.caloriesText);
+        physicalStatusText = (TextView) findViewById(R.id.physicalStatusText);
+        emotionalStatusText = (TextView) findViewById(R.id.emotionalStatusText);
         displayName = (MyTextView_Roboto_Regular) findViewById((R.id.displayName));
 
         unlockCounterService = new UnlockCounterService(getCtx());
@@ -141,6 +146,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         stepsText.setText(String.valueOf(steps));
         caloriesText.setText(String.format("%.2f", metrics.caloriesBurned(steps, flight)));
 
+        getStatus();
+
     }
 
     private boolean isServiceRunning(Class<?> serviceClass) {
@@ -154,6 +161,27 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         }
         Log.i(LOG_TAG, "ServiceRunning: FALSE");
         return false;
+    }
+
+    private void getStatus() {
+        int status = metrics.getPhysicalStatus(steps, flight, duration);
+        switch (status){
+            case 0:
+                physicalStatusText.setText("Not Good");
+                physicalStatusText.setTextColor(Color.parseColor("#ba031c"));
+                break;
+            case 1:
+                physicalStatusText.setText("Moderate");
+                physicalStatusText.setTextColor(Color.parseColor("#dbc20b"));
+                break;
+            case 2:
+                physicalStatusText.setText("Good");
+                physicalStatusText.setTextColor(Color.parseColor("#1bbc44"));
+                break;
+        }
+
+        emotionalStatusText.setText("Not Good");
+        emotionalStatusText.setTextColor(Color.parseColor("#ba031c"));
     }
 
     public void addBottomNavigation() {
@@ -239,6 +267,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         flightText.setText(String.valueOf(flight));
         stepsText.setText(String.valueOf(steps));
         caloriesText.setText(String.format("%.2f", metrics.caloriesBurned(steps, flight)));
+
+        getStatus();
 
         physicalTextView.setText(parent.getItemAtPosition(pos).toString());
         emotionalTextView.setText(parent.getItemAtPosition(pos).toString());

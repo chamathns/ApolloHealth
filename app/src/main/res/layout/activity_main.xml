@@ -93,6 +93,7 @@
                         android:textSize="16sp" />
 
                     <customfonts.MyTextView_Roboto_Regular
+                        android:id="@+id/physicalStatusText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="15.2dp"
@@ -275,6 +276,7 @@
                         android:textSize="16sp" />
 
                     <customfonts.MyTextView_Roboto_Regular
+                        android:id="@+id/emotionalStatusText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="15.2dp"
