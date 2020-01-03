@@ -115,7 +115,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         userData.moveToFirst();
         if (userData.moveToFirst()) {
             displayText = userData.getString(1);
-            displayName.setText(String.format("Hi, %s", displayText));
+            displayName.setText(String.format("Hi, %s", displayText.split(" ")[0]));
         } else {
             displayName.setText(String.format("Hi, %s", displayText));
         }

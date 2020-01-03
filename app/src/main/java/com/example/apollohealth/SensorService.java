@@ -2,6 +2,7 @@ package com.example.apollohealth;
 
 import android.app.Service;
 import android.content.Intent;
+import android.database.Cursor;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -14,6 +15,7 @@ import androidx.annotation.Nullable;
 
 import com.example.apollohealth.db.DatabaseHandler;
 
+import java.util.Currency;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -22,6 +24,8 @@ import static java.lang.Math.abs;
 public class SensorService extends Service implements SensorEventListener {
 
     protected static final int NOTIFICATION_ID = 1337;
+    protected static final int NOTIFICATION_ID_FLIGHT = 1338;
+    protected static final int NOTIFICATION_ID_STEP = 1339;
     private static String TAG = "Service";
     private static Service mCurrentService;
     private int counter = 0;
@@ -219,6 +223,20 @@ public class SensorService extends Service implements SensorEventListener {
                 Log.i("DB", "Writing flights climbed");
                 DatabaseHandler myDB = new DatabaseHandler(this);
                 myDB.updateHealthData(System.currentTimeMillis(), 0, 0, 0, 0, 0, 1);
+
+                Cursor flightData = myDB.getPhysicalData(1);
+                flightData.moveToFirst();
+                int f = Integer.parseInt(flightData.getString(2));
+                if(f >= 8) {
+                    try {
+                        Notification notification = new Notification();
+                        startForeground(NOTIFICATION_ID_FLIGHT, notification.setNotification(this, "Target Achieved!", "You just completed the daily target for flights climbed.", R.drawable.heart));
+                    } catch (Exception e) {
+                        Log.e("Error", "Error in notification " + e.getMessage());
+                    }
+                }
+
+
                 myDB.close();
                 initHeight = cHeight;
             } else {
@@ -235,6 +253,19 @@ public class SensorService extends Service implements SensorEventListener {
                 Log.i("DB", "Writing steps");
                 DatabaseHandler myDB = new DatabaseHandler(this);
                 myDB.updateHealthData(System.currentTimeMillis(), 0, 0, 0, 0, mSteps, 0);
+
+                Cursor steptData = myDB.getPhysicalData(1);
+                steptData.moveToFirst();
+                int s = Integer.parseInt(steptData.getString(1));
+                if(s == 5000) {
+                    try {
+                        Notification notification = new Notification();
+                        startForeground(NOTIFICATION_ID_STEP, notification.setNotification(this, "Target Achieved!", "You just completed the daily target for steps.", R.drawable.heart));
+                    } catch (Exception e) {
+                        Log.e("Error", "Error in notification " + e.getMessage());
+                    }
+                }
+
                 myDB.close();
                 mSteps = 0;
             }
