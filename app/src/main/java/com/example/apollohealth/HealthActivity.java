@@ -3,6 +3,10 @@ package com.example.apollohealth;
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -47,6 +51,7 @@ public class HealthActivity extends AppCompatActivity implements AdapterView.OnI
     private TextView dailyText;
     private Spinner typeSpinner;
     private Spinner durationSpinner;
+    private TextView textViewSteps;
 
     private int totalValue = 0;
     private int duration = 3;
@@ -66,6 +71,7 @@ public class HealthActivity extends AppCompatActivity implements AdapterView.OnI
         setContentView(R.layout.activity_health);
         addBottomNavigation();
         addItemsSpinner();
+
 
 //        anyChartView = (AnyChartView) findViewById(R.id.any_chart_view);
 //        cartesian = AnyChart.column();

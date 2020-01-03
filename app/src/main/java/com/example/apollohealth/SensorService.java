@@ -9,7 +9,6 @@ import android.hardware.SensorManager;
 import android.os.Build;
 import android.os.IBinder;
 import android.util.Log;
-
 import androidx.annotation.Nullable;
 
 import com.example.apollohealth.db.DatabaseHandler;
@@ -38,14 +37,6 @@ public class SensorService extends Service implements SensorEventListener {
     // Steps counted in current session
     private int mSteps = 0;
 
-    // Value of the step counter sensor when the listener was registered.
-    // (Total steps are calculated from this value.)
-    private int mCounterSteps = 0;
-
-    // Steps counted by the step counter previously. Used to keep counter consistent across rotation
-    // changes
-    private int mPreviousCounterSteps = 0;
-
     public SensorService() {
         super();
     }
@@ -59,7 +50,6 @@ public class SensorService extends Service implements SensorEventListener {
         }
         mCurrentService = this;
         Log.i("Important", "On crreaaaaaaaaaaaaaaaaaaaaaaaaaaaaate");
-
     }
 
     @Override
@@ -72,11 +62,9 @@ public class SensorService extends Service implements SensorEventListener {
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         pressureSensor = sensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE);
         stepDetector = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
-        stepCounter = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
 
         sensorManager.registerListener(this, pressureSensor, SensorManager.SENSOR_DELAY_NORMAL);
         sensorManager.registerListener(this, stepDetector, SensorManager.SENSOR_DELAY_NORMAL );
-        sensorManager.registerListener(this, stepCounter, SensorManager.SENSOR_DELAY_NORMAL );
 
         // it has been killed by Android and now it is restarted. We must make sure to have reinitialised everything
         if (intent == null) {
@@ -126,11 +114,15 @@ public class SensorService extends Service implements SensorEventListener {
         }
     }
 
-
     @Override
     public void onDestroy() {
         super.onDestroy();
         Log.i(TAG, "onDestroy called");
+        Log.i("DB", "Writing steps");
+        DatabaseHandler myDB = new DatabaseHandler(this);
+        myDB.updateHealthData(System.currentTimeMillis(), 0, 0, 0, 0, mSteps, 0);
+        myDB.close();
+//
         sensorManager.unregisterListener(this);
         // restart the never ending service
         Intent broadcastIntent = new Intent(Globals.RESTART_INTENT);
@@ -147,7 +139,9 @@ public class SensorService extends Service implements SensorEventListener {
 
     @Override
     public void onTaskRemoved(Intent rootIntent) {
+
         super.onTaskRemoved(rootIntent);
+
         Log.i(TAG, "onTaskRemoved called");
         // restart the never ending service
         Intent broadcastIntent = new Intent(Globals.RESTART_INTENT);
@@ -197,6 +191,7 @@ public class SensorService extends Service implements SensorEventListener {
      * not needed
      */
     public void stoptimertask() {
+
         //stop the timer, if it's not already null
         if (timer != null) {
             timer.cancel();
@@ -215,7 +210,6 @@ public class SensorService extends Service implements SensorEventListener {
     @Override
     public void onSensorChanged(SensorEvent event) {
         if (event.sensor.getType() == Sensor.TYPE_PRESSURE) {
-//            Log.i("Sensor", "Sensor changeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
             float[] pValues = event.values;
             float cHeight = SensorManager.getAltitude(SensorManager.PRESSURE_STANDARD_ATMOSPHERE, pValues[0]);
             if (initHeight == 0) {
@@ -239,28 +233,13 @@ public class SensorService extends Service implements SensorEventListener {
             Log.i(TAG,
                     "New step detected by STEP_DETECTOR sensor. Total step count: " + mSteps);
 
-
-        }else if (event.sensor.getType() == Sensor.TYPE_STEP_COUNTER) {
-
-                /*
-                A step counter event contains the total number of steps since the listener
-                was first registered. We need to keep track of this initial value to calculate the
-                number of steps taken, as the first value a listener receives is undefined.
-                 */
-            if (mCounterSteps < 1) {
-                // initial value
-                mCounterSteps = (int) event.values[0];
+            if (mSteps > 10){
+                Log.i("DB", "Writing steps");
+                DatabaseHandler myDB = new DatabaseHandler(this);
+                myDB.updateHealthData(System.currentTimeMillis(), 0, 0, 0, 0, mSteps, 0);
+                myDB.close();
+                mSteps = 0;
             }
-
-            // Calculate steps taken based on first counter value received.
-            mSteps = (int) event.values[0] - mCounterSteps;
-
-            // Add the number of steps previously taken, otherwise the counter would start at 0.
-            // This is needed to keep the counter consistent across rotation changes.
-            mSteps = mSteps + mPreviousCounterSteps;
-
-            Log.i(TAG, "New step detected by STEP_COUNTER sensor. Total step count: " + mSteps);
-            // END_INCLUDE(sensorevent)
         }
     }
 
