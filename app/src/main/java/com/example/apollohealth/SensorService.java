@@ -75,8 +75,8 @@ public class SensorService extends Service implements SensorEventListener {
         stepCounter = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
 
         sensorManager.registerListener(this, pressureSensor, SensorManager.SENSOR_DELAY_NORMAL);
-        sensorManager.registerListener(this, stepDetector, SensorManager.SENSOR_DELAY_NORMAL );
-        sensorManager.registerListener(this, stepCounter, SensorManager.SENSOR_DELAY_NORMAL );
+        sensorManager.registerListener(this, stepDetector, SensorManager.SENSOR_DELAY_NORMAL);
+        sensorManager.registerListener(this, stepCounter, SensorManager.SENSOR_DELAY_NORMAL);
 
         // it has been killed by Android and now it is restarted. We must make sure to have reinitialised everything
         if (intent == null) {
@@ -240,7 +240,7 @@ public class SensorService extends Service implements SensorEventListener {
                     "New step detected by STEP_DETECTOR sensor. Total step count: " + mSteps);
 
 
-        }else if (event.sensor.getType() == Sensor.TYPE_STEP_COUNTER) {
+        } else if (event.sensor.getType() == Sensor.TYPE_STEP_COUNTER) {
 
                 /*
                 A step counter event contains the total number of steps since the listener

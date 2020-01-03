@@ -15,7 +15,6 @@ public class MetricGenerator {
     private float weight;
 
     public MetricGenerator(float height, float weight) {
-
         this.height = height;
         this.weight = weight;
     }
@@ -48,7 +47,6 @@ public class MetricGenerator {
 
     public float calculateBMI(float height, float weight) {
         float heightInMeters = height / 100;
-
         float bmi = weight / (heightInMeters * heightInMeters);
 
         return bmi;
