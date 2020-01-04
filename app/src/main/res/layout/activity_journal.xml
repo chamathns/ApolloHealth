@@ -19,6 +19,15 @@
             android:textSize="20sp"
             android:textStyle="bold" />
 
+        <Spinner
+            android:id="@+id/durationSpinner"
+            android:layout_width="match_parent"
+            android:layout_height="47dp"
+            android:background="@null"
+            android:entries="@array/timeframe_report_array_single"
+            android:layoutDirection="ltr"
+            android:textAlignment="center" />
+
         <Button
             android:id="@+id/btn_nav_app_monitor"
             android:layout_width="match_parent"

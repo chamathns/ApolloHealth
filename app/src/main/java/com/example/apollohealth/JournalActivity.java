@@ -7,7 +7,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,12 +18,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class JournalActivity extends AppCompatActivity {
+    public static final String TAG = "J_ACTIVITY";
 
     Intent mServiceIntent;
     private SensorService mSensorService;
     Context ctx;
 
     private Button btnNavToAppMonitor;
+    Spinner durationSpinner;
 
     public Context getCtx() {
         return ctx;
@@ -30,14 +34,45 @@ public class JournalActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ctx = this;
-//
         setContentView(R.layout.activity_journal);
+        ctx = this;
+
 //        mSensorService = new SensorService((getCtx()));
 //        mServiceIntent = new Intent(getCtx(), mSensorService.getClass());
 //        if(!isMyServiceRunning(mSensorService.getClass())){
 //            startService(mServiceIntent);
 //        }
+
+        durationSpinner = findViewById(R.id.durationSpinner);
+        durationSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                if (i == 0) {
+                    Log.d(TAG, "onItemSelected: Loading data for 1 day");
+
+                } else if (i == 1) {
+                    Log.d(TAG, "onItemSelected: Loading data for 3 days");
+
+                } else if (i == 2) {
+                    Log.d(TAG, "onItemSelected: Loading data for 7 days");
+
+                } else if (i == 3) {
+                    Log.d(TAG, "onItemSelected: Loading data for 30 days");
+
+                } else if (i == 4) {
+                    Log.d(TAG, "onItemSelected: Loading data for 365 days");
+
+                } else {
+                    Log.d(TAG, "onItemSelected: Invalid selection");
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
 
         btnNavToAppMonitor = findViewById(R.id.btn_nav_app_monitor);
         btnNavToAppMonitor.setOnClickListener(new View.OnClickListener() {
@@ -48,7 +83,6 @@ public class JournalActivity extends AppCompatActivity {
         });
 
         addBottomNavigation();
-
     }
 
     public void goToAppMonitor() {
