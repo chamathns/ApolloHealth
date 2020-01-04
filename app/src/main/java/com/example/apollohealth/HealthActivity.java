@@ -246,7 +246,7 @@ public class HealthActivity extends AppCompatActivity implements AdapterView.OnI
             float f = (float) totalValue;
             sensorText.setText(String.format("Distance travelled: %d", totalValue));
             dailyText.setText(String.format("Distance travelled today: %d", currentValue));
-            caloryText.setText(String.format("Calories burned: %.2f", metrics.caloriesBurned((int) metrics.kmsToSteps(f), 0)));
+            caloryText.setText(String.format("Calories burned: %.2f", metrics.caloriesBurned((int) metrics.kmsToSteps(f)/1000, 0)));
         }
 
     }
