@@ -379,8 +379,8 @@ public class AppMonitorActivity extends AppCompatActivity {
             vLayout.addView(usageText);
 
             ImageView appIcon = new ImageView(this);
-            LinearLayout.LayoutParams imgViewParams = new LinearLayout.LayoutParams(120, 120);
-            imgViewParams.setMargins(25, 25, 25, 25);
+            LinearLayout.LayoutParams imgViewParams = new LinearLayout.LayoutParams(100, 100);
+            imgViewParams.setMargins(35, 35, 35, 35);
             appIcon.setLayoutParams(imgViewParams);
             appIcon.setImageDrawable(stat.getIcon());
 
