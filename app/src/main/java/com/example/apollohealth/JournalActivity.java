@@ -17,11 +17,27 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.anychart.APIlib;
+import com.anychart.AnyChart;
+import com.anychart.AnyChartView;
+import com.anychart.chart.common.dataentry.DataEntry;
+import com.anychart.chart.common.dataentry.ValueDataEntry;
+import com.anychart.charts.Cartesian;
+import com.anychart.core.cartesian.series.Column;
+import com.anychart.enums.Anchor;
+import com.anychart.enums.HoverMode;
+import com.anychart.enums.Position;
+import com.anychart.enums.TooltipPositionMode;
 import com.example.apollohealth.db.DatabaseHandler;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import java.text.Format;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+
 public class JournalActivity extends AppCompatActivity {
     public static final String TAG = "J_ACTIVITY";
+    private static final Format dateFormat = new SimpleDateFormat("yyyyMMdd");
 
     Intent mServiceIntent;
     Context ctx;
@@ -32,6 +48,8 @@ public class JournalActivity extends AppCompatActivity {
     Spinner durationSpinner;
     TextView numUnlocksText;
     TextView screenTimeText;
+    AnyChartView usageTimeChart;
+    AnyChartView numUnlocksChart;
 
     public Context getCtx() {
         return ctx;
@@ -94,7 +112,72 @@ public class JournalActivity extends AppCompatActivity {
             }
         });
 
+        usageTimeChart = findViewById(R.id.usage_time_chart);
+        APIlib.getInstance().setActiveAnyChartView(usageTimeChart);
+        usageTimeChart.setProgressBar(findViewById(R.id.time_progress_bar));
+        Cartesian timeCartesian = AnyChart.column();
+        Column timeColumn = timeCartesian.column(getChartData(0));
+        timeColumn.tooltip()
+                .titleFormat("{%X}")
+                .position(Position.CENTER_BOTTOM)
+                .anchor(Anchor.CENTER_BOTTOM)
+                .offsetX(0d)
+                .offsetY(5d)
+                .format("{%Value}{groupsSeparator: }");
+        timeCartesian.animation(true);
+        timeCartesian.title("OnScreen time during the past week");
+        timeCartesian.yScale().minimum(0d);
+        timeCartesian.yAxis(0).labels().format("{%Value}{groupsSeparator: }");
+        timeCartesian.tooltip().positionMode(TooltipPositionMode.POINT);
+        timeCartesian.interactivity().hoverMode(HoverMode.BY_X);
+        timeCartesian.xAxis(0).title("Date");
+        timeCartesian.yAxis(0).title("Time(s)");
+        usageTimeChart.setChart(timeCartesian);
+
+        numUnlocksChart = findViewById(R.id.num_unlocks_chart);
+        APIlib.getInstance().setActiveAnyChartView(numUnlocksChart);
+        numUnlocksChart.setProgressBar(findViewById(R.id.unlocks_progress_bar));
+        Cartesian unlocksCartesian = AnyChart.column();
+        Column unlocksColumn = unlocksCartesian.column(getChartData(1));
+        unlocksColumn.tooltip()
+                .titleFormat("{%X}")
+                .position(Position.CENTER_BOTTOM)
+                .anchor(Anchor.CENTER_BOTTOM)
+                .offsetX(0d)
+                .offsetY(5d)
+                .format("{%Value}{groupsSeparator: }");
+        unlocksCartesian.animation(true);
+        unlocksCartesian.title("Number of phone unlocks during the past week");
+        unlocksCartesian.yScale().minimum(0d);
+        unlocksCartesian.yAxis(0).labels().format("{%Value}{groupsSeparator: }");
+        unlocksCartesian.tooltip().positionMode(TooltipPositionMode.POINT);
+        unlocksCartesian.interactivity().hoverMode(HoverMode.BY_X);
+        unlocksCartesian.xAxis(0).title("Date");
+        unlocksCartesian.yAxis(0).title("Number of Unlocks");
+        numUnlocksChart.setChart(unlocksCartesian);
+
         addBottomNavigation();
+    }
+
+    private ArrayList getChartData(int col) {
+        ArrayList<DataEntry> entries = new ArrayList<>();
+
+        for (int i = 0; i < 7; i++) {
+            String timestampDate = String.valueOf(Long.parseLong(dateFormat.format(System.currentTimeMillis() - (i * 24 * 60 * 60 * 1000L))));
+            String chartTime = timestampDate.substring(timestampDate.length() - 2) + "/" + timestampDate.substring(timestampDate.length() - 4, timestampDate.length() - 2);
+
+            Cursor res = myDB.getEmotionDataDays(timestampDate);
+
+            if (res.getCount() == 0) {
+                entries.add(new ValueDataEntry(chartTime, 0));
+            } else if (res.getCount() == 1) {
+                res.moveToFirst();
+                int value = Integer.parseInt(res.getString(col));
+                entries.add(new ValueDataEntry(chartTime, value));
+            }
+        }
+
+        return entries;
     }
 
     private void getData(int numDays) {
@@ -107,7 +190,7 @@ public class JournalActivity extends AppCompatActivity {
             screenTimeText.setText("OnScreen Time: No data available");
             numUnlocksText.setText("Phone Unlocks: No data available");
         } else {
-            Log.d(TAG, "getData: Getting data for " + numDays + " days");
+            Log.d(TAG, "getChartData: Getting data for " + numDays + " days");
 
             emotionData.moveToFirst();
 
@@ -124,11 +207,11 @@ public class JournalActivity extends AppCompatActivity {
 
             String timeString = "0";
 
-            if(timeHrs > 0){
+            if (timeHrs > 0) {
                 timeString = timeHrs + "hrs " + timeMin + "mins" + timeSec + "sec";
-            } else if (timeMin > 0){
+            } else if (timeMin > 0) {
                 timeString = timeMin + "mins" + timeSec + "sec";
-            } else if (timeSec > 0){
+            } else if (timeSec > 0) {
                 timeString = timeSec + "sec";
             }
 

@@ -7,107 +7,152 @@
     android:background="#FFFFFF"
     tools:context=".MainActivity">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:fontFamily="sans-serif"
-            android:gravity="center"
-            android:text="Activity Journal"
-            android:textColor="#000000"
-            android:textSize="50dp"
-            android:textStyle="bold" />
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:padding="20dp">
+            android:layout_marginBottom="50dp"
+            android:orientation="vertical">
 
-            <Spinner
-                android:id="@+id/durationSpinner"
+            <TextView
                 android:layout_width="match_parent"
-                android:layout_height="47dp"
-                android:background="@null"
-                android:entries="@array/timeframe_report_array_single"
-                android:layoutDirection="ltr"
-                android:textAlignment="center" />
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:fontFamily="sans-serif"
+                android:gravity="center"
+                android:text="Activity Journal"
+                android:textColor="#000000"
+                android:textSize="50dp"
+                android:textStyle="bold" />
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:orientation="vertical"
-                android:paddingTop="35dp"
-                android:paddingBottom="15dp">
+                android:padding="20dp">
+
+                <Spinner
+                    android:id="@+id/durationSpinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="47dp"
+                    android:background="@null"
+                    android:entries="@array/timeframe_report_array_single"
+                    android:layoutDirection="ltr"
+                    android:textAlignment="center" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="50dp"
-                    android:layout_marginRight="50dp"
-                    android:layout_marginBottom="20dp"
-                    android:background="@drawable/border"
-                    android:padding="10dp">
+                    android:orientation="vertical"
+                    android:paddingTop="35dp"
+                    android:paddingBottom="15dp">
 
-                    <TextView
-                        android:id="@+id/screenTimeText"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="15dp"
-                        android:layout_marginBottom="15dp"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="TextView"
-                        android:textColor="#9b9b9b"
-                        android:textSize="18sp" />
+                        android:layout_marginLeft="50dp"
+                        android:layout_marginRight="50dp"
+                        android:layout_marginBottom="20dp"
+                        android:background="@drawable/border"
+                        android:padding="10dp">
+
+                        <TextView
+                            android:id="@+id/screenTimeText"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="15dp"
+                            android:layout_marginBottom="15dp"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="TextView"
+                            android:textColor="#9b9b9b"
+                            android:textSize="18sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="50dp"
+                        android:layout_marginRight="50dp"
+                        android:layout_marginBottom="20dp"
+                        android:background="@drawable/border"
+                        android:padding="10dp">
+
+                        <TextView
+                            android:id="@+id/numUnlocksText"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="15dp"
+                            android:layout_marginBottom="15dp"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="TextView"
+                            android:textColor="#9b9b9b"
+                            android:textSize="18sp" />
+                    </LinearLayout>
                 </LinearLayout>
 
-                <LinearLayout
+                <RelativeLayout
+                    android:id="@+id/RelativeLayout01"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content">
+
+                    <Button
+                        android:id="@+id/btn_nav_app_monitor"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:background="@color/navbar_material_purple"
+                        android:paddingHorizontal="10dp"
+                        android:text="Check Application Usage"
+                        android:textColor="#ffffff" />
+                </RelativeLayout>
+
+                <View style="@style/Divider.Horizontal"
+                    android:layout_marginTop="25dp"/>
+
+                <com.anychart.AnyChartView
+                    android:id="@+id/usage_time_chart"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="50dp"
-                    android:layout_marginRight="50dp"
-                    android:layout_marginBottom="20dp"
-                    android:background="@drawable/border"
-                    android:padding="10dp">
+                    android:layout_height="309dp"
+                    android:layout_marginTop="10dp"></com.anychart.AnyChartView>
 
-                    <TextView
-                        android:id="@+id/numUnlocksText"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="15dp"
-                        android:layout_marginBottom="15dp"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="TextView"
-                        android:textColor="#9b9b9b"
-                        android:textSize="18sp" />
-                </LinearLayout>
-            </LinearLayout>
-
-            <RelativeLayout
-                android:id="@+id/RelativeLayout01"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content">
-
-                <Button
-                    android:id="@+id/btn_nav_app_monitor"
+                <ProgressBar
+                    android:id="@+id/time_progress_bar"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:background="#6a0dad"
-                    android:textColor="#ffffff"
-                    android:paddingHorizontal="10dp"
-                    android:text="Application Usage" />
-            </RelativeLayout>
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
+                <View style="@style/Divider.Horizontal"
+                    android:layout_marginTop="15dp"/>
+
+                <com.anychart.AnyChartView
+                    android:id="@+id/num_unlocks_chart"
+                    android:layout_width="match_parent"
+                    android:layout_height="309dp"
+                    android:layout_marginTop="10dp"></com.anychart.AnyChartView>
+
+                <ProgressBar
+                    android:id="@+id/unlocks_progress_bar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <View style="@style/Divider.Horizontal"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginBottom="50dp"/>
+            </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
+    </ScrollView>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"

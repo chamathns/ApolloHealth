@@ -163,6 +163,17 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         );
     }
 
+    public Cursor getEmotionDataDays(String dateString){
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        return db.rawQuery(
+                "SELECT " + HEALTH_TABLE_SCREEN_TIME + ", " + HEALTH_TABLE_UNLOCKS + ", " + HEALTH_TABLE_PICKUPS + " " +
+                        "FROM " + HEALTH_TABLE + " " +
+                        "WHERE (" + HEALTH_TABLE_TIMESTAMP + " = " + dateString + ");",
+                null
+        );
+    }
+
     public Cursor getPhysicalData(int numDays) {
         SQLiteDatabase db = this.getWritableDatabase();
 
