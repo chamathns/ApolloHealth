@@ -13,10 +13,14 @@
         android:orientation="vertical">
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="activity_journal.xml"
-            android:textSize="20sp"
+            android:layout_margin="10dp"
+            android:fontFamily="sans-serif"
+            android:gravity="center"
+            android:text="Activity Journal"
+            android:textColor="#000000"
+            android:textSize="50dp"
             android:textStyle="bold" />
 
         <LinearLayout
@@ -86,11 +90,21 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <Button
-                android:id="@+id/btn_nav_app_monitor"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="App Monitor" />
+            <RelativeLayout
+                android:id="@+id/RelativeLayout01"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content">
+
+                <Button
+                    android:id="@+id/btn_nav_app_monitor"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:background="#6a0dad"
+                    android:textColor="#ffffff"
+                    android:paddingHorizontal="10dp"
+                    android:text="Application Usage" />
+            </RelativeLayout>
 
         </LinearLayout>
     </LinearLayout>
