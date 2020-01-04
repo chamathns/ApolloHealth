@@ -100,6 +100,20 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         );
     }
 
+    public UserProfile getUserProfile() {
+        Cursor cursor = this.getUserData();
+        cursor.moveToFirst();
+        UserProfile userProfile = new UserProfile.UserBuilder()
+                .uname(cursor.getString(1))
+                .uage(Integer.parseInt(cursor.getString(2)))
+                .ugender(cursor.getString(3))
+                .uheight(Float.parseFloat(cursor.getString(4)))
+                .uweight(Float.parseFloat(cursor.getString(5)))
+                .build();
+
+        return userProfile;
+    }
+
     public boolean updateUserData(String id, String name, int age, String gender, float weight, float height) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();

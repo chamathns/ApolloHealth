@@ -14,11 +14,10 @@ import android.util.Log;
 import androidx.annotation.Nullable;
 
 import com.example.apollohealth.db.DatabaseHandler;
+import com.example.apollohealth.db.UserProfile;
 
-import java.util.Currency;
 import java.util.Timer;
 import java.util.TimerTask;
-
 import static java.lang.Math.abs;
 
 public class SensorService extends Service implements SensorEventListener {
@@ -33,15 +32,14 @@ public class SensorService extends Service implements SensorEventListener {
     private SensorManager sensorManager;
     private Sensor pressureSensor;
     private Sensor stepDetector;
-    private Sensor stepCounter;
 
     private float initHeight;
     private int flights = 0;
     private MetricGenerator metrics;
-
+    private float mDistance = (float) 0.0;
     // Steps counted in current session
     private int mSteps = 0;
-
+    private UserProfile userProfile;
     public SensorService() {
         super();
     }
@@ -50,6 +48,18 @@ public class SensorService extends Service implements SensorEventListener {
     @Override
     public void onCreate() {
         super.onCreate();
+        Log.i("User Data", "On crreaaaaaaaaaaaaaaaaaaaaaaaaaaaaate get user data");
+
+        DatabaseHandler myDB = new DatabaseHandler(this);
+
+        if (!myDB.getUserData().moveToFirst()) {
+            myDB.insertUserData("John Doe", 20, "Male", 60, 170);
+        } else {
+            userProfile = myDB.getUserProfile();
+        }
+        myDB.close();
+        metrics = new MetricGenerator(userProfile.getuHeight(),userProfile.getuWeight());
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             restartForeground();
         }
@@ -250,9 +260,11 @@ public class SensorService extends Service implements SensorEventListener {
                     "New step detected by STEP_DETECTOR sensor. Total step count: " + mSteps);
 
             if (mSteps > 10){
-                Log.i("DB", "Writing steps");
+
+                mDistance = metrics.stepsToKm((float) mSteps)*1000;
+                Log.i("DB", "Writing steps and distance = " + mDistance);
                 DatabaseHandler myDB = new DatabaseHandler(this);
-                myDB.updateHealthData(System.currentTimeMillis(), 0, 0, 0, 0, mSteps, 0);
+                myDB.updateHealthData(System.currentTimeMillis(), 0, 0, 0, Math.round(mDistance), mSteps, 0);
 
                 Cursor steptData = myDB.getPhysicalData(1);
                 steptData.moveToFirst();
