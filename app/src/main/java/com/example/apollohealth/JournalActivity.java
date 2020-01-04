@@ -118,7 +118,21 @@ public class JournalActivity extends AppCompatActivity {
                 emotionData.moveToNext();
             }
 
-            screenTimeText.setText("OnScreen Time: " + totalTime);
+            int timeSec = totalTime % 60;
+            int timeMin = (totalTime / 60) % 60;
+            int timeHrs = (totalTime / 60) / 60;
+
+            String timeString = "0";
+
+            if(timeHrs > 0){
+                timeString = timeHrs + "hrs " + timeMin + "mins" + timeSec + "sec";
+            } else if (timeMin > 0){
+                timeString = timeMin + "mins" + timeSec + "sec";
+            } else if (timeSec > 0){
+                timeString = timeSec + "sec";
+            }
+
+            screenTimeText.setText("OnScreen Time:\n " + timeString);
             numUnlocksText.setText("Phone Unlocks: " + totalUnlocks);
         }
     }
