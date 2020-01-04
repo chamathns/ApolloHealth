@@ -3,6 +3,7 @@ package com.example.apollohealth;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -10,22 +11,27 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.apollohealth.db.DatabaseHandler;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class JournalActivity extends AppCompatActivity {
     public static final String TAG = "J_ACTIVITY";
 
     Intent mServiceIntent;
-    private SensorService mSensorService;
     Context ctx;
+    private SensorService mSensorService;
+    private DatabaseHandler myDB;
 
-    private Button btnNavToAppMonitor;
+    Button btnNavToAppMonitor;
     Spinner durationSpinner;
+    TextView numUnlocksText;
+    TextView screenTimeText;
 
     public Context getCtx() {
         return ctx;
@@ -43,25 +49,31 @@ public class JournalActivity extends AppCompatActivity {
 //            startService(mServiceIntent);
 //        }
 
+        numUnlocksText = findViewById(R.id.numUnlocksText);
+        screenTimeText = findViewById(R.id.screenTimeText);
+
+        myDB = new DatabaseHandler(this);
+        getData(1);
+
         durationSpinner = findViewById(R.id.durationSpinner);
         durationSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 if (i == 0) {
                     Log.d(TAG, "onItemSelected: Loading data for 1 day");
-
+                    getData(1);
                 } else if (i == 1) {
                     Log.d(TAG, "onItemSelected: Loading data for 3 days");
-
+                    getData(3);
                 } else if (i == 2) {
                     Log.d(TAG, "onItemSelected: Loading data for 7 days");
-
+                    getData(7);
                 } else if (i == 3) {
                     Log.d(TAG, "onItemSelected: Loading data for 30 days");
-
+                    getData(30);
                 } else if (i == 4) {
                     Log.d(TAG, "onItemSelected: Loading data for 365 days");
-
+                    getData(365);
                 } else {
                     Log.d(TAG, "onItemSelected: Invalid selection");
                 }
@@ -83,6 +95,32 @@ public class JournalActivity extends AppCompatActivity {
         });
 
         addBottomNavigation();
+    }
+
+    private void getData(int numDays) {
+        Cursor emotionData = myDB.getEmotionData(numDays);
+
+        int totalTime = 0;
+        int totalUnlocks = 0;
+
+        if (emotionData == null) {
+            screenTimeText.setText("OnScreen Time: No data available");
+            numUnlocksText.setText("Phone Unlocks: No data available");
+        } else {
+            Log.d(TAG, "getData: Getting data for " + numDays + " days");
+
+            emotionData.moveToFirst();
+
+            for (int i = 0; i < emotionData.getCount(); i++) {
+                totalTime += Integer.parseInt(emotionData.getString(0));
+                totalUnlocks += Integer.parseInt(emotionData.getString(1));
+
+                emotionData.moveToNext();
+            }
+
+            screenTimeText.setText("OnScreen Time: " + totalTime);
+            numUnlocksText.setText("Phone Unlocks: " + totalUnlocks);
+        }
     }
 
     public void goToAppMonitor() {

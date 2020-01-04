@@ -19,21 +19,80 @@
             android:textSize="20sp"
             android:textStyle="bold" />
 
-        <Spinner
-            android:id="@+id/durationSpinner"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="47dp"
-            android:background="@null"
-            android:entries="@array/timeframe_report_array_single"
-            android:layoutDirection="ltr"
-            android:textAlignment="center" />
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="20dp">
 
-        <Button
-            android:id="@+id/btn_nav_app_monitor"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="App Monitor" />
+            <Spinner
+                android:id="@+id/durationSpinner"
+                android:layout_width="match_parent"
+                android:layout_height="47dp"
+                android:background="@null"
+                android:entries="@array/timeframe_report_array_single"
+                android:layoutDirection="ltr"
+                android:textAlignment="center" />
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingTop="35dp"
+                android:paddingBottom="15dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="50dp"
+                    android:layout_marginRight="50dp"
+                    android:layout_marginBottom="20dp"
+                    android:background="@drawable/border"
+                    android:padding="10dp">
+
+                    <TextView
+                        android:id="@+id/screenTimeText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="15dp"
+                        android:layout_marginBottom="15dp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="TextView"
+                        android:textColor="#9b9b9b"
+                        android:textSize="18sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="50dp"
+                    android:layout_marginRight="50dp"
+                    android:layout_marginBottom="20dp"
+                    android:background="@drawable/border"
+                    android:padding="10dp">
+
+                    <TextView
+                        android:id="@+id/numUnlocksText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="15dp"
+                        android:layout_marginBottom="15dp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="TextView"
+                        android:textColor="#9b9b9b"
+                        android:textSize="18sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btn_nav_app_monitor"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="App Monitor" />
+
+        </LinearLayout>
     </LinearLayout>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
