@@ -25,6 +25,14 @@
         <item>Monthly Report</item>
         <item>Yearly Report</item>
     </string-array>
+
+    <string-array name="timeframe_report_array_single">
+        <item>1-day Report</item>
+        <item>3-day Report</item>
+        <item>Weekly Report</item>
+        <item>Monthly Report</item>
+        <item>Yearly Report</item>
+    </string-array>
     <string name="title_activity_app_monitor">AppMonitorActivity</string>
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>

@@ -2,17 +2,12 @@ package com.example.apollohealth;
 
 import android.content.Intent;
 import android.database.Cursor;
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
-import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -37,7 +32,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HealthActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
-
     private TextView sensorText;
     private TextView caloryText;
     private TextView dailyText;
@@ -246,7 +240,7 @@ public class HealthActivity extends AppCompatActivity implements AdapterView.OnI
             float f = (float) totalValue;
             sensorText.setText(String.format("Distance travelled: %d", totalValue));
             dailyText.setText(String.format("Distance travelled today: %d", currentValue));
-            caloryText.setText(String.format("Calories burned: %.2f", metrics.caloriesBurned((int) metrics.kmsToSteps(f)/1000, 0)));
+            caloryText.setText(String.format("Calories burned: %.2f", metrics.caloriesBurned((int) metrics.kmsToSteps(f) / 1000, 0)));
         }
 
     }

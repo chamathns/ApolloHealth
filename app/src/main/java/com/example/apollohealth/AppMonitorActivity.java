@@ -190,22 +190,23 @@ public class AppMonitorActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        timePeriodSpinner = findViewById(R.id.time_period_spinner);
-        List<String> timePeriods = new ArrayList<String>();
-        timePeriods.add("1-day Report");
-        timePeriods.add("3-day Report");
-        timePeriods.add("Weekly Report");
-        timePeriods.add("Monthly Report");
-        timePeriods.add("Yearly Report");
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_item, timePeriods);
-        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        timePeriodSpinner.setAdapter(dataAdapter);
+        timePeriodSpinner = findViewById(R.id.durationSpinner);
+//        List<String> timePeriods = new ArrayList<String>();
+//        timePeriods.add("1-day Report");
+//        timePeriods.add("3-day Report");
+//        timePeriods.add("Weekly Report");
+//        timePeriods.add("Monthly Report");
+//        timePeriods.add("Yearly Report");
+//        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
+//                android.R.layout.simple_spinner_item, timePeriods);
+//        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//        timePeriodSpinner.setAdapter(dataAdapter);
         timePeriodSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 if (i == 0) {
                     try {
+                        Log.d(TAG, "onItemSelected: Loading data for 1 day");
                         loadData(container, 1, NUM_APPS);
                     } catch (ExecutionException e) {
                         e.printStackTrace();
@@ -214,6 +215,7 @@ public class AppMonitorActivity extends AppCompatActivity {
                     }
                 } else if (i == 1) {
                     try {
+                        Log.d(TAG, "onItemSelected: Loading data for 3 days");
                         loadData(container, 3, NUM_APPS);
                     } catch (ExecutionException e) {
                         e.printStackTrace();
@@ -222,6 +224,7 @@ public class AppMonitorActivity extends AppCompatActivity {
                     }
                 } else if (i == 2) {
                     try {
+                        Log.d(TAG, "onItemSelected: Loading data for 7 days");
                         loadData(container, 7, NUM_APPS);
                     } catch (ExecutionException e) {
                         e.printStackTrace();
@@ -230,6 +233,7 @@ public class AppMonitorActivity extends AppCompatActivity {
                     }
                 } else if (i == 3) {
                     try {
+                        Log.d(TAG, "onItemSelected: Loading data for 30 days");
                         loadData(container, 30, NUM_APPS);
                     } catch (ExecutionException e) {
                         e.printStackTrace();
@@ -238,6 +242,7 @@ public class AppMonitorActivity extends AppCompatActivity {
                     }
                 } else if (i == 4) {
                     try {
+                        Log.d(TAG, "onItemSelected: Loading data for 365 days");
                         loadData(container, 365, NUM_APPS);
                     } catch (ExecutionException e) {
                         e.printStackTrace();

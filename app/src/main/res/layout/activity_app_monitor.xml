@@ -27,13 +27,22 @@
                 android:textStyle="bold"
                 android:fontFamily="sans-serif"/>
 
+<!--            <Spinner-->
+<!--                android:id="@+id/time_period_spinner"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginTop="10dp"-->
+<!--                android:layout_marginBottom="25dp"-->
+<!--                android:gravity="center"-->
+<!--                android:textAlignment="center" />-->
+
             <Spinner
-                android:id="@+id/time_period_spinner"
+                android:id="@+id/durationSpinner"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="25dp"
-                android:gravity="center"
+                android:layout_height="47dp"
+                android:background="@null"
+                android:entries="@array/timeframe_report_array_single"
+                android:layoutDirection="ltr"
                 android:textAlignment="center" />
 
             <LinearLayout
