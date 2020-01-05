@@ -269,7 +269,7 @@ public class SensorService extends Service implements SensorEventListener {
                 Cursor steptData = myDB.getPhysicalData(1);
                 steptData.moveToFirst();
                 int s = Integer.parseInt(steptData.getString(1));
-                if(s == 5000) {
+                if(s == 1000) {
                     try {
                         Notification notification = new Notification();
                         startForeground(NOTIFICATION_ID_STEP, notification.setNotification(this, "Target Achieved!", "You just completed the daily target for steps.", R.drawable.heart));
