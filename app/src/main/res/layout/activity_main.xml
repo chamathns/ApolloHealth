@@ -234,7 +234,7 @@
                 android:layout_marginStart="15dp"
                 android:layout_weight="1"
                 android:ems="10"
-                android:text="Emotinal Status" />
+                android:text="Emotional Status" />
 
             <LinearLayout
                 android:layout_width="match_parent"
