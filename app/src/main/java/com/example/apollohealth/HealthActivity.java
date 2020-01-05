@@ -32,18 +32,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HealthActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+    public int currentValue = 0;
     private TextView sensorText;
     private TextView caloryText;
     private TextView dailyText;
     private Spinner typeSpinner;
     private Spinner durationSpinner;
     private TextView textViewSteps;
-
     private int totalValue = 0;
     private int duration = 3;
     private int dbColumn = 1;
-    public int currentValue = 0;
-
     private MetricGenerator metrics;
     private DatabaseHandler myDB;
     private Cursor physicalData;

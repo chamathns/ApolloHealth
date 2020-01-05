@@ -18,6 +18,7 @@ import com.example.apollohealth.db.UserProfile;
 
 import java.util.Timer;
 import java.util.TimerTask;
+
 import static java.lang.Math.abs;
 
 public class SensorService extends Service implements SensorEventListener {
@@ -27,12 +28,16 @@ public class SensorService extends Service implements SensorEventListener {
     protected static final int NOTIFICATION_ID_STEP = 1339;
     private static String TAG = "Service";
     private static Service mCurrentService;
+    /**
+     * static to avoid multiple timers to be created when the service is called several times
+     */
+    private static Timer timer;
+    private static TimerTask timerTask;
+    long oldTime = 0;
     private int counter = 0;
-
     private SensorManager sensorManager;
     private Sensor pressureSensor;
     private Sensor stepDetector;
-
     private float initHeight;
     private int flights = 0;
     private MetricGenerator metrics;
@@ -40,15 +45,24 @@ public class SensorService extends Service implements SensorEventListener {
     // Steps counted in current session
     private int mSteps = 0;
     private UserProfile userProfile;
+
+
     public SensorService() {
         super();
     }
 
+    public static Service getmCurrentService() {
+        return mCurrentService;
+    }
+
+    public static void setmCurrentService(Service mCurrentService) {
+        SensorService.mCurrentService = mCurrentService;
+    }
 
     @Override
     public void onCreate() {
         super.onCreate();
-        Log.i("User Data", "On crreaaaaaaaaaaaaaaaaaaaaaaaaaaaaate get user data");
+        Log.i("User Data", "On create get user data");
 
         DatabaseHandler myDB = new DatabaseHandler(this);
 
@@ -58,13 +72,13 @@ public class SensorService extends Service implements SensorEventListener {
             userProfile = myDB.getUserProfile();
         }
         myDB.close();
-        metrics = new MetricGenerator(userProfile.getuHeight(),userProfile.getuWeight());
+        metrics = new MetricGenerator(userProfile.getuHeight(), userProfile.getuWeight());
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             restartForeground();
         }
         mCurrentService = this;
-        Log.i("Important", "On crreaaaaaaaaaaaaaaaaaaaaaaaaaaaaate");
+        Log.i("Important", "On create");
     }
 
     @Override
@@ -79,7 +93,7 @@ public class SensorService extends Service implements SensorEventListener {
         stepDetector = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
 
         sensorManager.registerListener(this, pressureSensor, SensorManager.SENSOR_DELAY_NORMAL);
-        sensorManager.registerListener(this, stepDetector, SensorManager.SENSOR_DELAY_NORMAL );
+        sensorManager.registerListener(this, stepDetector, SensorManager.SENSOR_DELAY_NORMAL);
 
         // it has been killed by Android and now it is restarted. We must make sure to have reinitialised everything
         if (intent == null) {
@@ -99,13 +113,11 @@ public class SensorService extends Service implements SensorEventListener {
         return START_STICKY;
     }
 
-
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
         return null;
     }
-
 
     /**
      * it starts the process in foreground. Normally this is done when screen goes off
@@ -145,7 +157,6 @@ public class SensorService extends Service implements SensorEventListener {
         stoptimertask();
     }
 
-
     /**
      * this is called when the process is killed by Android
      *
@@ -164,14 +175,6 @@ public class SensorService extends Service implements SensorEventListener {
         // it will stop the timer after it was restarted
         // stoptimertask();
     }
-
-
-    /**
-     * static to avoid multiple timers to be created when the service is called several times
-     */
-    private static Timer timer;
-    private static TimerTask timerTask;
-    long oldTime = 0;
 
     public void startTimer() {
         Log.i(TAG, "Starting timer");
@@ -211,14 +214,6 @@ public class SensorService extends Service implements SensorEventListener {
         }
     }
 
-    public static Service getmCurrentService() {
-        return mCurrentService;
-    }
-
-    public static void setmCurrentService(Service mCurrentService) {
-        SensorService.mCurrentService = mCurrentService;
-    }
-
     @Override
     public void onSensorChanged(SensorEvent event) {
         if (event.sensor.getType() == Sensor.TYPE_PRESSURE) {
@@ -237,7 +232,7 @@ public class SensorService extends Service implements SensorEventListener {
                 Cursor flightData = myDB.getPhysicalData(1);
                 flightData.moveToFirst();
                 int f = Integer.parseInt(flightData.getString(2));
-                if(f >= 8) {
+                if (f >= 8) {
                     try {
                         Notification notification = new Notification();
                         startForeground(NOTIFICATION_ID_FLIGHT, notification.setNotification(this, "Target Achieved!", "You just completed the daily target for flights climbed.", R.drawable.heart));
@@ -259,9 +254,9 @@ public class SensorService extends Service implements SensorEventListener {
             Log.i(TAG,
                     "New step detected by STEP_DETECTOR sensor. Total step count: " + mSteps);
 
-            if (mSteps > 10){
+            if (mSteps > 10) {
 
-                mDistance = metrics.stepsToKm((float) mSteps)*1000;
+                mDistance = metrics.stepsToKm((float) mSteps) * 1000;
                 Log.i("DB", "Writing steps and distance = " + mDistance);
                 DatabaseHandler myDB = new DatabaseHandler(this);
                 myDB.updateHealthData(System.currentTimeMillis(), 0, 0, 0, Math.round(mDistance), mSteps, 0);
@@ -269,7 +264,7 @@ public class SensorService extends Service implements SensorEventListener {
                 Cursor steptData = myDB.getPhysicalData(1);
                 steptData.moveToFirst();
                 int s = Integer.parseInt(steptData.getString(1));
-                if(s == 1000) {
+                if (s == 1000) {
                     try {
                         Notification notification = new Notification();
                         startForeground(NOTIFICATION_ID_STEP, notification.setNotification(this, "Target Achieved!", "You just completed the daily target for steps.", R.drawable.heart));

@@ -41,15 +41,14 @@ public class JournalActivity extends AppCompatActivity {
 
     Intent mServiceIntent;
     Context ctx;
-    private SensorService mSensorService;
-    private DatabaseHandler myDB;
-
     Button btnNavToAppMonitor;
     Spinner durationSpinner;
     TextView numUnlocksText;
     TextView screenTimeText;
     AnyChartView usageTimeChart;
     AnyChartView numUnlocksChart;
+    private SensorService mSensorService;
+    private DatabaseHandler myDB;
 
     public Context getCtx() {
         return ctx;
