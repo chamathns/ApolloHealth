@@ -30,7 +30,7 @@ import customfonts.MyTextView_Roboto_Regular;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
-    public static final String LOG_TAG = "APOLLOHEALTH_MAIN";
+    public static final String TAG = "APOLLOHEALTH_MAIN";
 
     Context ctx;
     DatabaseHandler myDB;
@@ -44,14 +44,19 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private TextView stepsText;
     private TextView physicalStatusText;
     private TextView emotionalStatusText;
+    private TextView unlocksText;
+    private TextView screenTimeText;
     private MyTextView_Roboto_Regular displayName;
 
     private MetricGenerator metrics;
     private Cursor physicalData;
+    private Cursor emotionalData;
 
     private int flight = 0;
     private int duration;
     private int steps = 0;
+    private int unlocks = 0;
+    private int screentime = 0;
     private String displayText = "John";
 //    private View mainView;
 
@@ -84,6 +89,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         caloriesText = (TextView) findViewById(R.id.caloriesText);
         physicalStatusText = (TextView) findViewById(R.id.physicalStatusText);
         emotionalStatusText = (TextView) findViewById(R.id.emotionalStatusText);
+        unlocksText = findViewById(R.id.unlocksText);
+        screenTimeText = findViewById(R.id.screenTimeText);
         displayName = (MyTextView_Roboto_Regular) findViewById((R.id.displayName));
 
         unlockCounterService = new UnlockCounterService(getCtx());
@@ -146,8 +153,45 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         stepsText.setText(String.valueOf(steps));
         caloriesText.setText(String.format("%.2f", metrics.caloriesBurned(steps, flight)));
 
-        getStatus();
+        emotionalData = myDB.getEmotionData(duration);
 
+        if (emotionalData != null) {
+            emotionalData.moveToFirst();
+            for (int i = 0; i < emotionalData.getCount(); i++) {
+                String tempScreenTime = emotionalData.getString(0);
+                screentime += Integer.parseInt(tempScreenTime);
+
+                emotionalData.moveToNext();
+            }
+
+            emotionalData.moveToFirst();
+            for (int j = 0; j < emotionalData.getCount(); j++) {
+                String tempUnlocks = emotionalData.getString(1);
+                unlocks += Integer.parseInt(tempUnlocks);
+
+                emotionalData.moveToNext();
+            }
+        }
+
+        unlocksText.setText(String.valueOf(unlocks));
+
+        int hours = screentime / 3600;
+        int remainder = screentime - hours * 3600;
+        int mins = remainder / 60;
+        remainder = remainder - mins * 60;
+        int secs = remainder;
+
+        if(hours > 0) {
+            screenTimeText.setText(hours + "hr " + mins + "min " + secs + "sec");
+        } else if (mins > 0) {
+            screenTimeText.setText(mins + "min " + secs + "sec");
+        } else if (secs > 0) {
+            screenTimeText.setText(secs + "sec");
+        } else {
+            screenTimeText.setText("0 sec");
+        }
+
+        getStatus();
     }
 
     private boolean isServiceRunning(Class<?> serviceClass) {
@@ -155,11 +199,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
             if (serviceClass.getName().equals(service.service.getClassName())) {
-                Log.i(LOG_TAG, "ServiceRunning: TRUE");
+                Log.i(TAG, "ServiceRunning: TRUE");
                 return true;
             }
         }
-        Log.i(LOG_TAG, "ServiceRunning: FALSE");
+        Log.i(TAG, "ServiceRunning: FALSE");
         return false;
     }
 
@@ -268,6 +312,43 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         stepsText.setText(String.valueOf(steps));
         caloriesText.setText(String.format("%.2f", metrics.caloriesBurned(steps, flight)));
 
+        emotionalData = myDB.getEmotionData(duration);
+        if (emotionalData != null) {
+            emotionalData.moveToFirst();
+            for (int i = 0; i < emotionalData.getCount(); i++) {
+                String tempScreenTime = emotionalData.getString(0);
+                screentime += Integer.parseInt(tempScreenTime);
+
+                emotionalData.moveToNext();
+            }
+
+            emotionalData.moveToFirst();
+            for (int j = 0; j < emotionalData.getCount(); j++) {
+                String tempUnlocks = emotionalData.getString(1);
+                unlocks += Integer.parseInt(tempUnlocks);
+
+                emotionalData.moveToNext();
+            }
+        }
+
+        unlocksText.setText(String.valueOf(unlocks));
+
+        int hours = screentime / 3600;
+        int remainder = screentime - hours * 3600;
+        int mins = remainder / 60;
+        remainder = remainder - mins * 60;
+        int secs = remainder;
+
+        if(hours > 0) {
+            screenTimeText.setText(hours + "hr " + mins + "min " + secs + "sec");
+        } else if (mins > 0) {
+            screenTimeText.setText(mins + "min " + secs + "sec");
+        } else if (secs > 0) {
+            screenTimeText.setText(secs + "sec");
+        } else {
+            screenTimeText.setText("0 sec");
+        }
+
         getStatus();
 
         physicalTextView.setText(parent.getItemAtPosition(pos).toString());
@@ -298,7 +379,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     protected void onDestroy() {
         stopService(unlockCounterServiceIntent);
         stopService(screenTimeServiceIntent);
-        Log.i(LOG_TAG, "onDestroy");
+        Log.i(TAG, "onDestroy");
         super.onDestroy();
     }
 }
