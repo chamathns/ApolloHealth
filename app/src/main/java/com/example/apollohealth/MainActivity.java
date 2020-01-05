@@ -34,7 +34,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     Context ctx;
     DatabaseHandler myDB;
-
+    Intent unlockCounterServiceIntent;
+    Intent screenTimeServiceIntent;
     private Spinner timeSpinner;
     private TextView physicalTextView;
     private TextView emotionalTextView;
@@ -47,23 +48,17 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private TextView unlocksText;
     private TextView screenTimeText;
     private MyTextView_Roboto_Regular displayName;
-
     private MetricGenerator metrics;
     private Cursor physicalData;
     private Cursor emotionalData;
-
     private int flight = 0;
     private int duration;
     private int steps = 0;
     private int unlocks = 0;
+//    private View mainView;
     private int screentime = 0;
     private String displayText = "John";
-//    private View mainView;
-
-    Intent unlockCounterServiceIntent;
     private UnlockCounterService unlockCounterService;
-
-    Intent screenTimeServiceIntent;
     private ScreenTimerService screenTimerService;
 
     public Context getCtx() {
@@ -181,7 +176,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         remainder = remainder - mins * 60;
         int secs = remainder;
 
-        if(hours > 0) {
+        if (hours > 0) {
             screenTimeText.setText(hours + "hr " + mins + "min " + secs + "sec");
         } else if (mins > 0) {
             screenTimeText.setText(mins + "min " + secs + "sec");
@@ -355,7 +350,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         remainder = remainder - mins * 60;
         int secs = remainder;
 
-        if(hours > 0) {
+        if (hours > 0) {
             screenTimeText.setText(hours + "hr " + mins + "min " + secs + "sec");
         } else if (mins > 0) {
             screenTimeText.setText(mins + "min " + secs + "sec");

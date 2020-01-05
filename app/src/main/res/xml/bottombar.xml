@@ -1,18 +1,18 @@
 <tabs>
     <tab
-        id="@+id/tab_health"
+        activeColor="#009688"
         icon="@drawable/ic_like"
-        activeColor="#009688"
+        id="@+id/tab_health"
         inActiveColor="#d3d3d3" />
     <tab
-        id="@+id/tab_history"
+        activeColor="#009688"
         icon="@drawable/ic_history"
-        activeColor="#009688"
+        id="@+id/tab_history"
         inActiveColor="#d3d3d3" />
     <tab
-        id="@/tab_profile"
-        icon="@drawable/profiles"
         activeColor="#009688"
+        icon="@drawable/profiles"
+        id="@/tab_profile"
         inActiveColor="#d3d3d3" />
 </tabs>
 

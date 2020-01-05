@@ -19,7 +19,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
@@ -63,102 +62,6 @@ public class AppMonitorActivity extends AppCompatActivity {
     Spinner timePeriodSpinner;
 
     Pie pie;
-
-    private class UsageStat {
-        private String packageName;
-        private long usageTime;
-        private String appName;
-        private Drawable icon;
-        private String category;
-
-        private UsageStat(String packageName, long usageTime) {
-            this.packageName = packageName;
-            this.usageTime = usageTime;
-        }
-
-        public void setAppName(ApplicationInfo app, PackageManager packageManager) {
-            this.appName = (String) packageManager.getApplicationLabel(app);
-        }
-
-        public void setIcon(ApplicationInfo app, PackageManager packageManager) {
-            this.icon = packageManager.getApplicationIcon(app);
-        }
-
-        public void setCategory() throws ExecutionException, InterruptedException {
-            this.category = new FetchCategoryTask().execute(this.packageName).get();
-        }
-
-        public String getPackageName() {
-            return this.packageName;
-        }
-
-        public long getUsageTime() {
-            return this.usageTime;
-        }
-
-        public String getUsageTimeString() {
-            int seconds = (int) this.usageTime / 1000;
-
-            int hours = seconds / 3600;
-            int minutes = (seconds % 3600) / 60;
-            seconds = (seconds % 3600) % 60;
-
-            if (hours > 0) {
-                return hours + "hrs " + minutes + "mins " + seconds + "seconds";
-            }
-
-            if (minutes > 0) {
-                return minutes + "mins " + seconds + "seconds";
-            }
-
-            if (seconds > 0) {
-                return seconds + "seconds";
-            }
-
-            return "No usage";
-        }
-
-        public String getAppName() {
-            return this.appName;
-        }
-
-        public Drawable getIcon() {
-            return this.icon;
-        }
-
-        public String getCategory() {
-            return category;
-        }
-
-        @NonNull
-        @Override
-        public String toString() {
-            return "\nPackage: " + this.packageName + "\nApp: " + this.appName + "\nIcon: " + this.icon + "\nUsage Time: " + this.getUsageTimeString();
-        }
-    }
-
-    private static class FetchCategoryTask extends AsyncTask<String, Void, String> {
-        @Override
-        protected String doInBackground(String... packageName) {
-            return getCategory(packageName[0]);
-        }
-
-        private String getCategory(String packageName) {
-            String queryUrl = GOOGLE_URL + packageName;
-
-            try {
-                Document doc = Jsoup.connect(queryUrl).get();
-//                Elements link = doc.select("a[class=\"hrTbp R8zArc\"]");
-                Elements link = doc.select("a[itemprop=\"genre\"]");
-                return link.text();
-            } catch (HttpStatusException e) {
-                return "Other";
-            } catch (Exception e) {
-                Log.e(TAG, e.toString());
-                return e.toString();
-            }
-        }
-    }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -473,5 +376,101 @@ public class AppMonitorActivity extends AppCompatActivity {
                 return false;
             }
         });
+    }
+
+    private static class FetchCategoryTask extends AsyncTask<String, Void, String> {
+        @Override
+        protected String doInBackground(String... packageName) {
+            return getCategory(packageName[0]);
+        }
+
+        private String getCategory(String packageName) {
+            String queryUrl = GOOGLE_URL + packageName;
+
+            try {
+                Document doc = Jsoup.connect(queryUrl).get();
+//                Elements link = doc.select("a[class=\"hrTbp R8zArc\"]");
+                Elements link = doc.select("a[itemprop=\"genre\"]");
+                return link.text();
+            } catch (HttpStatusException e) {
+                return "Other";
+            } catch (Exception e) {
+                Log.e(TAG, e.toString());
+                return e.toString();
+            }
+        }
+    }
+
+    private class UsageStat {
+        private String packageName;
+        private long usageTime;
+        private String appName;
+        private Drawable icon;
+        private String category;
+
+        private UsageStat(String packageName, long usageTime) {
+            this.packageName = packageName;
+            this.usageTime = usageTime;
+        }
+
+        public void setAppName(ApplicationInfo app, PackageManager packageManager) {
+            this.appName = (String) packageManager.getApplicationLabel(app);
+        }
+
+        public void setIcon(ApplicationInfo app, PackageManager packageManager) {
+            this.icon = packageManager.getApplicationIcon(app);
+        }
+
+        public void setCategory() throws ExecutionException, InterruptedException {
+            this.category = new FetchCategoryTask().execute(this.packageName).get();
+        }
+
+        public String getPackageName() {
+            return this.packageName;
+        }
+
+        public long getUsageTime() {
+            return this.usageTime;
+        }
+
+        public String getUsageTimeString() {
+            int seconds = (int) this.usageTime / 1000;
+
+            int hours = seconds / 3600;
+            int minutes = (seconds % 3600) / 60;
+            seconds = (seconds % 3600) % 60;
+
+            if (hours > 0) {
+                return hours + "hrs " + minutes + "mins " + seconds + "seconds";
+            }
+
+            if (minutes > 0) {
+                return minutes + "mins " + seconds + "seconds";
+            }
+
+            if (seconds > 0) {
+                return seconds + "seconds";
+            }
+
+            return "No usage";
+        }
+
+        public String getAppName() {
+            return this.appName;
+        }
+
+        public Drawable getIcon() {
+            return this.icon;
+        }
+
+        public String getCategory() {
+            return category;
+        }
+
+        @NonNull
+        @Override
+        public String toString() {
+            return "\nPackage: " + this.packageName + "\nApp: " + this.appName + "\nIcon: " + this.icon + "\nUsage Time: " + this.getUsageTimeString();
+        }
     }
 }

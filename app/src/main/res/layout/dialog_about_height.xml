@@ -17,18 +17,18 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
-            android:gravity="center"
             android:layout_marginLeft="140dp"
-            android:layout_marginTop="24dp" />
+            android:layout_marginTop="24dp"
+            android:gravity="center" />
 
         <customfonts.MyTextView_Roboto_Regular
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="15.2dp"
+            android:layout_marginTop="102dp"
             android:layout_weight="1"
             android:text="cm"
             android:textColor="#9b9b9b"
-            android:layout_marginTop="102dp"
             android:textSize="16sp" />
 
     </LinearLayout>
