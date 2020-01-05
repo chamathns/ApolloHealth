@@ -14,6 +14,10 @@ public class MetricGenerator {
     private final int STEP_THRESHOLD = 5000;
     private final int FLIGHT_THRESHOLD = 8;
 
+    private final int SCREEN_TIME_THRESHOLD = 14400;
+    private final int UNLOCKS_THRESHOLD = 110;
+
+
     private float height;
     private float weight;
 
@@ -67,5 +71,19 @@ public class MetricGenerator {
         }
 
         return 0;
+    }
+
+    public int getEmotionalStatus(int screenTime, int unlocks, int duration) {
+        if (screenTime < SCREEN_TIME_THRESHOLD * duration && unlocks < UNLOCKS_THRESHOLD * duration) {
+            return 0;
+        } else if (screenTime >= SCREEN_TIME_THRESHOLD * duration && unlocks < UNLOCKS_THRESHOLD * duration) {
+            return 1;
+        } else if (screenTime < SCREEN_TIME_THRESHOLD * duration && unlocks >= UNLOCKS_THRESHOLD * duration) {
+            return 1;
+        } else if (screenTime >= SCREEN_TIME_THRESHOLD * duration && unlocks >= UNLOCKS_THRESHOLD * duration) {
+            return 2;
+        }
+
+        return -1;
     }
 }

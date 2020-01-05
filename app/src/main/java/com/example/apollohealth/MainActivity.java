@@ -208,8 +208,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
     private void getStatus() {
-        int status = metrics.getPhysicalStatus(steps, flight, duration);
-        switch (status){
+        int physicalStatus = metrics.getPhysicalStatus(steps, flight, duration);
+        switch (physicalStatus){
             case 0:
                 physicalStatusText.setText("Not Good");
                 physicalStatusText.setTextColor(Color.parseColor("#ba031c"));
@@ -224,8 +224,21 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 break;
         }
 
-        emotionalStatusText.setText("Not Good");
-        emotionalStatusText.setTextColor(Color.parseColor("#ba031c"));
+        int emotionalStatus = metrics.getEmotionalStatus(screentime, unlocks, duration);
+        switch (emotionalStatus) {
+            case 0:
+                emotionalStatusText.setText("Good");
+                emotionalStatusText.setTextColor(Color.parseColor("#1bbc44"));
+                break;
+            case 1:
+                emotionalStatusText.setText("Moderate");
+                emotionalStatusText.setTextColor(Color.parseColor("#dbc20b"));
+                break;
+            case 2:
+                emotionalStatusText.setText("Not Good");
+                emotionalStatusText.setTextColor(Color.parseColor("#ba031c"));
+                break;
+        }
     }
 
     public void addBottomNavigation() {
@@ -311,6 +324,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         flightText.setText(String.valueOf(flight));
         stepsText.setText(String.valueOf(steps));
         caloriesText.setText(String.format("%.2f", metrics.caloriesBurned(steps, flight)));
+
+        screentime = 0;
+        unlocks = 0;
 
         emotionalData = myDB.getEmotionData(duration);
         if (emotionalData != null) {
