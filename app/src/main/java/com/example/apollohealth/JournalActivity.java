@@ -117,6 +117,7 @@ public class JournalActivity extends AppCompatActivity {
         usageTimeChart.setProgressBar(findViewById(R.id.time_progress_bar));
         Cartesian timeCartesian = AnyChart.column();
         Column timeColumn = timeCartesian.column(getChartData(0));
+        timeColumn.color("#641783");
         timeColumn.tooltip()
                 .titleFormat("{%X}")
                 .position(Position.CENTER_BOTTOM)
@@ -139,6 +140,7 @@ public class JournalActivity extends AppCompatActivity {
         numUnlocksChart.setProgressBar(findViewById(R.id.unlocks_progress_bar));
         Cartesian unlocksCartesian = AnyChart.column();
         Column unlocksColumn = unlocksCartesian.column(getChartData(1));
+        unlocksColumn.color("#641783");
         unlocksColumn.tooltip()
                 .titleFormat("{%X}")
                 .position(Position.CENTER_BOTTOM)
