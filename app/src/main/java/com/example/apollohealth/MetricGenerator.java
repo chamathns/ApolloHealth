@@ -67,10 +67,10 @@ public class MetricGenerator {
         } else if (steps < STEP_THRESHOLD * duration && flights >= FLIGHT_THRESHOLD * duration) {
             return 1;
         } else if (steps >= STEP_THRESHOLD * duration && flights >= FLIGHT_THRESHOLD * duration) {
-            return 0;
+            return 2;
         }
 
-        return 0;
+        return -1;
     }
 
     public int getEmotionalStatus(int screenTime, int unlocks, int duration) {
